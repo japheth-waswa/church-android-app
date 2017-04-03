@@ -69,11 +69,42 @@ public class HomeActivity extends AppCompatActivity {
         for (int i = 0; i < 12; i++) {
             Navigation navigation = new Navigation();
             navigation.setTitle("title-" + String.valueOf(i));
-            navigation.setColor("color-" + String.valueOf(i));
+            navigation.setColor(getBgColor(i));
             navigation.setDescription("desc-" + String.valueOf(i));
-            navigation.setNavIcon(R.drawable.brand);
+            navigation.setNavIcon(R.drawable.ic_login_nav);
             navigations.add(navigation);
         }
         navigationRecyclerAdapter.notifyDataSetChanged();
+    }
+
+    private String getBgColor(int i) {
+        switch (i){
+            case 0:
+                return "#B600E4";
+            case 1:
+                return "#E4006B";
+            case 2:
+                return "#659933";
+            case 3:
+                return "#884444";
+            case 4:
+                return "#CC5200";
+            case 5:
+                return "#00A3CC";
+            case 6:
+                return "#B0B200";
+            case 7:
+                return "#980000";
+            case 8:
+                return "#985D00";
+            case 9:
+                return "#400098";
+            case 10:
+                return "#724C26";
+            case 11:
+                return "#0E4C00";
+            default:
+                return "#B600E4";
+        }
     }
 }
