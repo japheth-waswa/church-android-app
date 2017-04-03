@@ -7,7 +7,6 @@ import com.japhethwaswa.church.BR;
 
 public class Navigation extends BaseObservable{
 
-    String drawable;
     String title;
     String description;
     String color;
@@ -31,18 +30,6 @@ public class Navigation extends BaseObservable{
     public void setColor(String color) {
         this.color = color;
         notifyPropertyChanged(BR.color);
-    }
-
-
-
-    @Bindable
-    public String getDrawable() {
-        return drawable;
-    }
-
-    public void setDrawable(String drawable) {
-        this.drawable = drawable;
-        notifyPropertyChanged(BR.drawable);
     }
 
     @Bindable

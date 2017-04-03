@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.widget.Toast;
 
+import com.cleveroad.fanlayoutmanager.FanLayoutManager;
+import com.cleveroad.fanlayoutmanager.FanLayoutManagerSettings;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.ActivityHomeBinding;
 
@@ -21,6 +23,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private ArrayList<Navigation> navigations;
     private NavigationRecyclerAdapter navigationRecyclerAdapter;
+    private FanLayoutManager fanLayoutManager;
 
 
     @Override
@@ -40,8 +43,22 @@ public class HomeActivity extends AppCompatActivity {
 
         navigationRecyclerAdapter = new NavigationRecyclerAdapter(navigations);
 
-        activityHomeBinding.homeNavigationItems.setLayoutManager(new LinearLayoutManager(this));
+        //fan layout manager
+        FanLayoutManagerSettings fanLayoutManagerSettings = FanLayoutManagerSettings
+                .newBuilder(this)
+                .withFanRadius(true)
+                .withAngleItemBounce(5)
+                .withViewWidthDp(200)
+                .withViewHeightDp(150)
+                .build();
+        fanLayoutManager =  new FanLayoutManager(this,fanLayoutManagerSettings);
+
+        //recyclerviea adapter
+        activityHomeBinding.homeNavigationItems.setLayoutManager(fanLayoutManager);
+
         activityHomeBinding.homeNavigationItems.setAdapter(navigationRecyclerAdapter);
+
+
 
         //prepare navigation items
         prepareNavigationitems();
@@ -49,12 +66,11 @@ public class HomeActivity extends AppCompatActivity {
 
     private void prepareNavigationitems() {
         navigations.clear();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 12; i++) {
             Navigation navigation = new Navigation();
             navigation.setTitle("title-" + String.valueOf(i));
             navigation.setColor("color-" + String.valueOf(i));
             navigation.setDescription("desc-" + String.valueOf(i));
-            navigation.setDrawable("drawable-" + String.valueOf(i));
             navigation.setNavIcon(R.drawable.brand);
             navigations.add(navigation);
         }
