@@ -11,6 +11,17 @@ public class Navigation extends BaseObservable{
     String title;
     String description;
     String color;
+    int navIcon;
+
+    @Bindable
+    public int getNavIcon() {
+        return navIcon;
+    }
+
+    public void setNavIcon(int navIcons) {
+        this.navIcon = navIcons;
+        notifyPropertyChanged(BR.navIcon);
+    }
 
     @Bindable
     public String getColor() {

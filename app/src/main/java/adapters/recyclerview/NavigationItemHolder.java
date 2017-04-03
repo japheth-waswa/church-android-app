@@ -19,5 +19,6 @@ public class NavigationItemHolder extends RecyclerView.ViewHolder {
 
     public void bind(Navigation navigation) {
         itemNavigationBinding.setNavigation(navigation);
+        itemNavigationBinding.navIconHolder.setImageResource(navigation.getNavIcon());
     }
 }

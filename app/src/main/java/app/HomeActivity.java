@@ -55,6 +55,7 @@ public class HomeActivity extends AppCompatActivity {
             navigation.setColor("color-" + String.valueOf(i));
             navigation.setDescription("desc-" + String.valueOf(i));
             navigation.setDrawable("drawable-" + String.valueOf(i));
+            navigation.setNavIcon(R.drawable.brand);
             navigations.add(navigation);
         }
         navigationRecyclerAdapter.notifyDataSetChanged();

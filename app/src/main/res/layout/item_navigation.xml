@@ -13,9 +13,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:text="@={navigation.title}"/>
         <ImageView
+            android:id="@+id/navIconHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/brand"
             android:layout_gravity="center"/>
 
     </LinearLayout>
