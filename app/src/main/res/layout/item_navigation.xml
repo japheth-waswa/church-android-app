@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout  xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="navigation"
@@ -9,18 +10,19 @@
         android:orientation="vertical"
         android:layout_width="200dp"
         android:layout_height="150dp"
-        jeffBgColorLinearLayout = "@{navigation.color}">
+        app:jeffBgColorLinearLayout = "@{navigation.color}">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@={navigation.title}"/>
+            android:gravity="center"
+            android:text="@={navigation.title}"
+            android:layout_margin="@dimen/standardPadding"/>
         <ImageView
-            android:id="@+id/navIconHolder"
-            android:layout_width="200dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"/>
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:jeffIconResource="@{navigation.navIcon}"/>
 
     </LinearLayout>
 </layout>
