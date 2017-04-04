@@ -1,17 +1,12 @@
 package app;
 
-import android.animation.Animator;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
-import android.support.v7.widget.SnapHelper;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.cleveroad.fanlayoutmanager.FanLayoutManager;
 import com.cleveroad.fanlayoutmanager.FanLayoutManagerSettings;
@@ -26,13 +21,14 @@ import event.CustomRecyclerTouchListener;
 import model.Navigation;
 import model.NavigationItem;
 
-public class HomeActivity extends AppCompatActivity {
-
-    private ActivityHomeBinding activityHomeBinding;
+public class NavActivity extends AppCompatActivity {
+//todo start fragment to load each specific navigation and manage it
+    /**private ActivityHomeBinding activityHomeBinding;
 
     private ArrayList<Navigation> navigations;
     private NavigationRecyclerAdapter navigationRecyclerAdapter;
-    private FanLayoutManager fanLayoutManager;
+    private FanLayoutManager fanLayoutManager;**/
+    private int navPosition;
 
 
     @Override
@@ -46,7 +42,13 @@ public class HomeActivity extends AppCompatActivity {
         /**==============**/
         super.onCreate(savedInstanceState);
 
-        activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+        //get data from HomeActivity
+        Intent intent = getIntent();
+        navPosition = intent.getIntExtra("navPosition",0);
+
+
+
+        /**activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
         navigations = new ArrayList<>();
 
@@ -72,10 +74,6 @@ public class HomeActivity extends AppCompatActivity {
                 this, activityHomeBinding.homeNavigationItems, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                //start new activity passing the position of the item selected
-                Intent intent = new Intent(HomeActivity.this,NavActivity.class);
-                intent.putExtra("navPosition",position);
-                startActivity(intent);
             }
 
             @Override
@@ -85,11 +83,11 @@ public class HomeActivity extends AppCompatActivity {
         }));
 
         //prepare navigation items
-        prepareNavigationitems();
+        prepareNavigationitems();**/
     }
 
     private void prepareNavigationitems() {
-        navigations.clear();
+        /**navigations.clear();
         for (int i = 0; i < 12; i++) {
             Navigation navigation = new Navigation();
             navigation.setTitle(NavigationItem.homeTitles(i));
@@ -97,7 +95,8 @@ public class HomeActivity extends AppCompatActivity {
             navigation.setNavIcon(NavigationItem.homeIcon(i));
             navigations.add(navigation);
         }
-        navigationRecyclerAdapter.notifyDataSetChanged();
+        navigationRecyclerAdapter.notifyDataSetChanged();**/
     }
+
 
 }

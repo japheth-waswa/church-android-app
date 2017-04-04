@@ -17,6 +17,15 @@
             </intent-filter>
         </activity>
         <activity android:name="app.HomeActivity" android:theme="@style/HomeTheme"/>
+        <activity
+            android:name="app.NavActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName="app.HomeActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="app.HomeActivity" />
+        </activity>
     </application>
 
 </manifest>
