@@ -1,10 +1,13 @@
 package app;
 
+import android.animation.Animator;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.SnapHelper;
 import android.widget.Toast;
 
 import com.cleveroad.fanlayoutmanager.FanLayoutManager;
@@ -16,6 +19,7 @@ import java.util.ArrayList;
 
 import adapters.recyclerview.NavigationRecyclerAdapter;
 import model.Navigation;
+import model.NavigationItem;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -48,18 +52,17 @@ public class HomeActivity extends AppCompatActivity {
                 .newBuilder(this)
                 .withFanRadius(true)
                 .withAngleItemBounce(5)
-                .withViewWidthDp(200)
-                .withViewHeightDp(150)
+                .withViewWidthDp(150)
+                .withViewHeightDp(200)
                 .build();
-        fanLayoutManager =  new FanLayoutManager(this,fanLayoutManagerSettings);
+        fanLayoutManager = new FanLayoutManager(this, fanLayoutManagerSettings);
 
         //recyclerviea adapter
         activityHomeBinding.homeNavigationItems.setLayoutManager(fanLayoutManager);
 
         activityHomeBinding.homeNavigationItems.setAdapter(navigationRecyclerAdapter);
 
-
-
+        //add click event to recyclerview
         //prepare navigation items
         prepareNavigationitems();
     }
@@ -68,19 +71,18 @@ public class HomeActivity extends AppCompatActivity {
         navigations.clear();
         for (int i = 0; i < 12; i++) {
             Navigation navigation = new Navigation();
-            navigation.setTitle("title-" + String.valueOf(i));
-            navigation.setColor(getBgColor(i));
-            navigation.setDescription("desc-" + String.valueOf(i));
-            navigation.setNavIcon(R.drawable.ic_login_nav);
+            navigation.setTitle(NavigationItem.homeTitles(i));
+            navigation.setColor(NavigationItem.getBgColor(i));
+            navigation.setNavIcon(NavigationItem.homeIcon(i));
             navigations.add(navigation);
         }
         navigationRecyclerAdapter.notifyDataSetChanged();
     }
 
     private String getBgColor(int i) {
-        switch (i){
+        switch (i) {
             case 0:
-                return "#B600E4";
+                return "#CC5200";
             case 1:
                 return "#E4006B";
             case 2:
@@ -88,7 +90,7 @@ public class HomeActivity extends AppCompatActivity {
             case 3:
                 return "#884444";
             case 4:
-                return "#CC5200";
+                return "#0E4C00";
             case 5:
                 return "#00A3CC";
             case 6:
@@ -102,7 +104,7 @@ public class HomeActivity extends AppCompatActivity {
             case 10:
                 return "#724C26";
             case 11:
-                return "#0E4C00";
+                return "#B600E4";
             default:
                 return "#B600E4";
         }
