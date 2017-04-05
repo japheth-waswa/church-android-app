@@ -3,26 +3,39 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <LinearLayout
-            android:id="@+id/mainNavLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-                <com.cleveroad.loopbar.widget.LoopBarView
-                    android:id="@+id/mainNavigationView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:enls_placeholderId="@id/mainNavLayout"
-                    app:enls_orientation="horizontal"
-                    app:enls_selectionGravity="start"
-                    app:enls_selectionMargin="@dimen/standardPadding"
-                    app:enls_overlaySize="5dp"
-                    app:enls_selectionInAnimation="@animator/enls_scale_restore"
-                    app:enls_selectionOutAnimation="@animator/enls_scale_small"
-                    app:enls_selectionBackground="@android:color/holo_blue_dark"
-                    app:enls_menu="@menu/nav_items"
-                    app:enls_scrollMode="auto"/>
-        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/placeHolder"
+            android:layout_alignParentTop="true"
+            android:text="Jenny"
+            android:textColor="@color/colorAccent"/>
+        <View
+            android:id="@+id/placeHolder"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_alignParentBottom="true"/>
+
+        <com.cleveroad.loopbar.widget.LoopBarView
+            android:id="@+id/mainNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorAccent"
+            app:enls_menu="@menu/nav_items"
+            app:enls_orientation="horizontal"
+            app:enls_overlaySize="5dp"
+            app:enls_placeholderId="@id/placeHolder"
+            app:enls_scrollMode="auto"
+            app:enls_selectionBackground="@color/colorTriadNav"
+            app:enls_selectionGravity="start"
+            app:enls_selectionInAnimation="@animator/enls_scale_restore"
+            app:enls_selectionMargin="@dimen/standardPadding"
+            app:enls_selectionOutAnimation="@animator/enls_scale_small" />
+    </RelativeLayout>
 
 </layout>

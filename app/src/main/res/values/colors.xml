@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#9E9E9E</color>
     <color name="colorAccent">#FF5722</color>
     <color name="colorSplash">#FFFFFF</color>
+    <color name="colorTriadNav">#3ccc0a</color>
 </resources>
