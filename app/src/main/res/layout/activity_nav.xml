@@ -7,13 +7,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
+        <FrameLayout
+            android:id="@+id/navFragmentHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/placeHolder"
-            android:layout_alignParentTop="true"
-            android:text="Jenny"
-            android:textColor="@color/colorAccent"/>
+            android:layout_margin="@dimen/standardPadding"
+            android:layout_alignParentTop="true"/>
         <View
             android:id="@+id/placeHolder"
             android:layout_width="match_parent"
