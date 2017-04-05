@@ -6,12 +6,17 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.cleveroad.fanlayoutmanager.FanLayoutManager;
 import com.cleveroad.fanlayoutmanager.FanLayoutManagerSettings;
+import com.cleveroad.loopbar.adapter.SimpleCategoriesAdapter;
+import com.cleveroad.loopbar.model.MockedItemsFactory;
+import com.cleveroad.loopbar.widget.OnItemClickListener;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.ActivityHomeBinding;
+import com.japhethwaswa.church.databinding.ActivityNavBinding;
 
 import java.util.ArrayList;
 
@@ -23,12 +28,13 @@ import model.NavigationItem;
 
 public class NavActivity extends AppCompatActivity {
 //todo start fragment to load each specific navigation and manage it
-    /**private ActivityHomeBinding activityHomeBinding;
+    private ActivityNavBinding activityNavBinding;
 
-    private ArrayList<Navigation> navigations;
+    /**private ArrayList<Navigation> navigations;
     private NavigationRecyclerAdapter navigationRecyclerAdapter;
     private FanLayoutManager fanLayoutManager;**/
     private int navPosition;
+    private SimpleCategoriesAdapter simpleCategoriesAdapter;
 
 
     @Override
@@ -48,9 +54,17 @@ public class NavActivity extends AppCompatActivity {
 
 
 
-        /**activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
+        activityNavBinding = DataBindingUtil.setContentView(this, R.layout.activity_nav);
 
-        navigations = new ArrayList<>();
+        //work with the items
+        activityNavBinding.mainNavigationView.addOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClicked(int position) {
+                Log.e("jeff-waswa",String.valueOf(position));
+            }
+        });
+
+        /**navigations = new ArrayList<>();
 
         navigationRecyclerAdapter = new NavigationRecyclerAdapter(navigations);
 
@@ -85,6 +99,7 @@ public class NavActivity extends AppCompatActivity {
         //prepare navigation items
         prepareNavigationitems();**/
     }
+
 
     private void prepareNavigationitems() {
         /**navigations.clear();

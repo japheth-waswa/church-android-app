@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <LinearLayout
+            android:id="@+id/mainNavLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+                <com.cleveroad.loopbar.widget.LoopBarView
+                    android:id="@+id/mainNavigationView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:enls_placeholderId="@id/mainNavLayout"
+                    app:enls_orientation="horizontal"
+                    app:enls_selectionGravity="start"
+                    app:enls_selectionMargin="@dimen/standardPadding"
+                    app:enls_overlaySize="5dp"
+                    app:enls_selectionInAnimation="@animator/enls_scale_restore"
+                    app:enls_selectionOutAnimation="@animator/enls_scale_small"
+                    app:enls_selectionBackground="@android:color/holo_blue_dark"
+                    app:enls_menu="@menu/nav_items"
+                    app:enls_scrollMode="auto"/>
+        </LinearLayout>
+
+</layout>
