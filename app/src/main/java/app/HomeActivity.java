@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.SnapHelper;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import com.cleveroad.fanlayoutmanager.FanLayoutManager;
 import com.cleveroad.fanlayoutmanager.FanLayoutManagerSettings;
+import com.cleveroad.fanlayoutmanager.callbacks.FanChildDrawingOrderCallback;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.ActivityHomeBinding;
 
@@ -64,11 +66,17 @@ public class HomeActivity extends AppCompatActivity {
 
         //recyclerviea adapter
         activityHomeBinding.homeNavigationItems.setLayoutManager(fanLayoutManager);
+        activityHomeBinding.homeNavigationItems.setItemAnimator(new DefaultItemAnimator());
 
+        //set adapter
         activityHomeBinding.homeNavigationItems.setAdapter(navigationRecyclerAdapter);
+        activityHomeBinding.homeNavigationItems.setChildDrawingOrderCallback(new FanChildDrawingOrderCallback(fanLayoutManager));
+
+        //fan layout collapse views
+        fanLayoutManager.collapseViews();
 
         //add touch listener to recyclerview
-        activityHomeBinding.homeNavigationItems.addOnItemTouchListener(new CustomRecyclerTouchListener(
+         activityHomeBinding.homeNavigationItems.addOnItemTouchListener(new CustomRecyclerTouchListener(
                 this, activityHomeBinding.homeNavigationItems, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -86,6 +94,14 @@ public class HomeActivity extends AppCompatActivity {
 
         //prepare navigation items
         prepareNavigationitems();
+
+        //set onclick listener on brand logo
+        activityHomeBinding.brandHome.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                fanLayoutManager.collapseViews();
+            }
+        });
     }
 
     private void prepareNavigationitems() {
