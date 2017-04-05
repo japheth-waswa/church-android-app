@@ -28,6 +28,8 @@ import model.NavigationItem;
 
 public class NavActivity extends AppCompatActivity {
 //todo start fragment to load each specific navigation and manage it
+    //todo remember to set current menu item as received from HomeActivity
+    //todo in each fragment handle screen orientation appropriately
     private ActivityNavBinding activityNavBinding;
 
     /**private ArrayList<Navigation> navigations;
@@ -60,57 +62,25 @@ public class NavActivity extends AppCompatActivity {
         activityNavBinding.mainNavigationView.addOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClicked(int position) {
-                Log.e("jeff-waswa",String.valueOf(position));
+                handleMenuClicks(position);
             }
         });
 
-        /**navigations = new ArrayList<>();
-
-        navigationRecyclerAdapter = new NavigationRecyclerAdapter(navigations);
-
-        //fan layout manager
-        FanLayoutManagerSettings fanLayoutManagerSettings = FanLayoutManagerSettings
-                .newBuilder(this)
-                .withFanRadius(true)
-                .withAngleItemBounce(5)
-                .withViewWidthDp(150)
-                .withViewHeightDp(200)
-                .build();
-        fanLayoutManager = new FanLayoutManager(this, fanLayoutManagerSettings);
-
-        //recyclerviea adapter
-        activityHomeBinding.homeNavigationItems.setLayoutManager(fanLayoutManager);
-
-        activityHomeBinding.homeNavigationItems.setAdapter(navigationRecyclerAdapter);
-
-        //add touch listener to recyclerview
-        activityHomeBinding.homeNavigationItems.addOnItemTouchListener(new CustomRecyclerTouchListener(
-                this, activityHomeBinding.homeNavigationItems, new ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
-
-        //prepare navigation items
-        prepareNavigationitems();**/
     }
 
-
-    private void prepareNavigationitems() {
-        /**navigations.clear();
-        for (int i = 0; i < 12; i++) {
-            Navigation navigation = new Navigation();
-            navigation.setTitle(NavigationItem.homeTitles(i));
-            navigation.setColor(NavigationItem.getBgColor(i));
-            navigation.setNavIcon(NavigationItem.homeIcon(i));
-            navigations.add(navigation);
+    //handle menu clicks
+    private void handleMenuClicks(int position) {
+        //todo ensure if home clicked you load HomeActivity ie super.backpressed
+        switch (position){
+            case 0:
+                super.onBackPressed();
+                finish();
+                return;
+            default:
+                Log.e("jeff-waswa",String.valueOf(position));
         }
-        navigationRecyclerAdapter.notifyDataSetChanged();**/
+        //todo use switch statement to load each different fragment
+        //todo mark the current selected menu item
     }
 
 
