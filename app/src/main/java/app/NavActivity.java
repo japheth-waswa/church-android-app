@@ -28,15 +28,10 @@ import model.NavigationItem;
 
 public class NavActivity extends AppCompatActivity {
 //todo start fragment to load each specific navigation and manage it
-    //todo remember to set current menu item as received from HomeActivity
     //todo in each fragment handle screen orientation appropriately
     private ActivityNavBinding activityNavBinding;
 
-    /**private ArrayList<Navigation> navigations;
-    private NavigationRecyclerAdapter navigationRecyclerAdapter;
-    private FanLayoutManager fanLayoutManager;**/
     private int navPosition;
-    private SimpleCategoriesAdapter simpleCategoriesAdapter;
 
 
     @Override
@@ -54,9 +49,19 @@ public class NavActivity extends AppCompatActivity {
         Intent intent = getIntent();
         navPosition = intent.getIntExtra("navPosition",0);
 
-
-
+        //inflate activity
         activityNavBinding = DataBindingUtil.setContentView(this, R.layout.activity_nav);
+
+        //determine if orientation change or activity creation
+        if(savedInstanceState == null){
+            //set the default selected menu item
+            int newNavPosition = navPosition+1;
+            activityNavBinding.mainNavigationView.setCurrentItem(newNavPosition);
+
+            //start fragment
+            handleMenuClicks(newNavPosition);
+
+        }
 
         //work with the items
         activityNavBinding.mainNavigationView.addOnItemClickListener(new OnItemClickListener() {
@@ -70,18 +75,58 @@ public class NavActivity extends AppCompatActivity {
 
     //handle menu clicks
     private void handleMenuClicks(int position) {
-        //todo ensure if home clicked you load HomeActivity ie super.backpressed
+        //ensure if home clicked you load HomeActivity ie super.backpressed
         switch (position){
             case 0:
                 super.onBackPressed();
                 finish();
-                return;
+                break;
+            case 1:
+                Log.e("jeff-waswa",String.valueOf(position)+"-fragment load here");
+                break;
+            case 2:
+                Log.e("jeff-waswa",String.valueOf(position)+"-fragment load here");
+                break;
+            case 3:
+                Log.e("jeff-waswa",String.valueOf(position)+"-fragment load here");
+                break;
+            case 4:
+                Log.e("jeff-waswa",String.valueOf(position)+"-fragment load here");
+                break;
+            case 5:
+                Log.e("jeff-waswa",String.valueOf(position)+"-fragment load here");
+                break;
+            case 6:
+                Log.e("jeff-waswa",String.valueOf(position)+"-fragment load here");
+                break;
+            case 7:
+                Log.e("jeff-waswa",String.valueOf(position)+"-fragment load here");
+                break;
+            case 8:
+                Log.e("jeff-waswa",String.valueOf(position)+"-fragment load here");
+                break;
+            case 9:
+                Log.e("jeff-waswa",String.valueOf(position)+"-fragment load here");
+                break;
+            case 10:
+                Log.e("jeff-waswa",String.valueOf(position)+"-fragment load here");
+                break;
+            case 11:
+                Log.e("jeff-waswa",String.valueOf(position)+"-fragment load here");
+                break;
+            case 12:
+                Log.e("jeff-waswa",String.valueOf(position)+"-fragment load here");
+                break;
             default:
-                Log.e("jeff-waswa",String.valueOf(position));
+                super.onBackPressed();
+                break;
         }
         //todo use switch statement to load each different fragment
-        //todo mark the current selected menu item
     }
 
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("customOrientationChange",1);
+    }
 }
