@@ -27,6 +27,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.google.android.gms:play-services-gcm:10.2.1'
     compile 'com.birbit:android-priority-jobqueue:2.0.1'
     compile 'com.cleveroad:cycle-menu:1.0.1'
     compile 'com.cleveroad:play-widget:1.0.0'
