@@ -1,6 +1,7 @@
 package app;
 
 import android.animation.Animator;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -20,6 +21,12 @@ import com.cleveroad.fanlayoutmanager.callbacks.FanChildDrawingOrderCallback;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.ActivityHomeBinding;
 
+import java.io.Console;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import adapters.recyclerview.NavigationRecyclerAdapter;
@@ -102,6 +109,36 @@ public class HomeActivity extends AppCompatActivity {
                 fanLayoutManager.collapseViews();
             }
         });
+
+        //todo perform bible_books,bible_chapters,bible_verses file creaations and write data to them.(remove after getting data i files)
+        performBibleMining();
+
+    }
+
+    private void performBibleMining() {
+        //todo perform in background thread
+        try {
+            File fileName = new File(getFilesDir().getPath() + "/bible_books.txt");
+            FileOutputStream fOut = new FileOutputStream(fileName,true);
+            //FileOutputStream fOut = openFileOutput("bible_books", Context.MODE_PRIVATE);
+            String str = "Hello world 3";
+            fOut.write(str.getBytes());
+            fOut.close();
+
+            FileInputStream fin = new FileInputStream(fileName);
+            int c;
+            String temp = "";
+            while((c = fin.read()) != -1){
+                temp = temp + Character.toString((char) c);
+            }
+            fin.close();
+            Log.e("jeff-waswa",temp);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void prepareNavigationitems() {

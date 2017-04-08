@@ -71,6 +71,7 @@ public class NavActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
     //handle menu clicks
