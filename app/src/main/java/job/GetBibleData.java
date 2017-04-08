@@ -7,6 +7,8 @@ import com.birbit.android.jobqueue.Job;
 import com.birbit.android.jobqueue.Params;
 import com.birbit.android.jobqueue.RetryConstraint;
 
+import service.ChurchWebService;
+
 public class GetBibleData extends Job{
     public static final int PRIORITY = 1;
 
@@ -27,7 +29,7 @@ public class GetBibleData extends Job{
         // Job logic goes here. In this example, the network call to post to Twitter is done here.
         // All work done here should be synchronous, a job is removed from the queue once
         // onRun() finishes.
-        //JumboWebService.serviceRetrieveCategories(getApplicationContext());
+        ChurchWebService.getEntireBible(getApplicationContext());
     }
 
     @Override

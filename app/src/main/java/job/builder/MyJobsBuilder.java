@@ -1,15 +1,10 @@
 package job.builder;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
 
 import com.birbit.android.jobqueue.config.Configuration;
 import com.birbit.android.jobqueue.log.CustomLogger;
-import com.birbit.android.jobqueue.scheduling.FrameworkJobSchedulerService;
-import com.birbit.android.jobqueue.scheduling.GcmJobSchedulerService;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
 
 public class MyJobsBuilder {
 

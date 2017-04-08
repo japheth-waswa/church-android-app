@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.birbit.android.jobqueue.JobManager;
 import com.cleveroad.fanlayoutmanager.FanLayoutManager;
 import com.cleveroad.fanlayoutmanager.FanLayoutManagerSettings;
 import com.cleveroad.fanlayoutmanager.callbacks.FanChildDrawingOrderCallback;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 import adapters.recyclerview.NavigationRecyclerAdapter;
 import event.ClickListener;
 import event.CustomRecyclerTouchListener;
+import job.GetBibleData;
+import job.builder.MyJobsBuilder;
 import model.Navigation;
 import model.NavigationItem;
 
@@ -42,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
     private ArrayList<Navigation> navigations;
     private NavigationRecyclerAdapter navigationRecyclerAdapter;
     private FanLayoutManager fanLayoutManager;
+    private JobManager jobManager;
 
 
     @Override
@@ -57,6 +61,11 @@ public class HomeActivity extends AppCompatActivity {
 
         activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
+        //instantiate job manager
+        jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getApplicationContext()));
+        jobManager.addJobInBackground(new GetBibleData());
+
+                //instantiate navigation items in ArrayList.
         navigations = new ArrayList<>();
 
         navigationRecyclerAdapter = new NavigationRecyclerAdapter(navigations);
@@ -110,12 +119,11 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        //todo perform bible_books,bible_chapters,bible_verses file creaations and write data to them.(remove after getting data i files)
-        performBibleMining();
+        //performBibleMining();
 
     }
 
-    private void performBibleMining() {
+    /**private void performBibleMining() {
         //todo perform in background thread
         try {
             File fileName = new File(getFilesDir().getPath() + "/bible_books.txt");
@@ -139,7 +147,7 @@ public class HomeActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-    }
+    }**/
 
     private void prepareNavigationitems() {
         navigations.clear();
