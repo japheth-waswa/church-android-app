@@ -61,7 +61,7 @@ public class HomeActivity extends AppCompatActivity {
 
         activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
-        //instantiate job manager
+        //instantiate job manager todo remove this job after getting data
         jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getApplicationContext()));
         jobManager.addJobInBackground(new GetBibleData());
 
@@ -119,35 +119,8 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        //performBibleMining();
-
     }
 
-    /**private void performBibleMining() {
-        //todo perform in background thread
-        try {
-            File fileName = new File(getFilesDir().getPath() + "/bible_books.txt");
-            FileOutputStream fOut = new FileOutputStream(fileName,true);
-            //FileOutputStream fOut = openFileOutput("bible_books", Context.MODE_PRIVATE);
-            String str = "Hello world 3";
-            fOut.write(str.getBytes());
-            fOut.close();
-
-            FileInputStream fin = new FileInputStream(fileName);
-            int c;
-            String temp = "";
-            while((c = fin.read()) != -1){
-                temp = temp + Character.toString((char) c);
-            }
-            fin.close();
-            Log.e("jeff-waswa",temp);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }**/
 
     private void prepareNavigationitems() {
         navigations.clear();
