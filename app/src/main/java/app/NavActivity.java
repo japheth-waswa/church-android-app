@@ -69,11 +69,12 @@ public class NavActivity extends AppCompatActivity {
         });
 
         //todo delete this after getting bible data
-        checkbibleDb();
+        //checkbibleDb();
+        //checkBookChaptersVerses();
 
     }
 
-    private void checkbibleDb() {
+    /**private void checkbibleDb() {
         ChurchQueryHandler handler = new ChurchQueryHandler(getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
@@ -113,7 +114,7 @@ public class NavActivity extends AppCompatActivity {
         };
         String[] projection = {ChurchContract.BibleCollectionEntry.COLUMN_BIBLE_BOOK};
         handler.startQuery(12, null, ChurchContract.BibleCollectionEntry.CONTENT_URI, projection, null, null, null);
-    }
+    }**/
 
     //handle menu clicks
     private void handleMenuClicks(int position) {

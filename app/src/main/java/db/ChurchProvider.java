@@ -12,23 +12,37 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import static db.ChurchContract.CONTENT_AUTHORITY;
-import static db.ChurchContract.PATH_BIBLECOLLECTION;
+import static db.ChurchContract.PATH_BIBLE_BOOK;
+import static db.ChurchContract.PATH_BIBLE_CHAPTER;
+import static db.ChurchContract.PATH_BIBLE_VERSE;
 
 public class ChurchProvider extends ContentProvider{
     /**
      * constants for the operation
      **/
-    private static final int BIBLECOLLECTION = 1;
-    private static final int BIBLECOLLECTION_ID = 2;
+    private static final int BIBLE_BOOK = 1;
+    private static final int BIBLE_BOOK_ID = 2;
+    private static final int BIBLE_CHAPTER = 3;
+    private static final int BIBLE_CHAPTER_ID = 4;
+    private static final int BIBLE_VERSE = 5;
+    private static final int BIBLE_VERSE_ID = 6;
 
     //Uri matcher
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
 
-        //pager data uri
-        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_BIBLECOLLECTION, BIBLECOLLECTION);
-        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_BIBLECOLLECTION + "/#", BIBLECOLLECTION_ID);
+        //bible book data uri
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_BIBLE_BOOK, BIBLE_BOOK);
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_BIBLE_BOOK + "/#", BIBLE_BOOK_ID);
+
+        //bible chapter data uri
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_BIBLE_CHAPTER, BIBLE_CHAPTER);
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_BIBLE_CHAPTER + "/#", BIBLE_CHAPTER_ID);
+
+        //bible verse data uri
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_BIBLE_VERSE, BIBLE_VERSE);
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_BIBLE_VERSE + "/#", BIBLE_VERSE_ID);
 
     }
 
@@ -49,13 +63,29 @@ public class ChurchProvider extends ContentProvider{
         int match = uriMatcher.match(uri);
         //4 possible scenarios
         switch (match) {
-            case BIBLECOLLECTION:
-                cursor = db.query(ChurchContract.BibleCollectionEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+            case BIBLE_BOOK:
+                cursor = db.query(ChurchContract.BibleBookEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
-            case BIBLECOLLECTION_ID:
-                selection = ChurchContract.BibleCollectionEntry._ID + "=?";
+            case BIBLE_BOOK_ID:
+                selection = ChurchContract.BibleBookEntry._ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                cursor = db.query(ChurchContract.BibleCollectionEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor = db.query(ChurchContract.BibleBookEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case BIBLE_CHAPTER:
+                cursor = db.query(ChurchContract.BibleChapterEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case BIBLE_CHAPTER_ID:
+                selection = ChurchContract.BibleChapterEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                cursor = db.query(ChurchContract.BibleChapterEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case BIBLE_VERSE:
+                cursor = db.query(ChurchContract.BibleVerseEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case BIBLE_VERSE_ID:
+                selection = ChurchContract.BibleVerseEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                cursor = db.query(ChurchContract.BibleVerseEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown Uri");
@@ -76,8 +106,12 @@ public class ChurchProvider extends ContentProvider{
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
         int match = uriMatcher.match(uri);
         switch (match) {
-            case BIBLECOLLECTION:
-                return insertRecord(uri, values, ChurchContract.BibleCollectionEntry.TABLE_NAME);
+            case BIBLE_BOOK:
+                return insertRecord(uri, values, ChurchContract.BibleBookEntry.TABLE_NAME);
+            case BIBLE_CHAPTER:
+                return insertRecord(uri, values, ChurchContract.BibleChapterEntry.TABLE_NAME);
+            case BIBLE_VERSE:
+                return insertRecord(uri, values, ChurchContract.BibleVerseEntry.TABLE_NAME);
             default:
                 throw new IllegalArgumentException("Unkwown uri: " + uri);
 
@@ -100,10 +134,18 @@ public class ChurchProvider extends ContentProvider{
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         int match = uriMatcher.match(uri);
         switch (match) {
-            case BIBLECOLLECTION:
-                return deleteRecord(uri, null, null, ChurchContract.BibleCollectionEntry.TABLE_NAME);
-            case BIBLECOLLECTION_ID:
-                return deleteRecord(uri, selection, selectionArgs, ChurchContract.BibleCollectionEntry.TABLE_NAME);
+            case BIBLE_BOOK:
+                return deleteRecord(uri, null, null, ChurchContract.BibleBookEntry.TABLE_NAME);
+            case BIBLE_BOOK_ID:
+                return deleteRecord(uri, selection, selectionArgs, ChurchContract.BibleBookEntry.TABLE_NAME);
+            case BIBLE_CHAPTER:
+                return deleteRecord(uri, null, null, ChurchContract.BibleChapterEntry.TABLE_NAME);
+            case BIBLE_CHAPTER_ID:
+                return deleteRecord(uri, selection, selectionArgs, ChurchContract.BibleChapterEntry.TABLE_NAME);
+            case BIBLE_VERSE:
+                return deleteRecord(uri, null, null, ChurchContract.BibleVerseEntry.TABLE_NAME);
+            case BIBLE_VERSE_ID:
+                return deleteRecord(uri, selection, selectionArgs, ChurchContract.BibleVerseEntry.TABLE_NAME);
             default:
                 throw new IllegalArgumentException("Insert unknown URI: " + uri);
         }
@@ -126,8 +168,12 @@ public class ChurchProvider extends ContentProvider{
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
         int match = uriMatcher.match(uri);
         switch (match) {
-            case BIBLECOLLECTION:
-                return updateRecord(uri, values, selection, selectionArgs, ChurchContract.BibleCollectionEntry.TABLE_NAME);
+            case BIBLE_BOOK:
+                return updateRecord(uri, values, selection, selectionArgs, ChurchContract.BibleBookEntry.TABLE_NAME);
+            case BIBLE_CHAPTER:
+                return updateRecord(uri, values, selection, selectionArgs, ChurchContract.BibleChapterEntry.TABLE_NAME);
+            case BIBLE_VERSE:
+                return updateRecord(uri, values, selection, selectionArgs, ChurchContract.BibleVerseEntry.TABLE_NAME);
             default:
                 throw new IllegalArgumentException("Update unknown URI: " + uri);
         }

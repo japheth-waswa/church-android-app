@@ -94,9 +94,10 @@ public class ChurchWebService {
                 //saveBibleCollection(response, context);
 
                 JSONObject responseJsonObj = new JSONObject(response);
-                //JSONObject responseJsonObj = new JSONObject(response.substring(response.indexOf("{"), response.lastIndexOf("}") + 1));
-                String bookName = responseJsonObj.getString("book_name");
-                Log.e("jeffw-waswa", bookName);
+
+                //deeply parse this book
+                deepParsing(responseJsonObj,context);
+
             }
 
         } catch (JSONException e) {
@@ -105,8 +106,19 @@ public class ChurchWebService {
 
     }
 
+    private static void deepParsing(JSONObject responseJsonObj, Context context) {
+        //todo parse both books,chapters,verses
+        String bookName = null;
+        try {
+            bookName = responseJsonObj.getString("book_name");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.e("jeffw-waswa", bookName);
+    }
+
     //save each bible book
-    private static void saveBibleCollection(String response, Context context) {
+    /**private static void saveBibleCollection(String response, Context context) {
         //todo save in database then fetch later and save in a json file on completion
         ChurchQueryHandler handler = new ChurchQueryHandler(context.getContentResolver());
 
@@ -125,6 +137,5 @@ public class ChurchWebService {
             e.printStackTrace();
         }**/
 
-    }
-
+    //}
 }
