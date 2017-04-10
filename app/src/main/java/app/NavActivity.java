@@ -85,7 +85,8 @@ public class NavActivity extends AppCompatActivity {
                         String bible_book = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleCollectionEntry.COLUMN_BIBLE_BOOK));
 
                         try {
-                            jsonObj.put(String.valueOf(i),bible_book);
+                            JSONObject jsonObjj = new JSONObject(bible_book);
+                            jsonObj.put(String.valueOf(i),jsonObjj);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
