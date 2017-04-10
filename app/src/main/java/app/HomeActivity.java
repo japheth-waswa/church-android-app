@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import adapters.recyclerview.NavigationRecyclerAdapter;
+import db.ChurchContract;
+import db.ChurchQueryHandler;
 import event.ClickListener;
 import event.CustomRecyclerTouchListener;
 import job.GetBibleData;
@@ -45,7 +47,6 @@ public class HomeActivity extends AppCompatActivity {
     private ArrayList<Navigation> navigations;
     private NavigationRecyclerAdapter navigationRecyclerAdapter;
     private FanLayoutManager fanLayoutManager;
-    private JobManager jobManager;
 
 
     @Override
@@ -60,10 +61,6 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
-
-        //instantiate job manager todo remove this job after getting data
-        jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getApplicationContext()));
-        jobManager.addJobInBackground(new GetBibleData());
 
                 //instantiate navigation items in ArrayList.
         navigations = new ArrayList<>();

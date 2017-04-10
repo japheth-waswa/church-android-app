@@ -70,8 +70,31 @@ public class NavActivity extends AppCompatActivity {
 
         //todo delete this after getting bible data
         //checkbibleDb();
-        //checkBookChaptersVerses();
+        checkBookChaptersVerses();
 
+    }
+
+    private void checkBookChaptersVerses() {
+        ChurchQueryHandler handler = new ChurchQueryHandler(getContentResolver()){
+            @Override
+            protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+                if(cursor.getCount() > 0){
+                    while(cursor.moveToNext()){
+                        Log.e("jeff-name",cursor.getString(cursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME)));
+                        Log.e("jeff-version",cursor.getString(cursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION)));
+                    }
+                }
+                cursor.close();
+            }
+        };
+        String[] projection = {
+                ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER,
+                ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION,
+                ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE,
+                ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME,
+        };
+
+        handler.startQuery(23,null,ChurchContract.BibleBookEntry.CONTENT_URI,projection,null,null,null);
     }
 
     /**private void checkbibleDb() {

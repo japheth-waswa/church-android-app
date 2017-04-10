@@ -83,6 +83,8 @@ public class ChurchWebService {
 
     }
 
+
+
     //parse bible data
     private static void parseBibleData(String response, Context context) {
         try {
@@ -108,13 +110,31 @@ public class ChurchWebService {
 
     private static void deepParsing(JSONObject responseJsonObj, Context context) {
         //todo parse both books,chapters,verses
-        String bookName = null;
         try {
-            bookName = responseJsonObj.getString("book_name");
+            String bookName = responseJsonObj.getString("book_name");
+            String bookCode = bookName.replace(" ","");
+            String bookNumber = responseJsonObj.getString("book_nr");
+            int bookNum = Integer.valueOf(bookNumber);
+            String bookVersion = "new";
+            if(bookNum <= 39){
+                bookVersion = "old";
+            }
+
+            //insert book
+            ChurchQueryHandler handler = new ChurchQueryHandler(context.getContentResolver());
+
+            ContentValues values = new ContentValues();
+            values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION,bookVersion);
+            values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE,bookCode);
+            values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER,bookNumber);
+            values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME,bookName);
+            handler.startInsert(1,null, ChurchContract.BibleBookEntry.CONTENT_URI,values);
+
+            Log.e("jeffw-waswa", bookName +" - "+bookCode+" - "+bookVersion);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.e("jeffw-waswa", bookName);
+
     }
 
     //save each bible book
