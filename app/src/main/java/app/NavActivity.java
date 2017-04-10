@@ -82,10 +82,45 @@ public class NavActivity extends AppCompatActivity {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
                 if(cursor.getCount() > 0){
+                    JSONObject jsonObj = new JSONObject();
+                    int j = -1;
+
                     while(cursor.moveToNext()){
-                        Log.e("jeff-name",cursor.getString(cursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME)));
-                        Log.e("jeff-version",cursor.getString(cursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION)));
+                        j++;
+                        String bookName = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME));
+                        String bookVersion = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION));
+                        String bookCode = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE));
+                        String bookNumber = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER));
+
+                        JSONObject jsonObjj = new JSONObject();
+                        try {
+                            //put in the local json object
+                            jsonObjj.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME,bookName);
+                            jsonObjj.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION,bookVersion);
+                            jsonObjj.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE,bookCode);
+                            jsonObjj.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER,bookNumber);
+
+                            //put int the main json object
+                            jsonObj.put(String.valueOf(j),jsonObjj);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
+
+                    //save to collection file
+                    File fileName = new File(NavActivity.this.getFilesDir().getPath() + "/bible_books.txt");
+                    FileOutputStream fOut = null;
+                    try {
+                        fOut = new FileOutputStream(fileName, true);
+                        fOut.write(jsonObj.toString().getBytes());
+                        fOut.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
                 cursor.close();
             }
