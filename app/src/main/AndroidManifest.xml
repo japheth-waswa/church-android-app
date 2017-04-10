@@ -26,6 +26,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="app.HomeActivity" />
         </activity>
+
+        <provider
+            android:authorities="com.japhethwaswa.church.db.churchprovider"
+            android:name="db.ChurchProvider"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
