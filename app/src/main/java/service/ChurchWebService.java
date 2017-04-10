@@ -168,11 +168,43 @@ public class ChurchWebService {
                 handler.startInsert(1,null, ChurchContract.BibleChapterEntry.CONTENT_URI,values);
 
                 Log.e("jeff-chapter", bookCode +" - "+chapterNumber+" - "+chapterCode);
+
+                //todo parse verse from here
+                parseVerse(chapterObj.getJSONObject("chapter"),chapterCode,context);
+
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void parseVerse(JSONObject chapter, String chapterCode, Context context) {
+
+        Iterator<String> iterator = chapter.keys();
+        while(iterator.hasNext()){
+            String key = iterator.next();
+            Log.e("verse-key",key);
+            try {
+                JSONObject verseObj = new JSONObject(chapter.get(key).toString());
+
+                String verseNumber = verseObj.getString("verse_nr");
+                String verse = verseObj.getString("verse");
+
+                //insert verse here
+                ChurchQueryHandler handler = new ChurchQueryHandler(context.getContentResolver());
+
+                ContentValues values = new ContentValues();
+                values.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER,verseNumber);
+                values.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE,chapterCode);
+                values.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE,verse);
+                handler.startInsert(1,null, ChurchContract.BibleVerseEntry.CONTENT_URI,values);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     //save each bible book

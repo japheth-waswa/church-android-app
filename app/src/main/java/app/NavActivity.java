@@ -72,6 +72,8 @@ public class NavActivity extends AppCompatActivity {
         //checkbibleDb();
         checkBibleBooks();
         checkBibleChapters();
+        checkBibleVerses();
+
 
     }
 
@@ -118,6 +120,29 @@ public class NavActivity extends AppCompatActivity {
         };
 
         handler.startQuery(27,null,ChurchContract.BibleChapterEntry.CONTENT_URI,projection,null,null,null);
+    }
+
+    private void checkBibleVerses() {
+        ChurchQueryHandler handler = new ChurchQueryHandler(getContentResolver()){
+            @Override
+            protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+                if(cursor.getCount() > 0){
+                    while(cursor.moveToNext()){
+                        Log.e("jeff-vr-num",cursor.getString(cursor.getColumnIndex(ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER)));
+                        Log.e("jeff-vr-ch-cd",cursor.getString(cursor.getColumnIndex(ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE)));
+                        Log.e("jeff-vr",cursor.getString(cursor.getColumnIndex(ChurchContract.BibleVerseEntry.COLUMN_VERSE)));
+                    }
+                }
+                cursor.close();
+            }
+        };
+        String[] projection = {
+                ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER,
+                ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE,
+                ChurchContract.BibleVerseEntry.COLUMN_VERSE,
+        };
+
+        handler.startQuery(27,null,ChurchContract.BibleVerseEntry.CONTENT_URI,projection,null,null,null);
     }
 
     /**private void checkbibleDb() {
