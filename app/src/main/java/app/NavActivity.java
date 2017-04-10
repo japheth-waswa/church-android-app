@@ -70,11 +70,12 @@ public class NavActivity extends AppCompatActivity {
 
         //todo delete this after getting bible data
         //checkbibleDb();
-        checkBookChaptersVerses();
+        checkBibleBooks();
+        checkBibleChapters();
 
     }
 
-    private void checkBookChaptersVerses() {
+    private void checkBibleBooks() {
         ChurchQueryHandler handler = new ChurchQueryHandler(getContentResolver()){
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
@@ -95,6 +96,28 @@ public class NavActivity extends AppCompatActivity {
         };
 
         handler.startQuery(23,null,ChurchContract.BibleBookEntry.CONTENT_URI,projection,null,null,null);
+    }
+
+    private void checkBibleChapters() {
+        ChurchQueryHandler handler = new ChurchQueryHandler(getContentResolver()){
+            @Override
+            protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+                if(cursor.getCount() > 0){
+                    while(cursor.moveToNext()){
+                        Log.e("jeff-bk-code",cursor.getString(cursor.getColumnIndex(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE)));
+                        Log.e("jeff-code",cursor.getString(cursor.getColumnIndex(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE)));
+                    }
+                }
+                cursor.close();
+            }
+        };
+        String[] projection = {
+                ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_NUMBER,
+                ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE,
+                ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE,
+        };
+
+        handler.startQuery(27,null,ChurchContract.BibleChapterEntry.CONTENT_URI,projection,null,null,null);
     }
 
     /**private void checkbibleDb() {

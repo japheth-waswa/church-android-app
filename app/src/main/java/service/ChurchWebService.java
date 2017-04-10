@@ -14,6 +14,8 @@ import com.japhethwaswa.church.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Iterator;
+
 import db.ChurchQueryHandler;
 import db.ChurchContract;
 
@@ -130,11 +132,47 @@ public class ChurchWebService {
             values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME,bookName);
             handler.startInsert(1,null, ChurchContract.BibleBookEntry.CONTENT_URI,values);
 
-            Log.e("jeffw-waswa", bookName +" - "+bookCode+" - "+bookVersion);
+            Log.e("jeff-book", bookName +" - "+bookCode+" - "+bookVersion);
+
+            //parse chapter
+            parseChapter(context,responseJsonObj,bookCode);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private static void parseChapter(Context context, JSONObject responseJsonObj, String bookCode) {
+
+        try {
+            JSONObject chapterMainObj = responseJsonObj.getJSONObject("book");
+
+            Iterator<String> iter = chapterMainObj.keys();
+            while(iter.hasNext()){
+                String key = iter.next();
+                Log.e("chapter-key",key);
+                JSONObject chapterObj = new JSONObject(chapterMainObj.get(key).toString());
+
+                String bbBookCode = bookCode;
+                String chapterNumber = chapterObj.getString("chapter_nr");
+                String chapterCode = bbBookCode +"_" + chapterNumber;
+
+                //insert chapter here
+                ChurchQueryHandler handler = new ChurchQueryHandler(context.getContentResolver());
+
+                ContentValues values = new ContentValues();
+                values.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_NUMBER,chapterNumber);
+                values.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE,bbBookCode);
+                values.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE,chapterCode);
+                handler.startInsert(1,null, ChurchContract.BibleChapterEntry.CONTENT_URI,values);
+
+                Log.e("jeff-chapter", bookCode +" - "+chapterNumber+" - "+chapterCode);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     //save each bible book
