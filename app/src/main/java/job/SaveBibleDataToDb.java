@@ -9,10 +9,10 @@ import com.birbit.android.jobqueue.RetryConstraint;
 
 import service.ChurchWebService;
 
-public class GetBibleData extends Job{
+public class SaveBibleDataToDb extends Job{
     public static final int PRIORITY = 1;
 
-    public GetBibleData() {
+    public SaveBibleDataToDb() {
         // This job requires network connectivity,
         // and should be persisted in case the application exits before job is completed.
         super(new Params(PRIORITY).requireNetwork().persist());
@@ -29,7 +29,7 @@ public class GetBibleData extends Job{
         // Job logic goes here. In this example, the network call to post to Twitter is done here.
         // All work done here should be synchronous, a job is removed from the queue once
         // onRun() finishes.
-        //ChurchWebService.serviceGetEntireBible(getApplicationContext());
+        ChurchWebService.servSaveBibleDataToDb(getApplicationContext());
     }
 
     @Override
