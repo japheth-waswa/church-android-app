@@ -13,16 +13,14 @@ import android.view.ViewGroup;
 
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.FragmentBibleBinding;
+import com.japhethwaswa.church.databinding.FragmentBibleBookBinding;
 
 import app.NavActivity;
 
-//todo 2layouts ie sw600dp for tablet view
-
-public class BibleFragment extends Fragment {
-    private FragmentBibleBinding fragmentBibleBinding;
+public class BibleBookFragment extends Fragment {
+    private FragmentBibleBookBinding fragmentBibleBookBinding;
     public NavActivity navActivity;
-    private FragmentManager localFragmentManager;
-    private FragmentTransaction fragmentTransaction;
+    //private FragmentManager localFragmentManager;
 
     @Nullable
     @Override
@@ -35,20 +33,14 @@ public class BibleFragment extends Fragment {
         StrictMode.setVmPolicy(vmPolicy);
         /**==============**/
 
-        fragmentBibleBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_bible,container,false);
+        fragmentBibleBookBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_bible_book,container,false);
 
-        navActivity =  (NavActivity) getActivity();
-
+        /**navActivity =  (NavActivity) getActivity();
         //code snippets come here
         localFragmentManager = navActivity.fragmentManager;
-        fragmentTransaction = localFragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = localFragmentManager.beginTransaction();**/
 
-        /**start frament to display bible books**/
-        BibleBookFragment bibleBookFragment =  new BibleBookFragment();
-        fragmentTransaction.replace(R.id.mainBibleFragment,bibleBookFragment,"bibleBookFragment");
-        fragmentTransaction.commit();
-
-        return fragmentBibleBinding.getRoot();
+        return fragmentBibleBookBinding.getRoot();
     }
 
     @Override

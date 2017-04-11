@@ -30,8 +30,8 @@ public class NavActivity extends AppCompatActivity {
     //todo start fragment to load each specific navigation and manage it
     //todo in each fragment handle screen orientation appropriately
     private ActivityNavBinding activityNavBinding;
-
     private int navPosition;
+    public FragmentManager fragmentManager = getSupportFragmentManager();
 
 
     @Override
@@ -79,7 +79,6 @@ public class NavActivity extends AppCompatActivity {
     //handle menu clicks
     private void handleMenuClicks(int position) {
         //ensure if home clicked you load HomeActivity ie super.backpressed
-        FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (position) {
             case 0:
@@ -101,6 +100,7 @@ public class NavActivity extends AppCompatActivity {
                 fragmentTransaction.replace(R.id.navFragmentHolder,bibleFragment,"bibleFragment");
                 fragmentTransaction.commit();
                 break;
+
             case 5:
                 Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
                 break;
