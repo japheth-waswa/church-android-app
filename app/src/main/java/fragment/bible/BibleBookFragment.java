@@ -1,6 +1,7 @@
 package fragment.bible;
 
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +81,8 @@ public class BibleBookFragment extends Fragment {
         };
         String selection = ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION+"=?";
         String[] selectionArgs = {"old"};
-        String orderBy = ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER+ " ASC";
+        //String orderBy = ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER+ " ASC";
+        String orderBy = "CAST (" +ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER+ " AS INTEGER) ASC";
 
         handler.startQuery(21,null, ChurchContract.BibleBookEntry.CONTENT_URI,projection,selection,selectionArgs,orderBy);
     }
