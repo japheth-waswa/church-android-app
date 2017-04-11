@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -22,6 +24,7 @@ import java.io.IOException;
 
 import db.ChurchContract;
 import db.ChurchQueryHandler;
+import fragment.bible.BibleFragment;
 
 public class NavActivity extends AppCompatActivity {
     //todo start fragment to load each specific navigation and manage it
@@ -76,6 +79,8 @@ public class NavActivity extends AppCompatActivity {
     //handle menu clicks
     private void handleMenuClicks(int position) {
         //ensure if home clicked you load HomeActivity ie super.backpressed
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (position) {
             case 0:
                 super.onBackPressed();
@@ -91,7 +96,10 @@ public class NavActivity extends AppCompatActivity {
                 Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
                 break;
             case 4:
-                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
+
+                BibleFragment bibleFragment = new BibleFragment();
+                fragmentTransaction.replace(R.id.navFragmentHolder,bibleFragment,"bibleFragment");
+                fragmentTransaction.commit();
                 break;
             case 5:
                 Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
