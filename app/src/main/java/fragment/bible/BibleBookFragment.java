@@ -91,13 +91,13 @@ public class BibleBookFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        /**close cursors**/
-        //localOldTestamentCursor.close();
     }
 
     @Override
     public void onPause() {
         super.onPause();
+
+        /**close cursors**/
         localOldTestamentCursor.close();
     }
 }
