@@ -78,14 +78,14 @@ public class NavActivity extends AppCompatActivity {
     }
 
     private void checkBibleBooks() {
-        ChurchQueryHandler handler = new ChurchQueryHandler(getContentResolver()){
+        ChurchQueryHandler handler = new ChurchQueryHandler(getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
-                if(cursor.getCount() > 0){
+                if (cursor.getCount() > 0) {
                     JSONObject jsonObj = new JSONObject();
                     int j = -1;
 
-                    while(cursor.moveToNext()){
+                    while (cursor.moveToNext()) {
                         j++;
                         String bookName = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME));
                         String bookVersion = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION));
@@ -95,13 +95,13 @@ public class NavActivity extends AppCompatActivity {
                         JSONObject jsonObjj = new JSONObject();
                         try {
                             //put in the local json object
-                            jsonObjj.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME,bookName);
-                            jsonObjj.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION,bookVersion);
-                            jsonObjj.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE,bookCode);
-                            jsonObjj.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER,bookNumber);
+                            jsonObjj.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME, bookName);
+                            jsonObjj.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION, bookVersion);
+                            jsonObjj.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE, bookCode);
+                            jsonObjj.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER, bookNumber);
 
                             //put int the main json object
-                            jsonObj.put(String.valueOf(j),jsonObjj);
+                            jsonObj.put(String.valueOf(j), jsonObjj);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -132,76 +132,40 @@ public class NavActivity extends AppCompatActivity {
                 ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME,
         };
 
-        handler.startQuery(23,null,ChurchContract.BibleBookEntry.CONTENT_URI,projection,null,null,null);
+        handler.startQuery(23, null, ChurchContract.BibleBookEntry.CONTENT_URI, projection, null, null, null);
     }
 
     private void checkBibleChapters() {
-        ChurchQueryHandler handler = new ChurchQueryHandler(getContentResolver()){
-            @Override
-            protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
-                if(cursor.getCount() > 0){
-                    while(cursor.moveToNext()){
-                        Log.e("jeff-bk-code",cursor.getString(cursor.getColumnIndex(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE)));
-                        Log.e("jeff-code",cursor.getString(cursor.getColumnIndex(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE)));
-                    }
-                }
-                cursor.close();
-            }
-        };
-        String[] projection = {
-                ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_NUMBER,
-                ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE,
-                ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE,
-        };
-
-        handler.startQuery(27,null,ChurchContract.BibleChapterEntry.CONTENT_URI,projection,null,null,null);
-    }
-
-    private void checkBibleVerses() {
-        ChurchQueryHandler handler = new ChurchQueryHandler(getContentResolver()){
-            @Override
-            protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
-                if(cursor.getCount() > 0){
-                    while(cursor.moveToNext()){
-                        Log.e("jeff-vr-num",cursor.getString(cursor.getColumnIndex(ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER)));
-                        Log.e("jeff-vr-ch-cd",cursor.getString(cursor.getColumnIndex(ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE)));
-                        Log.e("jeff-vr",cursor.getString(cursor.getColumnIndex(ChurchContract.BibleVerseEntry.COLUMN_VERSE)));
-                    }
-                }
-                cursor.close();
-            }
-        };
-        String[] projection = {
-                ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER,
-                ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE,
-                ChurchContract.BibleVerseEntry.COLUMN_VERSE,
-        };
-
-        handler.startQuery(27,null,ChurchContract.BibleVerseEntry.CONTENT_URI,projection,null,null,null);
-    }
-
-    /**private void checkbibleDb() {
         ChurchQueryHandler handler = new ChurchQueryHandler(getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
-                if(cursor.getCount() > 0){
+                if (cursor.getCount() > 0) {
                     JSONObject jsonObj = new JSONObject();
-                    int i = -1 ;
-                    while (cursor.moveToNext()) {
-                        i++;
-                        String bible_book = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleCollectionEntry.COLUMN_BIBLE_BOOK));
+                    int j = -1;
 
+                    while (cursor.moveToNext()) {
+                        j++;
+                        String chapterNumber = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_NUMBER));
+                        String chapterBookCode = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE));
+                        String chapterCode = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE));
+
+                        JSONObject jsonObjj = new JSONObject();
                         try {
-                            JSONObject jsonObjj = new JSONObject(bible_book);
-                            jsonObj.put(String.valueOf(i),jsonObjj);
+                            //put in the local json object
+                            jsonObjj.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_NUMBER, chapterNumber);
+                            jsonObjj.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE, chapterBookCode);
+                            jsonObjj.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE, chapterCode);
+
+                            //put int the main json object
+                            jsonObj.put(String.valueOf(j), jsonObjj);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        //Log.e("jeff-bible-book", bible_book);
                     }
 
                     //save to collection file
-                    File fileName = new File(NavActivity.this.getFilesDir().getPath() + "/bible_collection.txt");
+                    File fileName = new File(NavActivity.this.getFilesDir().getPath() + "/bible_chapters.txt");
                     FileOutputStream fOut = null;
                     try {
                         fOut = new FileOutputStream(fileName, true);
@@ -214,13 +178,116 @@ public class NavActivity extends AppCompatActivity {
                     }
 
                 }
-
                 cursor.close();
             }
         };
-        String[] projection = {ChurchContract.BibleCollectionEntry.COLUMN_BIBLE_BOOK};
-        handler.startQuery(12, null, ChurchContract.BibleCollectionEntry.CONTENT_URI, projection, null, null, null);
-    }**/
+        String[] projection = {
+                ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_NUMBER,
+                ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE,
+                ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE,
+        };
+
+        handler.startQuery(27, null, ChurchContract.BibleChapterEntry.CONTENT_URI, projection, null, null, null);
+    }
+
+    private void checkBibleVerses() {
+        ChurchQueryHandler handler = new ChurchQueryHandler(getContentResolver()) {
+            @Override
+            protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+                if (cursor.getCount() > 0) {
+                    JSONObject jsonObj = new JSONObject();
+                    int j = -1;
+
+                    while (cursor.moveToNext()) {
+                        j++;
+                        String verseNumber = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER));
+                        String verseChapterCode = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE));
+                        String verse = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleVerseEntry.COLUMN_VERSE));
+
+                        JSONObject jsonObjj = new JSONObject();
+                        try {
+                            //put in the local json object
+                            jsonObjj.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER, verseNumber);
+                            jsonObjj.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE, verseChapterCode);
+                            jsonObjj.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE, verse);
+
+                            //put int the main json object
+                            jsonObj.put(String.valueOf(j), jsonObjj);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    //save to collection file
+                    File fileName = new File(NavActivity.this.getFilesDir().getPath() + "/bible_verses.txt");
+                    FileOutputStream fOut = null;
+                    try {
+                        fOut = new FileOutputStream(fileName, true);
+                        fOut.write(jsonObj.toString().getBytes());
+                        fOut.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                cursor.close();
+            }
+        };
+        String[] projection = {
+                ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER,
+                ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE,
+                ChurchContract.BibleVerseEntry.COLUMN_VERSE,
+        };
+
+        handler.startQuery(27, null, ChurchContract.BibleVerseEntry.CONTENT_URI, projection, null, null, null);
+    }
+
+    /**
+     * private void checkbibleDb() {
+     * ChurchQueryHandler handler = new ChurchQueryHandler(getContentResolver()) {
+     *
+     * @Override protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+     * if(cursor.getCount() > 0){
+     * JSONObject jsonObj = new JSONObject();
+     * int i = -1 ;
+     * while (cursor.moveToNext()) {
+     * i++;
+     * String bible_book = cursor.getString(cursor.getColumnIndex(ChurchContract.BibleCollectionEntry.COLUMN_BIBLE_BOOK));
+     * <p>
+     * try {
+     * JSONObject jsonObjj = new JSONObject(bible_book);
+     * jsonObj.put(String.valueOf(i),jsonObjj);
+     * } catch (JSONException e) {
+     * e.printStackTrace();
+     * }
+     * //Log.e("jeff-bible-book", bible_book);
+     * }
+     * <p>
+     * //save to collection file
+     * File fileName = new File(NavActivity.this.getFilesDir().getPath() + "/bible_collection.txt");
+     * FileOutputStream fOut = null;
+     * try {
+     * fOut = new FileOutputStream(fileName, true);
+     * fOut.write(jsonObj.toString().getBytes());
+     * fOut.close();
+     * } catch (FileNotFoundException e) {
+     * e.printStackTrace();
+     * } catch (IOException e) {
+     * e.printStackTrace();
+     * }
+     * <p>
+     * }
+     * <p>
+     * cursor.close();
+     * }
+     * };
+     * String[] projection = {ChurchContract.BibleCollectionEntry.COLUMN_BIBLE_BOOK};
+     * handler.startQuery(12, null, ChurchContract.BibleCollectionEntry.CONTENT_URI, projection, null, null, null);
+     * }
+     **/
 
     //handle menu clicks
     private void handleMenuClicks(int position) {
