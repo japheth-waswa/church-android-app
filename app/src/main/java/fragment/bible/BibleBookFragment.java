@@ -19,6 +19,7 @@ import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.FragmentBibleBinding;
 import com.japhethwaswa.church.databinding.FragmentBibleBookBinding;
 
+import adapters.recyclerview.BibleBookNewRecyclerViewAdapter;
 import adapters.recyclerview.BibleBookOldRecyclerViewAdapter;
 import app.NavActivity;
 import db.ChurchContract;
@@ -30,6 +31,8 @@ public class BibleBookFragment extends Fragment {
     private FragmentManager localFragmentManager;
     private BibleBookOldRecyclerViewAdapter bibleBookOldRecyclerViewAdapter;
     private Cursor localOldTestamentCursor;
+    private BibleBookNewRecyclerViewAdapter bibleBookNewRecyclerViewAdapter;
+    private Cursor localNewTestamentCursor;
 
     @Nullable
     @Override
@@ -50,6 +53,12 @@ public class BibleBookFragment extends Fragment {
         fragmentBibleBookBinding.bibleBooksOldRecycler.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         /****/
 
+        /**new testament recycler view**/
+        bibleBookNewRecyclerViewAdapter =  new BibleBookNewRecyclerViewAdapter(localNewTestamentCursor);
+        fragmentBibleBookBinding.bibleBooksNewRecycler.setAdapter(bibleBookNewRecyclerViewAdapter);
+        fragmentBibleBookBinding.bibleBooksNewRecycler.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        /****/
+
         /**navActivity =  (NavActivity) getActivity();
         //code snippets come here
         localFragmentManager = navActivity.fragmentManager;
@@ -57,6 +66,9 @@ public class BibleBookFragment extends Fragment {
 
         //set old testament
         setOldTestament();
+        //set new testament
+        setNewTestament();
+
         return fragmentBibleBookBinding.getRoot();
     }
 
@@ -87,6 +99,33 @@ public class BibleBookFragment extends Fragment {
         handler.startQuery(21,null, ChurchContract.BibleBookEntry.CONTENT_URI,projection,selection,selectionArgs,orderBy);
     }
 
+    private void setNewTestament() {
+        ChurchQueryHandler handler = new ChurchQueryHandler(getContext().getContentResolver()){
+            @Override
+            protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+                if(cursor.getCount() > 0){
+                    localNewTestamentCursor = cursor;
+                    //set recycler cursor
+                    bibleBookNewRecyclerViewAdapter.setCursor(localNewTestamentCursor);
+                }
+
+            }
+        };
+
+        String[] projection = {
+                ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME,
+                ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE,
+                ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER,
+                ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION
+        };
+        String selection = ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION+"=?";
+        String[] selectionArgs = {"new"};
+        //String orderBy = ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER+ " ASC";
+        String orderBy = "CAST (" +ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER+ " AS INTEGER) ASC";
+
+        handler.startQuery(27,null, ChurchContract.BibleBookEntry.CONTENT_URI,projection,selection,selectionArgs,orderBy);
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -99,5 +138,7 @@ public class BibleBookFragment extends Fragment {
 
         /**close cursors**/
         localOldTestamentCursor.close();
+        localNewTestamentCursor.close();
+
     }
 }
