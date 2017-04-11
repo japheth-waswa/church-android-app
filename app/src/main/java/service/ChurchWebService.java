@@ -3,6 +3,8 @@ package service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
@@ -20,6 +22,7 @@ import java.util.Iterator;
 
 import db.ChurchQueryHandler;
 import db.ChurchContract;
+import db.DatabaseHelper;
 
 public class ChurchWebService {
 
@@ -55,6 +58,41 @@ public class ChurchWebService {
             e.printStackTrace();
         }
 
+        //parse the json and save in database
+        try {
+            JSONObject jsonObj = new JSONObject(json);
+            DatabaseHelper helper = new DatabaseHelper(applicationContext);
+            SQLiteDatabase db = helper.getWritableDatabase();
+
+            Log.e("jeff-waswa","inserting bible books");
+            Iterator<String> iterator = jsonObj.keys();
+            while(iterator.hasNext()){
+
+                String key = iterator.next();
+                JSONObject jsonObject = new JSONObject(jsonObj.get(key).toString());
+
+                //insert book here
+                ContentValues values = new ContentValues();
+                values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION,jsonObject.getString(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION));
+                values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE,jsonObject.getString(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE));
+                values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER,jsonObject.getString(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER));
+                values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME,jsonObject.getString(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME));
+
+                long id = db.insert(ChurchContract.BibleBookEntry.TABLE_NAME,null,values);
+
+            }
+
+            db.close();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static void insertBibleData(ChurchQueryHandler handler, JSONObject jsonObject) {
+
+
 
     }
 
@@ -76,6 +114,35 @@ public class ChurchWebService {
             e.printStackTrace();
         }
 
+        //parse the json and save in database
+        try {
+            JSONObject jsonObj = new JSONObject(json);
+            DatabaseHelper helper = new DatabaseHelper(applicationContext);
+            SQLiteDatabase db = helper.getWritableDatabase();
+
+            Log.e("jeff-waswa","inserting bible chapters");
+            Iterator<String> iterator = jsonObj.keys();
+            while(iterator.hasNext()){
+
+                String key = iterator.next();
+                JSONObject jsonObject = new JSONObject(jsonObj.get(key).toString());
+
+                //insert book here
+                ContentValues values = new ContentValues();
+                values.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_NUMBER,jsonObject.getString(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_NUMBER));
+                values.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE,jsonObject.getString(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE));
+                values.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE,jsonObject.getString(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE));
+
+                long id = db.insert(ChurchContract.BibleChapterEntry.TABLE_NAME,null,values);
+
+            }
+
+            db.close();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -94,6 +161,35 @@ public class ChurchWebService {
             json = new String(buffer,"UTF-8");
 
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //parse the json and save in database
+        try {
+            JSONObject jsonObj = new JSONObject(json);
+            DatabaseHelper helper = new DatabaseHelper(applicationContext);
+            SQLiteDatabase db = helper.getWritableDatabase();
+
+            Log.e("jeff-waswa","inserting bible verses");
+            Iterator<String> iterator = jsonObj.keys();
+            while(iterator.hasNext()){
+
+                String key = iterator.next();
+                JSONObject jsonObject = new JSONObject(jsonObj.get(key).toString());
+
+                //insert book here
+                ContentValues values = new ContentValues();
+                values.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER,jsonObject.getString(ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER));
+                values.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE,jsonObject.getString(ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE));
+                values.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE,jsonObject.getString(ChurchContract.BibleVerseEntry.COLUMN_VERSE));
+
+                long id = db.insert(ChurchContract.BibleVerseEntry.TABLE_NAME,null,values);
+
+            }
+
+            db.close();
+
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
