@@ -28,10 +28,10 @@ public class LaunchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         //todo before starting bg job to insert bible data ensure that the data does not exist.
-        dbPreparation(this);
+        //dbPreparation(this);
         //instantiate job manager todo remove this job after getting data
-        jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getApplicationContext()));
-        jobManager.addJobInBackground(new GetBibleData());
+        //jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getApplicationContext()));
+        //jobManager.addJobInBackground(new GetBibleData());
 
 
         //start home activity

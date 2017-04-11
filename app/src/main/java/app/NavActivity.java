@@ -68,16 +68,16 @@ public class NavActivity extends AppCompatActivity {
             }
         });
 
-        //todo delete this after getting bible data
+       /** //todo delete this after getting bible data
         //checkbibleDb();
         checkBibleBooks();
         checkBibleChapters();
-        checkBibleVerses();
+        checkBibleVerses();**/
 
 
     }
 
-    private void checkBibleBooks() {
+    /**private void checkBibleBooks() {
         ChurchQueryHandler handler = new ChurchQueryHandler(getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {

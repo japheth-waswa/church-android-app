@@ -24,7 +24,7 @@ public class ChurchWebService {
     //app-run-false
     public static void serviceGetEntireBible(final Context context) {
 
-        //todo perform bible_books,bible_chapters,bible_verses file creaations and write data to them.(remove after getting data i files)
+        //perform bible_books,bible_chapters,bible_verses file creaations and write data to them.(remove after getting data i files)
 
         String[] bibleBooks = {"genesis", "exodus", "leviticus", "numbers", "deuteronomy", "Joshua", "Judges", "Ruth", "1Samuel", "2Samuel",
                 "1Kings", "2Kings", "1Chronicles", "2Chronicles", "Ezra", "Nehemiah", "Esther", "Job", "Psalms", "Proverbs", "Ecclesiastes", "SongofSongs",
@@ -48,13 +48,11 @@ public class ChurchWebService {
                     .getAsString(new StringRequestListener() {
                         @Override
                         public void onResponse(String response) {
-                            parseBibleData(response, context);
-                            Log.e("jeff-bk_num",String.valueOf(finalBookNum));
+                            //parseBibleData(response, context);
                         }
 
                         @Override
                         public void onError(ANError anError) {
-                            Log.e("jeff-waswa-bib-err", anError.toString());
                         }
                     });
 
@@ -88,7 +86,7 @@ public class ChurchWebService {
 
 
     //parse bible data
-    private static void parseBibleData(String response, Context context) {
+    /**private static void parseBibleData(String response, Context context) {
         try {
             //Log.e("jeff-waswa",response);
             response = response.replace("(", "");
@@ -111,7 +109,7 @@ public class ChurchWebService {
     }
 
     private static void deepParsing(JSONObject responseJsonObj, Context context) {
-        //todo parse both books,chapters,verses
+        //parse both books,chapters,verses
         try {
             String bookName = responseJsonObj.getString("book_name");
             String bookCode = bookName.replace(" ","");
@@ -132,7 +130,6 @@ public class ChurchWebService {
             values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME,bookName);
             handler.startInsert(1,null, ChurchContract.BibleBookEntry.CONTENT_URI,values);
 
-            Log.e("jeff-book", bookName +" - "+bookCode+" - "+bookVersion);
 
             //parse chapter
             parseChapter(context,responseJsonObj,bookCode);
@@ -167,9 +164,8 @@ public class ChurchWebService {
                 values.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE,chapterCode);
                 handler.startInsert(1,null, ChurchContract.BibleChapterEntry.CONTENT_URI,values);
 
-                Log.e("jeff-chapter", bookCode +" - "+chapterNumber+" - "+chapterCode);
 
-                //todo parse verse from here
+                //parse verse from here
                 parseVerse(chapterObj.getJSONObject("chapter"),chapterCode,context);
 
             }
@@ -209,7 +205,7 @@ public class ChurchWebService {
 
     //save each bible book
     /**private static void saveBibleCollection(String response, Context context) {
-        //todo save in database then fetch later and save in a json file on completion
+        //save in database then fetch later and save in a json file on completion
         ChurchQueryHandler handler = new ChurchQueryHandler(context.getContentResolver());
 
         ContentValues values = new ContentValues();
