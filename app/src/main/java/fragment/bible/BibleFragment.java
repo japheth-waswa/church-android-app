@@ -23,6 +23,7 @@ public class BibleFragment extends Fragment {
     public NavActivity navActivity;
     private FragmentManager localFragmentManager;
     private FragmentTransaction fragmentTransaction;
+    private int orientationChange = -1;
 
     @Nullable
     @Override
@@ -46,6 +47,16 @@ public class BibleFragment extends Fragment {
         /**start frament to display bible books**/
         BibleBookFragment bibleBookFragment =  new BibleBookFragment();
         fragmentTransaction.replace(R.id.mainBibleFragment,bibleBookFragment,"bibleBookFragment");
+
+        if(savedInstanceState != null){
+            orientationChange = 1;
+        }
+
+        //variable to indicate orientation change
+        Bundle bundle = new Bundle();
+        bundle.putInt("orientationChange", orientationChange);
+
+        bibleBookFragment.setArguments(bundle);
         fragmentTransaction.commit();
 
         return fragmentBibleBinding.getRoot();
@@ -54,5 +65,6 @@ public class BibleFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putInt("orientationChange",1);
     }
 }

@@ -7,7 +7,9 @@ import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +30,8 @@ public class BibleChapterFragment extends Fragment {
     private FragmentManager localFragmentManager;
     private BibleBookRecyclerViewAdapter bibleBookRecyclerViewAdapter;
     private Cursor localTestamentCursor;
+    private FragmentTransaction fragmentTransaction;
+    private int bookPosition = -1;
 
     @Nullable
     @Override
@@ -40,22 +44,36 @@ public class BibleChapterFragment extends Fragment {
         StrictMode.setVmPolicy(vmPolicy);
         /**==============**/
 
-        fragmentBibleBookBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_bible_book,container,false);
+        fragmentBibleBookBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_bible_book, container, false);
 
-        /**bible books recycler view**/
-       // bibleBookRecyclerViewAdapter =  new BibleBookRecyclerViewAdapter(localTestamentCursor);
-        //fragmentBibleBookBinding.bibleBooksRecycler.setAdapter(bibleBookRecyclerViewAdapter);
-        //fragmentBibleBookBinding.bibleBooksRecycler.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        /****/
+        //todo handle orientation change since it returns to bible books
+        /**Bundle bundle = getArguments();
+        bookPosition = bundle.getInt()**/
+
+        //set cursor to null
+        localTestamentCursor = null;
+
+        /**navActivity = (NavActivity) getActivity();
+        //code snippets come here
+        localFragmentManager = navActivity.fragmentManager;
+        fragmentTransaction = localFragmentManager.beginTransaction();
+
+
+        bible books recycler view
+        bibleBookRecyclerViewAdapter = new BibleBookRecyclerViewAdapter(localTestamentCursor);
+        fragmentBibleBookBinding.bibleBooksRecycler.setAdapter(bibleBookRecyclerViewAdapter);
+        fragmentBibleBookBinding.bibleBooksRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
 
         //add touch listener to recyclerview
-        /**fragmentBibleBookBinding.bibleBooksRecycler.addOnItemTouchListener(new CustomRecyclerTouchListener(
+        fragmentBibleBookBinding.bibleBooksRecycler.addOnItemTouchListener(new CustomRecyclerTouchListener(
                 getActivity(), fragmentBibleBookBinding.bibleBooksRecycler, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                localTestamentCursor.moveToPosition(position);
-                String bibleBookCode = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE));
-                //todo start a new fragment showing all the chapters in this book
+
+                bookPosition = position;
+                //start a new fragment showing all the chapters in this book
+                launchBookChapters(bookPosition);
+
             }
 
             @Override
@@ -65,26 +83,29 @@ public class BibleChapterFragment extends Fragment {
         }
         ));
 
-        /**navActivity =  (NavActivity) getActivity();
-        //code snippets come here
-        localFragmentManager = navActivity.fragmentManager;
-        FragmentTransaction fragmentTransaction = localFragmentManager.beginTransaction();**/
-
         //set bible books
-        //setBookTestaments();
+        setBookTestaments();**/
 
         return fragmentBibleBookBinding.getRoot();
     }
 
     private void setBookTestaments() {
-        ChurchQueryHandler handler = new ChurchQueryHandler(getContext().getContentResolver()){
+        ChurchQueryHandler handler = new ChurchQueryHandler(getContext().getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
-                if(cursor.getCount() > 0){
-                    localTestamentCursor = cursor;
-                    //set recycler cursor
-                    bibleBookRecyclerViewAdapter.setCursor(localTestamentCursor);
+
+                localTestamentCursor = cursor;
+
+                if (bookPosition != -1) {
+                    launchBookChapters(bookPosition);
+                } else {
+                    if (cursor.getCount() > 0) {
+                        //set recycler cursor
+                        bibleBookRecyclerViewAdapter.setCursor(localTestamentCursor);
+                    }
+
                 }
+
 
             }
         };
@@ -96,16 +117,29 @@ public class BibleChapterFragment extends Fragment {
                 ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION
         };
 
-        String orderBy = "CAST (" +ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER+ " AS INTEGER) ASC";
+        String orderBy = "CAST (" + ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER + " AS INTEGER) ASC";
 
-        handler.startQuery(21,null, ChurchContract.BibleBookEntry.CONTENT_URI,projection,null,null,orderBy);
+        handler.startQuery(21, null, ChurchContract.BibleBookEntry.CONTENT_URI, projection, null, null, orderBy);
+    }
+
+    private void launchBookChapters(int position) {
+
+        /**localTestamentCursor.moveToPosition(position);
+        BibleChapterFragment bibleChapterFragment = new BibleChapterFragment();
+        String bibleBookCode = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE));
+        Bundle bundle = new Bundle();
+        bundle.putString("bibleBookCode", bibleBookCode);
+
+        bibleChapterFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.mainBibleFragment, bibleChapterFragment, "bibleChapterFragment");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();**/
     }
 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
     }
 
 
@@ -114,8 +148,9 @@ public class BibleChapterFragment extends Fragment {
         super.onDestroy();
 
         /**close cursors**/
-        if(localTestamentCursor != null){
+        if (localTestamentCursor != null) {
             localTestamentCursor.close();
         }
+
     }
 }
