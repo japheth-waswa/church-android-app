@@ -9,30 +9,28 @@ import android.view.ViewGroup;
 
 import com.japhethwaswa.church.R;
 
-import fragment.bible.BibleBookFragment;
-
-public class BibleBookOldRecyclerViewAdapter extends RecyclerView.Adapter<BibleBookOldViewHolder> {
+public class BibleBookRecyclerViewAdapter extends RecyclerView.Adapter<BibleBookViewHolder> {
 
     private Cursor cursor;
 
-    public BibleBookOldRecyclerViewAdapter(Cursor cursor) {
+    public BibleBookRecyclerViewAdapter(Cursor cursor) {
         this.cursor = cursor;
     }
 
 
     @Override
-    public BibleBookOldViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BibleBookViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View bibleBookContainer = inflater.inflate(R.layout.item_bible_book_old, parent, false);
+        View bibleBookContainer = inflater.inflate(R.layout.item_bible_book, parent, false);
 
-        return new BibleBookOldViewHolder(bibleBookContainer);
+        return new BibleBookViewHolder(bibleBookContainer);
 
     }
 
     @Override
-    public void onBindViewHolder(BibleBookOldViewHolder holder, int position) {
+    public void onBindViewHolder(BibleBookViewHolder holder, int position) {
         cursor.moveToPosition(position);
         holder.bind(cursor);
     }

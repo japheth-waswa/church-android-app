@@ -2,9 +2,6 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -16,25 +13,13 @@
                 android:layout_margin="@dimen/standardPadding"
                 android:textSize="17sp"
                 android:textStyle="bold"
-                android:text="OLD TESTAMENT" />
+                android:textColor="@color/colorAccent"
+                android:text="BIBLE BOOKS" />
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/bibleBooksOldRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/standardPadding"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:text="NEW TESTAMENT" />
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/bibleBooksNewRecycler"
+                android:id="@+id/bibleBooksRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-    </ScrollView>
 
 
 </layout>
