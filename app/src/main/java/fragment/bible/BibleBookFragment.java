@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import adapters.recyclerview.BibleBookRecyclerViewAdapter;
 import app.NavActivity;
 import db.ChurchContract;
 import db.ChurchQueryHandler;
+import event.ClickListener;
+import event.CustomRecyclerTouchListener;
 
 public class BibleBookFragment extends Fragment {
     private FragmentBibleBookBinding fragmentBibleBookBinding;
@@ -40,12 +43,27 @@ public class BibleBookFragment extends Fragment {
 
         fragmentBibleBookBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_bible_book,container,false);
 
-        /**old testament recycler view**/
+        /**bible books recycler view**/
         bibleBookRecyclerViewAdapter =  new BibleBookRecyclerViewAdapter(localTestamentCursor);
         fragmentBibleBookBinding.bibleBooksRecycler.setAdapter(bibleBookRecyclerViewAdapter);
         fragmentBibleBookBinding.bibleBooksRecycler.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         /****/
 
+        //add touch listener to recyclerview
+        fragmentBibleBookBinding.bibleBooksRecycler.addOnItemTouchListener(new CustomRecyclerTouchListener(
+                getActivity(), fragmentBibleBookBinding.bibleBooksRecycler, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                localTestamentCursor.moveToPosition(position);
+                Log.e("jeff-waswa-bible",localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME)));
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }
+        ));
 
         /**navActivity =  (NavActivity) getActivity();
         //code snippets come here
