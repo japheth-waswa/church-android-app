@@ -3,4 +3,6 @@
     <string name="bibleApi">http://getbible.net/</string>
     <string name="preference_file_key">com.japhethwaswa.church.JEAN_BABY</string>
     <string name="preference_book_position">bibleBookPosition</string>
+    <string name="preference_chapter_position">bibleChapterPosition</string>
+    <string name="preference_verse_position">bibleVersePosition</string>
 </resources>

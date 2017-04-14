@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -49,6 +50,7 @@ public class BibleBookFragment extends Fragment {
         /**==============**/
 
         fragmentBibleBookBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_bible_book, container, false);
+
 
         //todo handle orientation change since it returns to bible books
         Bundle bundle = getArguments();
@@ -93,10 +95,16 @@ public class BibleBookFragment extends Fragment {
         return fragmentBibleBookBinding.getRoot();
     }
 
-
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onStart() {
+        super.onStart();
+
+        //confirm if is not screen orientation change then clear all the bible,chapters,verse logs in preference file
+        if(orientationChange == -1){
+            //clear all preference bible related data
+            clearBiblePreference();
+        }
+
         //set bible books
         setBookTestaments();
     }
@@ -172,6 +180,25 @@ public class BibleBookFragment extends Fragment {
         editor.commit();
     }
 
+
+    private void clearBiblePreference() {
+        Resources res = getResources();
+        String preferenceFileKey = res.getString(R.string.preference_file_key);
+        SharedPreferences sharedPref = getContext().getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(res.getString(R.string.preference_book_position),-1);
+        editor.putInt(res.getString(R.string.preference_chapter_position),-1);
+        editor.putInt(res.getString(R.string.preference_verse_position),-1);
+        editor.commit();
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //outState.putInt("orientationChanged",1);
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -181,7 +208,12 @@ public class BibleBookFragment extends Fragment {
             localTestamentCursor.close();
         }
 
-    }
+        //todo save current recyclerview position
+        long currentVisiblePosition = 0;
+        currentVisiblePosition = ((LinearLayoutManager)fragmentBibleBookBinding.bibleBooksRecycler.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
 
+        Log.e("jef-waswa-pos",String.valueOf(currentVisiblePosition));
+
+    }
 
 }
