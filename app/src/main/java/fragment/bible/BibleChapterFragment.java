@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,7 @@ public class BibleChapterFragment extends Fragment {
     private FragmentTransaction fragmentTransaction;
     private String bibleCode = null;
     private String bibleName = null;
-    private int bookPosition = -1;
+    private int chapterPosition = -1;
     private int orientationChange = -1;
     private int bibleBookCurrentVisiblePos = -1;
 
@@ -98,9 +99,9 @@ public class BibleChapterFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
 
-                bookPosition = position;
-                //start a new fragment showing all the chapters in this book
-                //launchBookChapters(bookPosition);
+                chapterPosition = position;
+                //start a new fragment showing all the verses in this chapter
+                launchChapterVerses(chapterPosition);
 
             }
 
@@ -133,24 +134,24 @@ public class BibleChapterFragment extends Fragment {
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
 
                 localTestamentCursor = cursor;
-                //int previousBookPosition = getPrevBookPosition();
+                int previousChapterPosition = getPrevChapterPosition();
 
-               // if (previousBookPosition != -1 && orientationChange != -1) {
-                  //  bookPosition = previousBookPosition;
-                   // launchBookChapters(bookPosition);
-                //} else {
+                if (previousChapterPosition != -1 && orientationChange != -1) {
+                    chapterPosition = previousChapterPosition;
+                    launchChapterVerses(chapterPosition);
+                } else {
                     if (cursor.getCount() > 0) {
                         //set recycler cursor
                         bibleChapterRecyclerViewAdapter.setCursor(localTestamentCursor);
 
                         //scroll to position if set
-                        //if(bibleBookCurrentVisiblePos != -1){
-                        //    fragmentBibleChapterBinding.bibleChaptersRecycler.scrollToPosition(bibleBookCurrentVisiblePos);
-                        //}
+                        if(bibleBookCurrentVisiblePos != -1){
+                            fragmentBibleChapterBinding.bibleChaptersRecycler.scrollToPosition(bibleBookCurrentVisiblePos);
+                        }
 
                     }
 
-                //}
+                }
 
 
             }
@@ -169,19 +170,21 @@ public class BibleChapterFragment extends Fragment {
         handler.startQuery(21, null, ChurchContract.BibleChapterEntry.CONTENT_URI, projection,selection, selectionArgs, orderBy);
     }
 
-    private int getPrevBookPosition() {
+    private int getPrevChapterPosition() {
         Resources res = getResources();
         String preferenceFileKey = res.getString(R.string.preference_file_key);
         SharedPreferences sharedPref = getContext().getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
-       return sharedPref.getInt(res.getString(R.string.preference_book_position),-1);
+       return sharedPref.getInt(res.getString(R.string.preference_chapter_position),-1);
     }
 
-    private void launchBookChapters(int position) {
+    private void launchChapterVerses(int position) {
 
-        //save the current book in preferences
-        saveToPreference(bookPosition);
+        //save the current chapter position in preferences
+        saveToPreference(position);
 
-        localTestamentCursor.moveToPosition(position);
+        Log.e("jean","supposed to load verses here");
+
+        /**localTestamentCursor.moveToPosition(position);
         BibleChapterFragment bibleChapterFragment = new BibleChapterFragment();
         String bibleBookCode = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE));
 
@@ -192,16 +195,16 @@ public class BibleChapterFragment extends Fragment {
         bibleChapterFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.mainBibleFragment, bibleChapterFragment, "bibleChapterFragment");
         //fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        fragmentTransaction.commit();**/
     }
 
 
-    private void saveToPreference(int bookPosition) {
+    private void saveToPreference(int chapterPosition) {
         Resources res = getResources();
         String preferenceFileKey = res.getString(R.string.preference_file_key);
         SharedPreferences sharedPref = getContext().getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(res.getString(R.string.preference_book_position),bookPosition);
+        editor.putInt(res.getString(R.string.preference_chapter_position),chapterPosition);
         editor.commit();
     }
 
