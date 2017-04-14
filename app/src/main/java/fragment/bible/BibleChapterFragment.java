@@ -33,6 +33,7 @@ import db.ChurchQueryHandler;
 import event.ClickListener;
 import event.CustomRecyclerTouchListener;
 import event.pojo.BibleBookPositionEvent;
+import event.pojo.BibleChapterPositionEvent;
 import event.pojo.FragConfigChange;
 import model.BibleBook;
 
@@ -47,7 +48,8 @@ public class BibleChapterFragment extends Fragment {
     private String bibleName = null;
     private int chapterPosition = -1;
     private int orientationChange = -1;
-    private int bibleBookCurrentVisiblePos = -1;
+    private int bibleChapterCurrentVisiblePos = -1;
+    private int bibleVerseCurrentVisiblePos = -1;
 
     @Nullable
     @Override
@@ -62,13 +64,11 @@ public class BibleChapterFragment extends Fragment {
 
         fragmentBibleChapterBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_bible_chapter, container, false);
 
-
-
-
-        //todo get the following bundle arguments chapter/verse position
+        //get the following bundle arguments chapter/verse position
         Bundle bundle = getArguments();
         orientationChange = bundle.getInt("orientationChange");
-        //bibleBookCurrentVisiblePos = bundle.getInt("bibleBookCurrentVisiblePosition");
+        bibleChapterCurrentVisiblePos = bundle.getInt("bibleChapterCurrentVisiblePosition");
+        bibleVerseCurrentVisiblePos = bundle.getInt("bibleVerseCurrentVisiblePosition");
         bibleCode = bundle.getString("bibleBookCode");
         bibleName = bundle.getString("bibleBookName");
 
@@ -125,7 +125,7 @@ public class BibleChapterFragment extends Fragment {
         setChapterTestaments();
 
         //register event
-        //EventBus.getDefault().register(this);
+        EventBus.getDefault().register(this);
     }
 
     private void setChapterTestaments() {
@@ -145,8 +145,8 @@ public class BibleChapterFragment extends Fragment {
                         bibleChapterRecyclerViewAdapter.setCursor(localTestamentCursor);
 
                         //scroll to position if set
-                        if(bibleBookCurrentVisiblePos != -1){
-                            fragmentBibleChapterBinding.bibleChaptersRecycler.scrollToPosition(bibleBookCurrentVisiblePos);
+                        if(bibleChapterCurrentVisiblePos != -1){
+                            fragmentBibleChapterBinding.bibleChaptersRecycler.scrollToPosition(bibleChapterCurrentVisiblePos);
                         }
 
                     }
@@ -221,18 +221,18 @@ public class BibleChapterFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onFragConfigChange(FragConfigChange event){
-        //save current recyclerview position for bible book
-        /**long bibleBookCurrentVisiblePosition;
-         bibleBookCurrentVisiblePosition = ((LinearLayoutManager)fragmentBibleBookBinding.bibleBooksRecycler.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        //save current recyclerview position
+        long bibleChapterCurrentVisiblePosition;
+        bibleChapterCurrentVisiblePosition = ((LinearLayoutManager)fragmentBibleChapterBinding.bibleChaptersRecycler.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
 
          //post event to EventBus
-         EventBus.getDefault().post(new BibleBookPositionEvent((int) bibleBookCurrentVisiblePosition));**/
+         EventBus.getDefault().post(new BibleChapterPositionEvent((int) bibleChapterCurrentVisiblePosition));
     }
 
 
     @Override
     public void onStop() {
-        //EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
         super.onStop();
     }
 

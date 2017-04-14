@@ -44,6 +44,8 @@ public class BibleBookFragment extends Fragment {
     private int bookPosition = -1;
     private int orientationChange = -1;
     private int bibleBookCurrentVisiblePos = -1;
+    private int bibleChapterCurrentVisiblePos = -1;
+    private int bibleVerseCurrentVisiblePos = -1;
 
     @Nullable
     @Override
@@ -63,6 +65,8 @@ public class BibleBookFragment extends Fragment {
         Bundle bundle = getArguments();
         orientationChange = bundle.getInt("orientationChange");
         bibleBookCurrentVisiblePos = bundle.getInt("bibleBookCurrentVisiblePosition");
+        bibleChapterCurrentVisiblePos = bundle.getInt("bibleChapterCurrentVisiblePosition");
+        bibleVerseCurrentVisiblePos = bundle.getInt("bibleVerseCurrentVisiblePosition");
 
         //set cursor to null
         localTestamentCursor = null;
@@ -182,8 +186,8 @@ public class BibleBookFragment extends Fragment {
         bundle.putString("bibleBookCode", bibleBookCode);
         bundle.putString("bibleBookName", bibleBookName);
         bundle.putInt("orientationChange",orientationChange);
-        //todo bundle current chapter position
-        //todo bundle current verse position
+        bundle.putInt("bibleChapterCurrentVisiblePosition",bibleChapterCurrentVisiblePos);
+        bundle.putInt("bibleVerseCurrentVisiblePosition",bibleVerseCurrentVisiblePos);
 
         bibleChapterFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.mainBibleFragment, bibleChapterFragment, "bibleChapterFragment");

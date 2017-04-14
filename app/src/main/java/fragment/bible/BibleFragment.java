@@ -22,6 +22,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import app.NavActivity;
 import event.pojo.BibleBookPositionEvent;
+import event.pojo.BibleChapterPositionEvent;
+import event.pojo.BibleVersePositionEvent;
 import event.pojo.FragConfigChange;
 
 //todo 2layouts ie sw600dp for tablet view
@@ -33,6 +35,8 @@ public class BibleFragment extends Fragment {
     private FragmentTransaction fragmentTransaction;
     private int orientationChange = -1;
     private int bibleBookCurrentVisiblePosition = -1;
+    private int bibleChapterCurrentVisiblePosition = -1;
+    private int bibleVerseCurrentVisiblePosition = -1;
 
     @Nullable
     @Override
@@ -59,14 +63,16 @@ public class BibleFragment extends Fragment {
         if(savedInstanceState != null){
             orientationChange = 1;
             bibleBookCurrentVisiblePosition = savedInstanceState.getInt("bibleBookCurrentVisiblePosition");
+            bibleChapterCurrentVisiblePosition = savedInstanceState.getInt("bibleChapterCurrentVisiblePosition");
+            bibleVerseCurrentVisiblePosition = savedInstanceState.getInt("bibleVerseCurrentVisiblePosition");
         }
 
         //variable to indicate orientation change
         Bundle bundle = new Bundle();
         bundle.putInt("orientationChange", orientationChange);
         bundle.putInt("bibleBookCurrentVisiblePosition", bibleBookCurrentVisiblePosition);
-        //todo bundle current chapter position
-        //todo bundle current verse position
+        bundle.putInt("bibleChapterCurrentVisiblePosition",bibleChapterCurrentVisiblePosition);
+        bundle.putInt("bibleVerseCurrentVisiblePosition",bibleVerseCurrentVisiblePosition);
 
         bibleBookFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.mainBibleFragment,bibleBookFragment,"bibleBookFragment");
@@ -83,15 +89,28 @@ public class BibleFragment extends Fragment {
         //post event
         EventBus.getDefault().post(new FragConfigChange());
         outState.putInt("bibleBookCurrentVisiblePosition",bibleBookCurrentVisiblePosition);
+        outState.putInt("bibleChapterCurrentVisiblePosition",bibleChapterCurrentVisiblePosition);
+        outState.putInt("bibleVerseCurrentVisiblePosition",bibleVerseCurrentVisiblePosition);
     }
 
-    //todo subscribe to event to event for current chapter position
-    //todo subscribe to event to event for current verse position
-
+    //subscribe to event for current book position
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBibleBookPositionEvent(BibleBookPositionEvent event){
         bibleBookCurrentVisiblePosition = event.getBibleBookPosition();
     }
+
+    //subscribe to event to event for current chapter position
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onBibleVesePositionEvent(BibleChapterPositionEvent event){
+        bibleChapterCurrentVisiblePosition = event.getBibleChapterPosition();
+    }
+
+    //subscribe to event to event for current verse position
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onBibleVesePositionEvent(BibleVersePositionEvent event){
+        bibleVerseCurrentVisiblePosition = event.getBibleVersePosition();
+    }
+
 
     @Override
     public void onStart() {
