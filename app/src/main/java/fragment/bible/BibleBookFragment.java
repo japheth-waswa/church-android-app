@@ -21,12 +21,18 @@ import android.view.ViewGroup;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.FragmentBibleBookBinding;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import adapters.recyclerview.BibleBookRecyclerViewAdapter;
 import app.NavActivity;
 import db.ChurchContract;
 import db.ChurchQueryHandler;
 import event.ClickListener;
 import event.CustomRecyclerTouchListener;
+import event.pojo.BibleBookPositionEvent;
+import event.pojo.FragConfigChange;
 
 public class BibleBookFragment extends Fragment {
     private FragmentBibleBookBinding fragmentBibleBookBinding;
@@ -37,6 +43,7 @@ public class BibleBookFragment extends Fragment {
     private FragmentTransaction fragmentTransaction;
     private int bookPosition = -1;
     private int orientationChange = -1;
+    private int bibleBookCurrentVisiblePos = -1;
 
     @Nullable
     @Override
@@ -55,6 +62,7 @@ public class BibleBookFragment extends Fragment {
         //todo handle orientation change since it returns to bible books
         Bundle bundle = getArguments();
         orientationChange = bundle.getInt("orientationChange");
+        bibleBookCurrentVisiblePos = bundle.getInt("bibleBookCurrentVisiblePosition");
 
         //set cursor to null
         localTestamentCursor = null;
@@ -107,6 +115,9 @@ public class BibleBookFragment extends Fragment {
 
         //set bible books
         setBookTestaments();
+
+        //register event
+        EventBus.getDefault().register(this);
     }
 
     private void setBookTestaments() {
@@ -124,6 +135,12 @@ public class BibleBookFragment extends Fragment {
                     if (cursor.getCount() > 0) {
                         //set recycler cursor
                         bibleBookRecyclerViewAdapter.setCursor(localTestamentCursor);
+
+                        //scroll to position if set
+                        if(bibleBookCurrentVisiblePos != -1){
+                            fragmentBibleBookBinding.bibleBooksRecycler.scrollToPosition(bibleBookCurrentVisiblePos);
+                        }
+
                     }
 
                 }
@@ -192,6 +209,12 @@ public class BibleBookFragment extends Fragment {
         editor.commit();
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //save current recyclerview position for bible book
+
+    }
 
     @Override
     public void onPause() {
@@ -202,12 +225,24 @@ public class BibleBookFragment extends Fragment {
             localTestamentCursor.close();
         }
 
-        //todo save current recyclerview position
-        long currentVisiblePosition;
-        currentVisiblePosition = ((LinearLayoutManager)fragmentBibleBookBinding.bibleBooksRecycler.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
 
-        Log.e("jef-waswa-pos",String.valueOf(currentVisiblePosition));
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFragConfigChange(FragConfigChange event){
+        //save current recyclerview position for bible book
+        long bibleBookCurrentVisiblePosition;
+         bibleBookCurrentVisiblePosition = ((LinearLayoutManager)fragmentBibleBookBinding.bibleBooksRecycler.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+
+         //post event to EventBus
+         EventBus.getDefault().post(new BibleBookPositionEvent((int) bibleBookCurrentVisiblePosition));
+    }
+
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
 }

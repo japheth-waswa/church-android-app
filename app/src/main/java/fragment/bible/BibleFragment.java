@@ -22,6 +22,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import app.NavActivity;
 import event.pojo.BibleBookPositionEvent;
+import event.pojo.FragConfigChange;
 
 //todo 2layouts ie sw600dp for tablet view
 
@@ -31,6 +32,7 @@ public class BibleFragment extends Fragment {
     private FragmentManager localFragmentManager;
     private FragmentTransaction fragmentTransaction;
     private int orientationChange = -1;
+    private int bibleBookCurrentVisiblePosition = -1;
 
     @Nullable
     @Override
@@ -56,11 +58,13 @@ public class BibleFragment extends Fragment {
 
         if(savedInstanceState != null){
             orientationChange = 1;
+            bibleBookCurrentVisiblePosition = savedInstanceState.getInt("bibleBookCurrentVisiblePosition");
         }
 
         //variable to indicate orientation change
         Bundle bundle = new Bundle();
         bundle.putInt("orientationChange", orientationChange);
+        bundle.putInt("bibleBookCurrentVisiblePosition", bibleBookCurrentVisiblePosition);
 
         bibleBookFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.mainBibleFragment,bibleBookFragment,"bibleBookFragment");
@@ -73,11 +77,15 @@ public class BibleFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("orientationChange",1);
+
+        //post event
+        EventBus.getDefault().post(new FragConfigChange());
+        outState.putInt("bibleBookCurrentVisiblePosition",bibleBookCurrentVisiblePosition);
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBibleBookPositionEvent(BibleBookPositionEvent event){
-        Log.e("jeff-book-pos", String.valueOf(event.getBibleBookPosition()));
+        bibleBookCurrentVisiblePosition = event.getBibleBookPosition();
     }
 
     @Override
