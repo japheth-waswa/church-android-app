@@ -176,9 +176,11 @@ public class BibleBookFragment extends Fragment {
         localTestamentCursor.moveToPosition(position);
         BibleChapterFragment bibleChapterFragment = new BibleChapterFragment();
         String bibleBookCode = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE));
+        String bibleBookName = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME));
 
         Bundle bundle = new Bundle();
         bundle.putString("bibleBookCode", bibleBookCode);
+        bundle.putString("bibleBookName", bibleBookName);
         bundle.putInt("orientationChange",orientationChange);
         //todo bundle current chapter position
         //todo bundle current verse position
