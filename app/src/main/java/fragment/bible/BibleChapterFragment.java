@@ -182,20 +182,22 @@ public class BibleChapterFragment extends Fragment {
         //save the current chapter position in preferences
         saveToPreference(position);
 
-        Log.e("jean","supposed to load verses here");
-
-        /**localTestamentCursor.moveToPosition(position);
-        BibleChapterFragment bibleChapterFragment = new BibleChapterFragment();
-        String bibleBookCode = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE));
+        localTestamentCursor.moveToPosition(position);
+        BibleVerseFragment bibleVerseFragment = new BibleVerseFragment();
+        String bibleChapterCode = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE));
+        String bibleChapterNumber = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_NUMBER));
 
         Bundle bundle = new Bundle();
-        bundle.putString("bibleBookCode", bibleBookCode);
+        bundle.putString("bibleBookName", bibleName);
+        bundle.putString("bibleChapterNumber", bibleChapterNumber);
+        bundle.putString("bibleChapterCode", bibleChapterCode);
         bundle.putInt("orientationChange",orientationChange);
+        bundle.putInt("bibleVerseCurrentVisiblePosition",bibleVerseCurrentVisiblePos);
 
-        bibleChapterFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.mainBibleFragment, bibleChapterFragment, "bibleChapterFragment");
+        bibleVerseFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.mainBibleFragment, bibleVerseFragment, "bibleVerseFragment");
         //fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();**/
+        fragmentTransaction.commit();
     }
 
 
