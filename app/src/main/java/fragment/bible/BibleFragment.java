@@ -65,6 +65,8 @@ public class BibleFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putInt("orientationChange", orientationChange);
         bundle.putInt("bibleBookCurrentVisiblePosition", bibleBookCurrentVisiblePosition);
+        //todo bundle current chapter position
+        //todo bundle current verse position
 
         bibleBookFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.mainBibleFragment,bibleBookFragment,"bibleBookFragment");
@@ -82,6 +84,9 @@ public class BibleFragment extends Fragment {
         EventBus.getDefault().post(new FragConfigChange());
         outState.putInt("bibleBookCurrentVisiblePosition",bibleBookCurrentVisiblePosition);
     }
+
+    //todo subscribe to event to event for current chapter position
+    //todo subscribe to event to event for current verse position
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onBibleBookPositionEvent(BibleBookPositionEvent event){

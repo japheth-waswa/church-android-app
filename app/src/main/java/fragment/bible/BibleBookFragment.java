@@ -59,7 +59,7 @@ public class BibleBookFragment extends Fragment {
         fragmentBibleBookBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_bible_book, container, false);
 
 
-        //todo handle orientation change since it returns to bible books
+        //handle orientation change since it returns to bible books
         Bundle bundle = getArguments();
         orientationChange = bundle.getInt("orientationChange");
         bibleBookCurrentVisiblePos = bundle.getInt("bibleBookCurrentVisiblePosition");
@@ -180,6 +180,8 @@ public class BibleBookFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putString("bibleBookCode", bibleBookCode);
         bundle.putInt("orientationChange",orientationChange);
+        //todo bundle current chapter position
+        //todo bundle current verse position
 
         bibleChapterFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.mainBibleFragment, bibleChapterFragment, "bibleChapterFragment");
@@ -209,12 +211,6 @@ public class BibleBookFragment extends Fragment {
         editor.commit();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //save current recyclerview position for bible book
-
-    }
 
     @Override
     public void onPause() {

@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +19,18 @@ import android.view.ViewGroup;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.FragmentBibleBookBinding;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import adapters.recyclerview.BibleBookRecyclerViewAdapter;
 import app.NavActivity;
 import db.ChurchContract;
 import db.ChurchQueryHandler;
 import event.ClickListener;
 import event.CustomRecyclerTouchListener;
+import event.pojo.BibleBookPositionEvent;
+import event.pojo.FragConfigChange;
 
 public class BibleChapterFragment extends Fragment {
     private FragmentBibleBookBinding fragmentBibleBookBinding;
@@ -36,6 +41,7 @@ public class BibleChapterFragment extends Fragment {
     private FragmentTransaction fragmentTransaction;
     private int bookPosition = -1;
     private int orientationChange = -1;
+    private int bibleBookCurrentVisiblePos = -1;
 
     @Nullable
     @Override
@@ -51,8 +57,9 @@ public class BibleChapterFragment extends Fragment {
         fragmentBibleBookBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_bible_book, container, false);
 
 
-      /**  Bundle bundle = getArguments();
+       /** Bundle bundle = getArguments();
         orientationChange = bundle.getInt("orientationChange");
+        bibleBookCurrentVisiblePos = bundle.getInt("bibleBookCurrentVisiblePosition");
 
         //set cursor to null
         localTestamentCursor = null;
@@ -67,10 +74,10 @@ public class BibleChapterFragment extends Fragment {
         bibleBookRecyclerViewAdapter = new BibleBookRecyclerViewAdapter(localTestamentCursor);
         fragmentBibleBookBinding.bibleBooksRecycler.setAdapter(bibleBookRecyclerViewAdapter);
         fragmentBibleBookBinding.bibleBooksRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-       **/
+        /****/
 
         //add touch listener to recyclerview
-       /** fragmentBibleBookBinding.bibleBooksRecycler.addOnItemTouchListener(new CustomRecyclerTouchListener(
+        /**fragmentBibleBookBinding.bibleBooksRecycler.addOnItemTouchListener(new CustomRecyclerTouchListener(
                 getActivity(), fragmentBibleBookBinding.bibleBooksRecycler, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -99,12 +106,16 @@ public class BibleChapterFragment extends Fragment {
 
         //confirm if is not screen orientation change then clear all the bible,chapters,verse logs in preference file
        /** if(orientationChange == -1){
+        * //todo we dont' need this clearbible preference data since it is being cleared by BibleBookFragment
             //clear all preference bible related data
             clearBiblePreference();
         }
 
         //set bible books
-        setBookTestaments();**/
+        setBookTestaments();
+
+        //register event
+        EventBus.getDefault().register(this);**/
     }
 
     private void setBookTestaments() {
@@ -122,6 +133,12 @@ public class BibleChapterFragment extends Fragment {
                     if (cursor.getCount() > 0) {
                         //set recycler cursor
                         bibleBookRecyclerViewAdapter.setCursor(localTestamentCursor);
+
+                        //scroll to position if set
+                        if(bibleBookCurrentVisiblePos != -1){
+                            fragmentBibleBookBinding.bibleBooksRecycler.scrollToPosition(bibleBookCurrentVisiblePos);
+                        }
+
                     }
 
                 }
@@ -152,7 +169,7 @@ public class BibleChapterFragment extends Fragment {
     private void launchBookChapters(int position) {
 
         //save the current book in preferences
-        /**saveToPreference(bookPosition);
+        saveToPreference(bookPosition);
 
         localTestamentCursor.moveToPosition(position);
         BibleChapterFragment bibleChapterFragment = new BibleChapterFragment();
@@ -165,7 +182,7 @@ public class BibleChapterFragment extends Fragment {
         bibleChapterFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.mainBibleFragment, bibleChapterFragment, "bibleChapterFragment");
         //fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();**/
+        fragmentTransaction.commit();
     }
 
 
@@ -192,24 +209,29 @@ public class BibleChapterFragment extends Fragment {
 
 
     @Override
-    public void onPause() {
-        super.onPause();
-
-        //todo save current recyclerview position
-        /**long currentVisiblePosition = 0;
-        currentVisiblePosition = ((LinearLayoutManager)fragmentBibleBookBinding.bibleBooksRecycler.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-
-        Log.e("jef-waswa-pos",String.valueOf(currentVisiblePosition));**/
-
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
-
         /**close cursors**/
         if (localTestamentCursor != null) {
             localTestamentCursor.close();
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFragConfigChange(FragConfigChange event){
+        //save current recyclerview position for bible book
+        /**long bibleBookCurrentVisiblePosition;
+         bibleBookCurrentVisiblePosition = ((LinearLayoutManager)fragmentBibleBookBinding.bibleBooksRecycler.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+
+         //post event to EventBus
+         EventBus.getDefault().post(new BibleBookPositionEvent((int) bibleBookCurrentVisiblePosition));**/
+    }
+
+
+    @Override
+    public void onStop() {
+        //EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
 }

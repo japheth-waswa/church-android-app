@@ -26,7 +26,6 @@ import db.DatabaseHelper;
 
 public class ChurchWebService {
 
-    //todo remember to use event bus
     public static void servSaveBibleDataToDb(Context applicationContext) {
 
         //parse bible books from bible_books.txt
