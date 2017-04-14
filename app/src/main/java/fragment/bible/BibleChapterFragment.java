@@ -1,5 +1,8 @@
 package fragment.bible;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -32,6 +35,7 @@ public class BibleChapterFragment extends Fragment {
     private Cursor localTestamentCursor;
     private FragmentTransaction fragmentTransaction;
     private int bookPosition = -1;
+    private int orientationChange = -1;
 
     @Nullable
     @Override
@@ -46,26 +50,27 @@ public class BibleChapterFragment extends Fragment {
 
         fragmentBibleBookBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_bible_book, container, false);
 
-        //todo handle orientation change since it returns to bible books
-        /**Bundle bundle = getArguments();
-        bookPosition = bundle.getInt()**/
+
+      /**  Bundle bundle = getArguments();
+        orientationChange = bundle.getInt("orientationChange");
 
         //set cursor to null
         localTestamentCursor = null;
 
-        /**navActivity = (NavActivity) getActivity();
+        navActivity = (NavActivity) getActivity();
         //code snippets come here
         localFragmentManager = navActivity.fragmentManager;
         fragmentTransaction = localFragmentManager.beginTransaction();
 
 
-        bible books recycler view
+        /**bible books recycler view
         bibleBookRecyclerViewAdapter = new BibleBookRecyclerViewAdapter(localTestamentCursor);
         fragmentBibleBookBinding.bibleBooksRecycler.setAdapter(bibleBookRecyclerViewAdapter);
         fragmentBibleBookBinding.bibleBooksRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+       **/
 
         //add touch listener to recyclerview
-        fragmentBibleBookBinding.bibleBooksRecycler.addOnItemTouchListener(new CustomRecyclerTouchListener(
+       /** fragmentBibleBookBinding.bibleBooksRecycler.addOnItemTouchListener(new CustomRecyclerTouchListener(
                 getActivity(), fragmentBibleBookBinding.bibleBooksRecycler, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -83,10 +88,23 @@ public class BibleChapterFragment extends Fragment {
         }
         ));
 
-        //set bible books
-        setBookTestaments();**/
+**/
 
         return fragmentBibleBookBinding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        //confirm if is not screen orientation change then clear all the bible,chapters,verse logs in preference file
+       /** if(orientationChange == -1){
+            //clear all preference bible related data
+            clearBiblePreference();
+        }
+
+        //set bible books
+        setBookTestaments();**/
     }
 
     private void setBookTestaments() {
@@ -95,8 +113,10 @@ public class BibleChapterFragment extends Fragment {
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
 
                 localTestamentCursor = cursor;
+                int previousBookPosition = getPrevBookPosition();
 
-                if (bookPosition != -1) {
+                if (previousBookPosition != -1 && orientationChange != -1) {
+                    bookPosition = previousBookPosition;
                     launchBookChapters(bookPosition);
                 } else {
                     if (cursor.getCount() > 0) {
@@ -122,26 +142,66 @@ public class BibleChapterFragment extends Fragment {
         handler.startQuery(21, null, ChurchContract.BibleBookEntry.CONTENT_URI, projection, null, null, orderBy);
     }
 
+    private int getPrevBookPosition() {
+        Resources res = getResources();
+        String preferenceFileKey = res.getString(R.string.preference_file_key);
+        SharedPreferences sharedPref = getContext().getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
+       return sharedPref.getInt(res.getString(R.string.preference_book_position),-1);
+    }
+
     private void launchBookChapters(int position) {
 
-        /**localTestamentCursor.moveToPosition(position);
+        //save the current book in preferences
+        /**saveToPreference(bookPosition);
+
+        localTestamentCursor.moveToPosition(position);
         BibleChapterFragment bibleChapterFragment = new BibleChapterFragment();
         String bibleBookCode = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE));
+
         Bundle bundle = new Bundle();
         bundle.putString("bibleBookCode", bibleBookCode);
+        bundle.putInt("orientationChange",orientationChange);
 
         bibleChapterFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.mainBibleFragment, bibleChapterFragment, "bibleChapterFragment");
-        fragmentTransaction.addToBackStack(null);
+        //fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();**/
     }
 
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+    private void saveToPreference(int bookPosition) {
+        Resources res = getResources();
+        String preferenceFileKey = res.getString(R.string.preference_file_key);
+        SharedPreferences sharedPref = getContext().getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(res.getString(R.string.preference_book_position),bookPosition);
+        editor.commit();
     }
 
+
+    private void clearBiblePreference() {
+        Resources res = getResources();
+        String preferenceFileKey = res.getString(R.string.preference_file_key);
+        SharedPreferences sharedPref = getContext().getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(res.getString(R.string.preference_book_position),-1);
+        editor.putInt(res.getString(R.string.preference_chapter_position),-1);
+        editor.putInt(res.getString(R.string.preference_verse_position),-1);
+        editor.commit();
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        //todo save current recyclerview position
+        /**long currentVisiblePosition = 0;
+        currentVisiblePosition = ((LinearLayoutManager)fragmentBibleBookBinding.bibleBooksRecycler.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+
+        Log.e("jef-waswa-pos",String.valueOf(currentVisiblePosition));**/
+
+    }
 
     @Override
     public void onDestroy() {
@@ -151,6 +211,5 @@ public class BibleChapterFragment extends Fragment {
         if (localTestamentCursor != null) {
             localTestamentCursor.close();
         }
-
     }
 }

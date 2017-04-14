@@ -162,7 +162,7 @@ public class BibleBookFragment extends Fragment {
 
         Bundle bundle = new Bundle();
         bundle.putString("bibleBookCode", bibleBookCode);
-        //todo rem to add variable to indicate whether it is an orientation change from BibleFragment.java
+        bundle.putInt("orientationChange",orientationChange);
 
         bibleChapterFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.mainBibleFragment, bibleChapterFragment, "bibleChapterFragment");
@@ -194,12 +194,6 @@ public class BibleBookFragment extends Fragment {
 
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //outState.putInt("orientationChanged",1);
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
 
@@ -209,7 +203,7 @@ public class BibleBookFragment extends Fragment {
         }
 
         //todo save current recyclerview position
-        long currentVisiblePosition = 0;
+        long currentVisiblePosition;
         currentVisiblePosition = ((LinearLayoutManager)fragmentBibleBookBinding.bibleBooksRecycler.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
 
         Log.e("jef-waswa-pos",String.valueOf(currentVisiblePosition));
