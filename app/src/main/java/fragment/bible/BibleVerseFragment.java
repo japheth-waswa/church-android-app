@@ -17,6 +17,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.StringRequestListener;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.FragmentBibleChapterBinding;
 import com.japhethwaswa.church.databinding.FragmentBibleVerseBinding;
@@ -94,6 +98,21 @@ public class BibleVerseFragment extends Fragment {
         /****/
 
 
+        AndroidNetworking.get(getString(R.string.root_domain) + getString(R.string.app_sermon))
+                .setPriority(Priority.HIGH)
+                .setTag("laravelApi")
+                .build()
+                .getAsString(new StringRequestListener() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.e("jeff-json",response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Log.e("jeff-json-err",anError.toString());
+                    }
+                });
 
 
         return fragmentBibleVerseBinding.getRoot();
