@@ -1,7 +1,6 @@
 package app;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -14,20 +13,10 @@ import com.cleveroad.loopbar.widget.OnItemClickListener;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.ActivityNavBinding;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import db.ChurchContract;
-import db.ChurchQueryHandler;
 import fragment.bible.BibleFragment;
+import fragment.sermon.SermonFragment;
 
 public class NavActivity extends AppCompatActivity {
-    //todo start fragment to load each specific navigation and manage it
     //todo in each fragment handle screen orientation appropriately
     private ActivityNavBinding activityNavBinding;
     private int navPosition;
@@ -86,8 +75,13 @@ public class NavActivity extends AppCompatActivity {
                 finish();
                 break;
             case 1:
-                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
+
+                //sermons
+                SermonFragment sermonFragment = new SermonFragment();
+                fragmentTransaction.replace(R.id.navFragmentHolder,sermonFragment,"sermonFragment");
+                fragmentTransaction.commit();
                 break;
+
             case 2:
                 Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
                 break;
@@ -96,6 +90,7 @@ public class NavActivity extends AppCompatActivity {
                 break;
             case 4:
 
+                //bible
                 BibleFragment bibleFragment = new BibleFragment();
                 fragmentTransaction.replace(R.id.navFragmentHolder,bibleFragment,"bibleFragment");
                 fragmentTransaction.commit();
@@ -129,7 +124,6 @@ public class NavActivity extends AppCompatActivity {
                 super.onBackPressed();
                 break;
         }
-        //todo use switch statement to load each different fragment
     }
 
     @Override
@@ -137,4 +131,6 @@ public class NavActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putInt("customOrientationChange", 1);
     }
+
+
 }

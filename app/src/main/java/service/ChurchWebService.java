@@ -2,17 +2,9 @@ package service;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.StringRequestListener;
-import com.japhethwaswa.church.R;
-
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,9 +12,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 
-import db.ChurchQueryHandler;
 import db.ChurchContract;
 import db.DatabaseHelper;
+import event.pojo.ConnectionStatus;
+import model.Connectivity;
 
 public class ChurchWebService {
 
@@ -186,9 +179,12 @@ public class ChurchWebService {
 
     }
 
-
+//todo create class that handles OAuth2 authentication and access token retrieval
     public static void serviceGetSermons(Context applicationContext) {
-        //todo check internet connection and post event to subscribers if connection is not available.
+        //check internet connection and post event to subscribers .
+        EventBus.getDefault().post(new ConnectionStatus(Connectivity.isConnected(applicationContext)));
+
+
         //todo get jsonObject,if it returns an error then ensure you get a new access_token from OAuth2
         //todo parse and store the data in local db
         //todo post event for all subscribers.
