@@ -97,24 +97,6 @@ public class BibleVerseFragment extends Fragment {
         fragmentBibleVerseBinding.bibleVersesRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         /****/
 
-
-        AndroidNetworking.get(getString(R.string.root_domain) + getString(R.string.app_sermon))
-                .setPriority(Priority.HIGH)
-                .setTag("laravelApi")
-                .build()
-                .getAsString(new StringRequestListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.e("jeff-json",response);
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-                        Log.e("jeff-json-err",anError.toString());
-                    }
-                });
-
-
         return fragmentBibleVerseBinding.getRoot();
     }
 

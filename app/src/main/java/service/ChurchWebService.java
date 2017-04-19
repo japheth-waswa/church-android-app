@@ -2,7 +2,15 @@ package service;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.StringRequestListener;
+import com.japhethwaswa.church.R;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -181,13 +189,37 @@ public class ChurchWebService {
 
 //todo create class that handles OAuth2 authentication and access token retrieval
     public static void serviceGetSermons(Context applicationContext) {
-        //check internet connection and post event to subscribers .
-        EventBus.getDefault().post(new ConnectionStatus(Connectivity.isConnected(applicationContext)));
+
+        Resources res = applicationContext.getResources();
+        String relativeUrl = res.getString(R.string.app_sermon);
 
 
+        AndroidNetworking.get(getAbsoluteUrl(applicationContext, relativeUrl))
+                .setPriority(Priority.HIGH)
+                .setTag("laravelApi")
+                .build()
+                .getAsString(new StringRequestListener() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.e("jeff-json",response);
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Log.e("jeff-json-err",anError.toString());
+                    }
+                });
         //todo get jsonObject,if it returns an error then ensure you get a new access_token from OAuth2
         //todo parse and store the data in local db
         //todo post event for all subscribers.
 
     }
+
+
+    private static String getAbsoluteUrl(Context context, String relativeUrl) {
+        Resources res = context.getResources();
+        String baseUrl = res.getString(R.string.root_domain);
+        return baseUrl + relativeUrl;
+    }
+
 }

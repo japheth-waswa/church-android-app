@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import com.birbit.android.jobqueue.JobManager;
 import com.cleveroad.loopbar.widget.OnItemClickListener;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.ActivityNavBinding;
@@ -23,6 +24,8 @@ import es.dmoral.toasty.Toasty;
 import event.pojo.ConnectionStatus;
 import fragment.bible.BibleFragment;
 import fragment.sermon.SermonFragment;
+import job.SermonsJob;
+import job.builder.MyJobsBuilder;
 import model.Connectivity;
 
 public class NavActivity extends AppCompatActivity {
@@ -30,7 +33,7 @@ public class NavActivity extends AppCompatActivity {
     private ActivityNavBinding activityNavBinding;
     private int navPosition;
     public FragmentManager fragmentManager = getSupportFragmentManager();
-
+    //public JobManager jobManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,10 @@ public class NavActivity extends AppCompatActivity {
 
         //inflate activity
         activityNavBinding = DataBindingUtil.setContentView(this, R.layout.activity_nav);
+
+        //initiate job
+        //jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getApplicationContext()));
+        //jobManager.addJobInBackground(new SermonsJob());
 
         //determine if orientation change or activity creation
         if (savedInstanceState == null) {
