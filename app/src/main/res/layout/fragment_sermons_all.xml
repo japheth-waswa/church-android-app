@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="bibleChapter"
+            type="model.BibleChapter"/>
+    </data>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/standardPadding"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                android:text="@string/all_sermons_title" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/sermonsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+</layout>

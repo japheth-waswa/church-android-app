@@ -211,7 +211,7 @@ public class ChurchWebService {
                 });
         //todo get jsonObject,if it returns an error then ensure you get a new access_token from OAuth2
         //todo parse and store the data in local db
-        //todo post event for all subscribers.
+        //todo post event for all subscribers that data has been received
 
     }
 

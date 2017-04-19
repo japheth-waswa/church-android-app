@@ -7,4 +7,5 @@
     <string name="preference_verse_position">bibleVersePosition</string>
     <string name="root_domain">http://192.168.3.12:8019/church/public/api/</string>
     <string name="app_sermon">sermons</string>
+    <string name="all_sermons_title">All Sermons</string>
 </resources>

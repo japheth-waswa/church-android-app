@@ -7,34 +7,28 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.birbit.android.jobqueue.JobManager;
 import com.japhethwaswa.church.R;
+import com.japhethwaswa.church.databinding.FragmentSermonsAllBinding;
 import com.japhethwaswa.church.databinding.FragmentSermonsBinding;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import app.NavActivity;
-import es.dmoral.toasty.Toasty;
 import event.pojo.ConnectionStatus;
-import job.SaveBibleDataToDb;
 import job.SermonsJob;
 import job.builder.MyJobsBuilder;
 import model.Connectivity;
 
 
-public class SermonFragment extends Fragment{
+public class AllSermonsFragment extends Fragment {
 
-private FragmentSermonsBinding fragmentSermonsBinding;
-    public NavActivity navActivity;
+private FragmentSermonsAllBinding fragmentSermonsAllBinding;
+public NavActivity navActivity;
     private JobManager jobManager;
     private FragmentManager localFragmentManager;
     private FragmentTransaction fragmentTransaction;
@@ -51,11 +45,11 @@ private FragmentSermonsBinding fragmentSermonsBinding;
         /**==============**/
 
         //inflate the view
-        fragmentSermonsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sermons,container,false);
+        fragmentSermonsAllBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sermons_all, container, false);
 
-        //start bg job to get sermons from remote server
-        jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getActivity().getApplicationContext()));
-        jobManager.addJobInBackground(new SermonsJob());
+        //start bg job to get specific sermon from the server
+        //jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getActivity().getApplicationContext()));
+        //jobManager.addJobInBackground(new SermonsJob());
 
         //fragment management
 
@@ -64,18 +58,12 @@ private FragmentSermonsBinding fragmentSermonsBinding;
         fragmentTransaction = localFragmentManager.beginTransaction();
 
         //start Fragment to display all sermons
-        AllSermonsFragment allSermonsFragment = new AllSermonsFragment();
-        fragmentTransaction.replace(R.id.mainSermonFragment,allSermonsFragment,"allSermonsFragment");
-        fragmentTransaction.commit();
+        //AllSermonsFragment allSermonsFragment = new AllSermonsFragment();
+        //fragmentTransaction.replace(R.id.mainSermonFragment,allSermonsFragment,"bibleBookFragment");
+        //fragmentTransaction.commit();
 
 
-        return fragmentSermonsBinding.getRoot();
+        return fragmentSermonsAllBinding.getRoot();
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //check for internet connection and post to subscribers
-        EventBus.getDefault().post(new ConnectionStatus(Connectivity.isConnected(getActivity().getApplicationContext())));
-    }
+//todo on click a sermon,start bg job to get the specific sermon from the server.
 }
