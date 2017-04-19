@@ -8,6 +8,7 @@ public class ChurchContract {
     public static final String PATH_BIBLE_BOOK = "bible_book";
     public static final String PATH_BIBLE_CHAPTER = "bible_chapter";
     public static final String PATH_BIBLE_VERSE = "bible_verse";
+    public static final String PATH_SERMONS = "sermons";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://"+CONTENT_AUTHORITY);
 
     public static final class BibleBookEntry implements BaseColumns{
@@ -47,5 +48,25 @@ public class ChurchContract {
         public static final String COLUMN_VERSE_NUMBER = "verse_number";
         public static final String COLUMN_VERSE_CHAPTER_CODE = "verse_chapter_code";
         public static final String COLUMN_VERSE = "verse";
+    }
+    public static final class SermonEntry implements BaseColumns{
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI,PATH_SERMONS);
+
+        //Table name
+        public static final String TABLE_NAME = "sermons";
+        //column field names
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_SERMON_ID = "sermon_id";
+        public static final String COLUMN_SERMON_TITLE = "sermon_title";
+        public static final String COLUMN_SERMON_IMAGE_URL= "sermon_image_url";
+        public static final String COLUMN_SERMON_BRIEF_DESCRIPTION= "sermon_brief_description";
+        public static final String COLUMN_SERMON_AUDIO_URL= "sermon_audio_url";
+        public static final String COLUMN_SERMON_VIDEO_URL= "sermon_video_url";
+        public static final String COLUMN_SERMON_PDF_URL= "sermon_pdf_url";
+        public static final String COLUMN_SERMON_DATE= "sermon_date";
+        public static final String COLUMN_SERMON_VISIBLE= "sermon_visible";
+        public static final String COLUMN_SERMON_CREATED_AT= "sermon_created_at";
+        public static final String COLUMN_SERMON_UPDATED_AT= "sermon_updated_at";
     }
 }

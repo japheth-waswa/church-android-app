@@ -187,4 +187,11 @@ public class ChurchWebService {
     }
 
 
+    public static void serviceGetSermons(Context applicationContext) {
+        //todo check internet connection and post event to subscribers if connection is not available.
+        //todo get jsonObject,if it returns an error then ensure you get a new access_token from OAuth2
+        //todo parse and store the data in local db
+        //todo post event for all subscribers.
+
+    }
 }
