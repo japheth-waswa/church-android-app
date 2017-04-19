@@ -8,13 +8,22 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 
 import com.cleveroad.loopbar.widget.OnItemClickListener;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.ActivityNavBinding;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import es.dmoral.toasty.Toasty;
+import event.pojo.ConnectionStatus;
 import fragment.bible.BibleFragment;
 import fragment.sermon.SermonFragment;
+import model.Connectivity;
 
 public class NavActivity extends AppCompatActivity {
     //todo in each fragment handle screen orientation appropriately
@@ -132,5 +141,29 @@ public class NavActivity extends AppCompatActivity {
         outState.putInt("customOrientationChange", 1);
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectionStatus(ConnectionStatus connectionStatus){
+        if(connectionStatus.isConnected() == false){
+            //notify user to enable internet connection
+            Toasty.error(this, "Please check your internet connection.", Toast.LENGTH_SHORT, true).show();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //register event
+        EventBus.getDefault().register(this);
+
+    }
+
+    @Override
+    protected void onStop() {
+        //unregister event
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 
 }
