@@ -12,27 +12,23 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.japhethwaswa.church.R;
-import com.japhethwaswa.church.databinding.FragmentBibleBookBinding;
 import com.japhethwaswa.church.databinding.FragmentBibleChapterBinding;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import adapters.recyclerview.BibleBookRecyclerViewAdapter;
-import adapters.recyclerview.BibleChapterRecyclerViewAdapter;
+import adapters.recyclerview.bible.BibleChapterRecyclerViewAdapter;
 import app.NavActivity;
 import db.ChurchContract;
 import db.ChurchQueryHandler;
 import event.ClickListener;
 import event.CustomRecyclerTouchListener;
-import event.pojo.BibleBookPositionEvent;
 import event.pojo.BibleChapterPositionEvent;
 import event.pojo.FragConfigChange;
 import model.BibleBook;

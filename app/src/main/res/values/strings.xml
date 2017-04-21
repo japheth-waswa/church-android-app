@@ -5,6 +5,7 @@
     <string name="preference_book_position">bibleBookPosition</string>
     <string name="preference_chapter_position">bibleChapterPosition</string>
     <string name="preference_verse_position">bibleVersePosition</string>
+    <string name="preference_sermon_position">sermonPosition</string>
     <string name="preference_client_credentials_name">clientCredentialsAccessTokenString</string>
     <string name="preference_client_credentials_expires">clientCredentialsAccessTokenExpires</string>
     <string name="preference_password_grant_name">passwordGrantAccessTokenString</string>
@@ -19,5 +20,5 @@
     <string name="root_domain_api">http://192.168.3.12:8019/church/public/api/</string>
     <string name="token_test">validtoken</string>
     <string name="app_sermon">sermons</string>
-    <string name="all_sermons_title">All Sermons</string>
+    <string name="all_sermons_title">Sermons</string>
 </resources>

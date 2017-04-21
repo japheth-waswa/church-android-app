@@ -1,4 +1,4 @@
-package adapters.recyclerview;
+package adapters.recyclerview.bible;
 
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;

@@ -1,8 +1,5 @@
 package fragment.bible;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -12,34 +9,23 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.common.Priority;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.StringRequestListener;
 import com.japhethwaswa.church.R;
-import com.japhethwaswa.church.databinding.FragmentBibleChapterBinding;
 import com.japhethwaswa.church.databinding.FragmentBibleVerseBinding;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import adapters.recyclerview.BibleChapterRecyclerViewAdapter;
-import adapters.recyclerview.BibleVerseRecyclerViewAdapter;
+import adapters.recyclerview.bible.BibleVerseRecyclerViewAdapter;
 import app.NavActivity;
 import db.ChurchContract;
 import db.ChurchQueryHandler;
-import event.ClickListener;
-import event.CustomRecyclerTouchListener;
-import event.pojo.BibleChapterPositionEvent;
 import event.pojo.BibleVersePositionEvent;
 import event.pojo.FragConfigChange;
-import model.BibleBook;
 import model.BibleChapter;
 
 public class BibleVerseFragment extends Fragment {

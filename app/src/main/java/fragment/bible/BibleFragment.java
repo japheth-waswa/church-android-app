@@ -67,6 +67,7 @@ public class BibleFragment extends Fragment {
             bibleVerseCurrentVisiblePosition = savedInstanceState.getInt("bibleVerseCurrentVisiblePosition");
         }
 
+        //todo orientation management for tablets ie 2 split views
         //variable to indicate orientation change
         Bundle bundle = new Bundle();
         bundle.putInt("orientationChange", orientationChange);

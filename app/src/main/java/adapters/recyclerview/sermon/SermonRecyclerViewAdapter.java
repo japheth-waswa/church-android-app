@@ -1,4 +1,4 @@
-package adapters.recyclerview;
+package adapters.recyclerview.sermon;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,32 +9,34 @@ import android.view.ViewGroup;
 
 import com.japhethwaswa.church.R;
 
-public class BibleVerseRecyclerViewAdapter extends RecyclerView.Adapter<BibleVerseViewHolder> {
+import adapters.recyclerview.bible.BibleBookViewHolder;
+
+public class SermonRecyclerViewAdapter extends RecyclerView.Adapter<SermonViewHolder> {
 
     private Cursor cursor;
 
-    public BibleVerseRecyclerViewAdapter(Cursor cursor) {
+    public SermonRecyclerViewAdapter(Cursor cursor) {
         this.cursor = cursor;
     }
 
 
     @Override
-    public BibleVerseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SermonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View bibleVerseContainer = inflater.inflate(R.layout.item_bible_verse, parent, false);
+        View customViewContainer = inflater.inflate(R.layout.item_sermon, parent, false);
 
-        return new BibleVerseViewHolder(bibleVerseContainer);
+        return new SermonViewHolder(customViewContainer);
 
     }
 
-
     @Override
-    public void onBindViewHolder(BibleVerseViewHolder holder, int position) {
+    public void onBindViewHolder(SermonViewHolder holder, int position) {
         cursor.moveToPosition(position);
         holder.bind(cursor);
     }
+
 
     @Override
     public int getItemCount() {

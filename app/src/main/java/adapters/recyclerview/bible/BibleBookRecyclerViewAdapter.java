@@ -1,4 +1,4 @@
-package adapters.recyclerview;
+package adapters.recyclerview.bible;
 
 import android.content.Context;
 import android.database.Cursor;

@@ -16,21 +16,28 @@ import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.FragmentSermonsBinding;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import app.NavActivity;
+import event.pojo.BibleVersePositionEvent;
 import event.pojo.ConnectionStatus;
+import event.pojo.FragConfigChange;
+import event.pojo.SermonPositionEvent;
 import job.SermonsJob;
 import job.builder.MyJobsBuilder;
 import model.dyno.Connectivity;
 
 
-public class SermonFragment extends Fragment{
+public class SermonFragment extends Fragment {
 
-private FragmentSermonsBinding fragmentSermonsBinding;
+    private FragmentSermonsBinding fragmentSermonsBinding;
     public NavActivity navActivity;
     private JobManager jobManager;
     private FragmentManager localFragmentManager;
     private FragmentTransaction fragmentTransaction;
+    private int orientationChange = -1;
+    private int positionCurrentlyVisible = -1;
 
     @Nullable
     @Override
@@ -44,25 +51,65 @@ private FragmentSermonsBinding fragmentSermonsBinding;
         /**==============**/
 
         //inflate the view
-        fragmentSermonsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sermons,container,false);
+        fragmentSermonsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sermons, container, false);
 
-        //start bg job to get sermons from remote server
-        jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getActivity().getApplicationContext()));
-        jobManager.addJobInBackground(new SermonsJob());
+
+        if (savedInstanceState == null) {
+            //do not start job if is orientation change
+            //start bg job to get sermons from remote server
+            jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getActivity().getApplicationContext()));
+            jobManager.addJobInBackground(new SermonsJob());
+        } else {
+            orientationChange = 1;
+            positionCurrentlyVisible = savedInstanceState.getInt("sermonPosition");
+        }
 
         //fragment management
-
         navActivity = (NavActivity) getActivity();
         localFragmentManager = navActivity.fragmentManager;
         fragmentTransaction = localFragmentManager.beginTransaction();
 
+        //todo orientation management for tablets ie 2 split views
         //start Fragment to display all sermons
         AllSermonsFragment allSermonsFragment = new AllSermonsFragment();
-        fragmentTransaction.replace(R.id.mainSermonFragment,allSermonsFragment,"allSermonsFragment");
+        Bundle bundle = new Bundle();
+        bundle.putInt("orientationChange", orientationChange);
+        bundle.putInt("positionCurrentlyVisible", positionCurrentlyVisible);
+
+        allSermonsFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.mainSermonFragment, allSermonsFragment, "allSermonsFragment");
         fragmentTransaction.commit();
 
 
         return fragmentSermonsBinding.getRoot();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onBibleVesePositionEvent(SermonPositionEvent event) {
+        positionCurrentlyVisible = event.getPosition();
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("orientationChange", 1);
+
+        //post event
+        EventBus.getDefault().post(new FragConfigChange());
+        outState.putInt("sermonPosition", positionCurrentlyVisible);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override
