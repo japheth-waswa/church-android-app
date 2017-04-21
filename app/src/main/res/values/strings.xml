@@ -7,9 +7,14 @@
     <string name="preference_verse_position">bibleVersePosition</string>
     <string name="preference_client_credentials_name">clientCredentialsAccessTokenString</string>
     <string name="preference_client_credentials_expires">clientCredentialsAccessTokenExpires</string>
+    <string name="preference_password_grant_name">passwordGrantAccessTokenString</string>
+    <string name="preference_password_grant_expires">passwordGrantAccessTokenExpires</string>
+    <string name="preference_password_grant_refresh_name">passwordGrantAccessTokenRefresh</string>
     <string name="oauth_token_endpoint">oauth/token</string>
     <string name="client_credentials_client_id">3</string>
+    <string name="password_grant_client_id">4</string>
     <string name="client_credentials_client_secret">cwQCFnZ0XjeeTyfRPwgorAWu6F8nqWdqqtqHAcl7</string>
+    <string name="password_grant_secret">ggVZ2cOeEoVROan8z71qEord94yX24EP4iCkiqUH</string>
     <string name="root_domain">http://192.168.3.12:8019/church/public/</string>
     <string name="root_domain_api">http://192.168.3.12:8019/church/public/api/</string>
     <string name="token_test">validtoken</string>
