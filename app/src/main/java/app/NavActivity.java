@@ -20,6 +20,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import es.dmoral.toasty.Toasty;
 import event.pojo.ConnectionStatus;
+import event.pojo.SermonDataRetrievedSaved;
 import fragment.bible.BibleFragment;
 import fragment.sermon.SermonFragment;
 
@@ -151,6 +152,7 @@ public class NavActivity extends AppCompatActivity {
             Toasty.error(this, "Please check your internet connection.", Toast.LENGTH_SHORT, true).show();
         }
     }
+
 
     @Override
     protected void onStart() {

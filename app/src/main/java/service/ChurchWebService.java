@@ -4,14 +4,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.StringRequestListener;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.japhethwaswa.church.R;
 
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,7 +21,9 @@ import java.io.InputStream;
 import java.util.Iterator;
 
 import db.ChurchContract;
+import db.ChurchQueryHandler;
 import db.DatabaseHelper;
+import event.pojo.SermonDataRetrievedSaved;
 import model.dyno.OAuth;
 
 public class ChurchWebService {
@@ -49,7 +52,7 @@ public class ChurchWebService {
             byte[] buffer = new byte[size];
             is.read(buffer);
             is.close();
-            json = new String(buffer,"UTF-8");
+            json = new String(buffer, "UTF-8");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -62,19 +65,19 @@ public class ChurchWebService {
             SQLiteDatabase db = helper.getWritableDatabase();
 
             Iterator<String> iterator = jsonObj.keys();
-            while(iterator.hasNext()){
+            while (iterator.hasNext()) {
 
                 String key = iterator.next();
                 JSONObject jsonObject = new JSONObject(jsonObj.get(key).toString());
 
                 //insert book here
                 ContentValues values = new ContentValues();
-                values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION,jsonObject.getString(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION));
-                values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE,jsonObject.getString(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE));
-                values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER,jsonObject.getString(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER));
-                values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME,jsonObject.getString(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME));
+                values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION, jsonObject.getString(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION));
+                values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE, jsonObject.getString(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE));
+                values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER, jsonObject.getString(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER));
+                values.put(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME, jsonObject.getString(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME));
 
-                long id = db.insert(ChurchContract.BibleBookEntry.TABLE_NAME,null,values);
+                long id = db.insert(ChurchContract.BibleBookEntry.TABLE_NAME, null, values);
 
             }
 
@@ -99,7 +102,7 @@ public class ChurchWebService {
             byte[] buffer = new byte[size];
             is.read(buffer);
             is.close();
-            json = new String(buffer,"UTF-8");
+            json = new String(buffer, "UTF-8");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -112,18 +115,18 @@ public class ChurchWebService {
             SQLiteDatabase db = helper.getWritableDatabase();
 
             Iterator<String> iterator = jsonObj.keys();
-            while(iterator.hasNext()){
+            while (iterator.hasNext()) {
 
                 String key = iterator.next();
                 JSONObject jsonObject = new JSONObject(jsonObj.get(key).toString());
 
                 //insert book here
                 ContentValues values = new ContentValues();
-                values.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_NUMBER,jsonObject.getString(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_NUMBER));
-                values.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE,jsonObject.getString(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE));
-                values.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE,jsonObject.getString(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE));
+                values.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_NUMBER, jsonObject.getString(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_NUMBER));
+                values.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE, jsonObject.getString(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE));
+                values.put(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE, jsonObject.getString(ChurchContract.BibleChapterEntry.COLUMN_CHAPTER_CODE));
 
-                long id = db.insert(ChurchContract.BibleChapterEntry.TABLE_NAME,null,values);
+                long id = db.insert(ChurchContract.BibleChapterEntry.TABLE_NAME, null, values);
 
             }
 
@@ -148,7 +151,7 @@ public class ChurchWebService {
             byte[] buffer = new byte[size];
             is.read(buffer);
             is.close();
-            json = new String(buffer,"UTF-8");
+            json = new String(buffer, "UTF-8");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -161,18 +164,18 @@ public class ChurchWebService {
             SQLiteDatabase db = helper.getWritableDatabase();
 
             Iterator<String> iterator = jsonObj.keys();
-            while(iterator.hasNext()){
+            while (iterator.hasNext()) {
 
                 String key = iterator.next();
                 JSONObject jsonObject = new JSONObject(jsonObj.get(key).toString());
 
                 //insert book here
                 ContentValues values = new ContentValues();
-                values.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER,jsonObject.getString(ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER));
-                values.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE,jsonObject.getString(ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE));
-                values.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE,jsonObject.getString(ChurchContract.BibleVerseEntry.COLUMN_VERSE));
+                values.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER, jsonObject.getString(ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER));
+                values.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE, jsonObject.getString(ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE));
+                values.put(ChurchContract.BibleVerseEntry.COLUMN_VERSE, jsonObject.getString(ChurchContract.BibleVerseEntry.COLUMN_VERSE));
 
-                long id = db.insert(ChurchContract.BibleVerseEntry.TABLE_NAME,null,values);
+                long id = db.insert(ChurchContract.BibleVerseEntry.TABLE_NAME, null, values);
 
             }
 
@@ -185,36 +188,79 @@ public class ChurchWebService {
 
     }
 
-//todo create class that handles OAuth2 authentication and access token retrieval
-    public static void serviceGetSermons(Context applicationContext) {
+    //todo create class that handles OAuth2 authentication and access token retrieval
+    public static void serviceGetSermons(final Context applicationContext) {
 
         Resources res = applicationContext.getResources();
         String relativeUrl = res.getString(R.string.app_sermon);
         String accessToken = OAuth.getClientCredentialsGrantTypeAccessToken();
-        Log.e("jean-accessTok",accessToken);
-        Log.e("jean",OAuth.getTokenEndPoint());
 
-        /**AndroidNetworking.get(getAbsoluteUrl(applicationContext, relativeUrl))
+        AndroidNetworking.get(getAbsoluteUrl(applicationContext, relativeUrl))
                 .setPriority(Priority.HIGH)
-                .setTag("laravelApi")
-                .build()
-                .getAsString(new StringRequestListener() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.e("jeff-json",response);
-                    }
+                .setTag("sermonsApi")
+                .addHeaders("Authorization", "Bearer " + accessToken)
+                .build().getAsJSONArray(new JSONArrayRequestListener() {
+            @Override
+            public void onResponse(JSONArray response) {
+                parseSermons(response,applicationContext);
+            }
 
-                    @Override
-                    public void onError(ANError anError) {
-                        Log.e("jeff-json-err",anError.toString());
-                    }
-                });**/
-        //todo get jsonObject,if it returns an error then ensure you get a new access_token from OAuth2
-        //todo parse and store the data in local db
-        //todo post event for all subscribers that data has been received
+            @Override
+            public void onError(ANError anError) {
+
+            }
+        });
 
     }
 
+    private static void parseSermons(JSONArray response, Context applicationContext) {
+        //parse and store the data in local db
+        JSONArray jArray = response;
+
+        //clear entire database of sermons
+        ChurchQueryHandler handler = new ChurchQueryHandler(applicationContext.getContentResolver());
+        handler.startDelete(3,null,ChurchContract.SermonEntry.CONTENT_URI,null,null);
+
+        if(jArray.length() > 0) {
+            for (int i = 0; i < jArray.length(); i++) {
+                try {
+
+                    JSONObject sermonJObject = jArray.getJSONObject(i);
+                    ContentValues values = new ContentValues();
+                    values.put(ChurchContract.SermonEntry.COLUMN_SERMON_ID,sermonJObject.getString("id"));
+                    values.put(ChurchContract.SermonEntry.COLUMN_SERMON_TITLE,sermonJObject.getString("title"));
+                    values.put(ChurchContract.SermonEntry.COLUMN_SERMON_IMAGE_URL,sermonJObject.getString("image_url"));
+                    values.put(ChurchContract.SermonEntry.COLUMN_SERMON_BRIEF_DESCRIPTION,sermonJObject.getString("brief_description"));
+                    values.put(ChurchContract.SermonEntry.COLUMN_SERMON_AUDIO_URL,sermonJObject.getString("audio_url"));
+                    values.put(ChurchContract.SermonEntry.COLUMN_SERMON_VIDEO_URL,sermonJObject.getString("video_url"));
+                    values.put(ChurchContract.SermonEntry.COLUMN_SERMON_PDF_URL,sermonJObject.getString("pdf_url"));
+                    values.put(ChurchContract.SermonEntry.COLUMN_SERMON_DATE,sermonJObject.getString("sermon_date"));
+                    values.put(ChurchContract.SermonEntry.COLUMN_SERMON_VISIBLE,sermonJObject.getString("visible"));
+                    values.put(ChurchContract.SermonEntry.COLUMN_SERMON_CREATED_AT,sermonJObject.getString("created_at"));
+                    values.put(ChurchContract.SermonEntry.COLUMN_SERMON_UPDATED_AT,sermonJObject.getString("updated_at"));
+
+                    handler.startInsert(5,null, ChurchContract.SermonEntry.CONTENT_URI,values);
+                    /**Sermon sermon =new Sermon();
+                    sermon.setSermon_id(sermonJObject.getString("id"));
+                    sermon.setSermon_title(sermonJObject.getString("title"));
+                    sermon.setSermon_image_url(sermonJObject.getString("image_url"));
+                    sermon.setSermon_brief_description(sermonJObject.getString("brief_description"));
+                    sermon.setSermon_audio_url(sermonJObject.getString("audio_url"));
+                    sermon.setSermon_video_url(sermonJObject.getString("video_url"));
+                    sermon.setSermon_pdf_url(sermonJObject.getString("pdf_url"));
+                    sermon.setSermon_date(sermonJObject.getString("sermon_date"));
+                    sermon.setSermon_visible(sermonJObject.getString("visible"));
+                    sermon.setSermon_created_at(sermonJObject.getString("created_at"));
+                    sermon.setSermon_updated_at(sermonJObject.getString("updated_at"));**/
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        //post event for all subscribers that data has been received and saved in local database
+        EventBus.getDefault().post(new SermonDataRetrievedSaved());
+    }
 
     private static String getAbsoluteUrl(Context context, String relativeUrl) {
         Resources res = context.getResources();
