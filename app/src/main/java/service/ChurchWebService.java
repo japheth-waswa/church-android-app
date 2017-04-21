@@ -240,19 +240,6 @@ public class ChurchWebService {
                     values.put(ChurchContract.SermonEntry.COLUMN_SERMON_UPDATED_AT,sermonJObject.getString("updated_at"));
 
                     handler.startInsert(5,null, ChurchContract.SermonEntry.CONTENT_URI,values);
-                    /**Sermon sermon =new Sermon();
-                    sermon.setSermon_id(sermonJObject.getString("id"));
-                    sermon.setSermon_title(sermonJObject.getString("title"));
-                    sermon.setSermon_image_url(sermonJObject.getString("image_url"));
-                    sermon.setSermon_brief_description(sermonJObject.getString("brief_description"));
-                    sermon.setSermon_audio_url(sermonJObject.getString("audio_url"));
-                    sermon.setSermon_video_url(sermonJObject.getString("video_url"));
-                    sermon.setSermon_pdf_url(sermonJObject.getString("pdf_url"));
-                    sermon.setSermon_date(sermonJObject.getString("sermon_date"));
-                    sermon.setSermon_visible(sermonJObject.getString("visible"));
-                    sermon.setSermon_created_at(sermonJObject.getString("created_at"));
-                    sermon.setSermon_updated_at(sermonJObject.getString("updated_at"));**/
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

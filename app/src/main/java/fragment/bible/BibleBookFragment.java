@@ -31,6 +31,7 @@ import event.ClickListener;
 import event.CustomRecyclerTouchListener;
 import event.pojo.BibleBookPositionEvent;
 import event.pojo.FragConfigChange;
+import model.dyno.FragDyno;
 
 public class BibleBookFragment extends Fragment {
     private FragmentBibleBookBinding fragmentBibleBookBinding;
@@ -112,7 +113,10 @@ public class BibleBookFragment extends Fragment {
         //confirm if is not screen orientation change then clear all the bible,chapters,verse logs in preference file
         if(orientationChange == -1){
             //clear all preference bible related data
-            clearBiblePreference();
+            String[] itemNames = {getString(R.string.preference_book_position),
+                    getString(R.string.preference_chapter_position),
+                    getString(R.string.preference_verse_position)};
+            FragDyno.clearDataPreference(itemNames);
         }
 
         //set bible books
@@ -128,7 +132,7 @@ public class BibleBookFragment extends Fragment {
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
 
                 localTestamentCursor = cursor;
-                int previousBookPosition = getPrevBookPosition();
+                int previousBookPosition = FragDyno.getPrevPosition(getString(R.string.preference_book_position));
 
                 if (previousBookPosition != -1 && orientationChange != -1) {
                     bookPosition = previousBookPosition;
@@ -163,17 +167,11 @@ public class BibleBookFragment extends Fragment {
         handler.startQuery(21, null, ChurchContract.BibleBookEntry.CONTENT_URI, projection, null, null, orderBy);
     }
 
-    private int getPrevBookPosition() {
-        Resources res = getResources();
-        String preferenceFileKey = res.getString(R.string.preference_file_key);
-        SharedPreferences sharedPref = getContext().getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
-       return sharedPref.getInt(res.getString(R.string.preference_book_position),-1);
-    }
 
     private void launchBookChapters(int position) {
 
         //save the current book in preferences
-        saveToPreference(bookPosition);
+        FragDyno.saveToPreference(getString(R.string.preference_book_position), bookPosition);
 
         localTestamentCursor.moveToPosition(position);
         BibleChapterFragment bibleChapterFragment = new BibleChapterFragment();
@@ -193,27 +191,6 @@ public class BibleBookFragment extends Fragment {
         fragmentTransaction.commit();
     }
 
-
-    private void saveToPreference(int bookPosition) {
-        Resources res = getResources();
-        String preferenceFileKey = res.getString(R.string.preference_file_key);
-        SharedPreferences sharedPref = getContext().getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(res.getString(R.string.preference_book_position),bookPosition);
-        editor.commit();
-    }
-
-
-    private void clearBiblePreference() {
-        Resources res = getResources();
-        String preferenceFileKey = res.getString(R.string.preference_file_key);
-        SharedPreferences sharedPref = getContext().getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(res.getString(R.string.preference_book_position),-1);
-        editor.putInt(res.getString(R.string.preference_chapter_position),-1);
-        editor.putInt(res.getString(R.string.preference_verse_position),-1);
-        editor.commit();
-    }
 
 
     @Override

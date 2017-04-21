@@ -36,6 +36,7 @@ import event.pojo.FragConfigChange;
 import event.pojo.SermonDataRetrievedSaved;
 import event.pojo.SermonPositionEvent;
 import fragment.bible.BibleChapterFragment;
+import model.dyno.FragDyno;
 
 
 public class AllSermonsFragment extends Fragment {
@@ -98,7 +99,7 @@ public class AllSermonsFragment extends Fragment {
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
 
                 localCursor = cursor;
-                int previousPosition = getPrevPosition();
+                int previousPosition = FragDyno.getPrevPosition(getString(R.string.preference_sermon_position));
 
                 if (previousPosition != -1 && orientationChange != -1) {
                     sermonPosition = previousPosition;
@@ -145,7 +146,7 @@ public class AllSermonsFragment extends Fragment {
     private void showSpecificSermon(int position) {
 
         //save the current position in preferences
-        saveToPreference(position);
+        FragDyno.saveToPreference(getString(R.string.preference_sermon_position), position);
 
         localCursor.moveToPosition(position);
 
@@ -173,31 +174,6 @@ public class AllSermonsFragment extends Fragment {
          fragmentTransaction.replace(R.id.mainBibleFragment, bibleChapterFragment, "bibleChapterFragment");
          //fragmentTransaction.addToBackStack(null);
          fragmentTransaction.commit();**/
-    }
-
-    private int getPrevPosition() {
-        Resources res = getResources();
-        String preferenceFileKey = res.getString(R.string.preference_file_key);
-        SharedPreferences sharedPref = getContext().getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
-        return sharedPref.getInt(res.getString(R.string.preference_sermon_position), -1);
-    }
-
-    private void saveToPreference(int position) {
-        Resources res = getResources();
-        String preferenceFileKey = res.getString(R.string.preference_file_key);
-        SharedPreferences sharedPref = getContext().getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(res.getString(R.string.preference_sermon_position), position);
-        editor.commit();
-    }
-
-    private void clearDataPreference() {
-        Resources res = getResources();
-        String preferenceFileKey = res.getString(R.string.preference_file_key);
-        SharedPreferences sharedPref = getContext().getSharedPreferences(preferenceFileKey, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt(res.getString(R.string.preference_sermon_position), -1);
-        editor.commit();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -234,13 +210,11 @@ public class AllSermonsFragment extends Fragment {
         //confirm if is not screen orientation change then clear all the bible,chapters,verse logs in preference file
         if (orientationChange == -1) {
             //clear all preference bible related data
-            clearDataPreference();
+            String[] itemNames = {getString(R.string.preference_sermon_position)};
+            FragDyno.clearDataPreference(itemNames);
         }
 
-
-        if(orientationChange != -1){
-            getSermonFromDb();
-        }
+        getSermonFromDb();
 
         //register event
         EventBus.getDefault().register(this);
