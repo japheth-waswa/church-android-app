@@ -14,15 +14,8 @@ import android.view.ViewGroup;
 import com.birbit.android.jobqueue.JobManager;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.FragmentSermonsAllBinding;
-import com.japhethwaswa.church.databinding.FragmentSermonsBinding;
-
-import org.greenrobot.eventbus.EventBus;
 
 import app.NavActivity;
-import event.pojo.ConnectionStatus;
-import job.SermonsJob;
-import job.builder.MyJobsBuilder;
-import model.Connectivity;
 
 
 public class AllSermonsFragment extends Fragment {

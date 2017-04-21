@@ -7,28 +7,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.birbit.android.jobqueue.JobManager;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.FragmentSermonsBinding;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import app.NavActivity;
-import es.dmoral.toasty.Toasty;
 import event.pojo.ConnectionStatus;
-import job.SaveBibleDataToDb;
 import job.SermonsJob;
 import job.builder.MyJobsBuilder;
-import model.Connectivity;
+import model.dyno.Connectivity;
 
 
 public class SermonFragment extends Fragment{

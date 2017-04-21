@@ -5,7 +5,14 @@
     <string name="preference_book_position">bibleBookPosition</string>
     <string name="preference_chapter_position">bibleChapterPosition</string>
     <string name="preference_verse_position">bibleVersePosition</string>
-    <string name="root_domain">http://192.168.3.12:8019/church/public/api/</string>
+    <string name="preference_client_credentials_name">clientCredentialsAccessTokenString</string>
+    <string name="preference_client_credentials_expires">clientCredentialsAccessTokenExpires</string>
+    <string name="oauth_token_endpoint">oauth/token</string>
+    <string name="client_credentials_client_id">3</string>
+    <string name="client_credentials_client_secret">cwQCFnZ0XjeeTyfRPwgorAWu6F8nqWdqqtqHAcl7</string>
+    <string name="root_domain">http://192.168.3.12:8019/church/public/</string>
+    <string name="root_domain_api">http://192.168.3.12:8019/church/public/api/</string>
+    <string name="token_test">validtoken</string>
     <string name="app_sermon">sermons</string>
     <string name="all_sermons_title">All Sermons</string>
 </resources>

@@ -3,6 +3,7 @@
     package="com.japhethwaswa.church">
 
     <application
+        android:name="model.dyno.ApplicationContextProvider"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

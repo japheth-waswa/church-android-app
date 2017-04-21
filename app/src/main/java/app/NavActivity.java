@@ -8,10 +8,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.widget.Toast;
 
-import com.birbit.android.jobqueue.JobManager;
 import com.cleveroad.loopbar.widget.OnItemClickListener;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.ActivityNavBinding;
@@ -24,9 +22,6 @@ import es.dmoral.toasty.Toasty;
 import event.pojo.ConnectionStatus;
 import fragment.bible.BibleFragment;
 import fragment.sermon.SermonFragment;
-import job.SermonsJob;
-import job.builder.MyJobsBuilder;
-import model.Connectivity;
 
 public class NavActivity extends AppCompatActivity {
     //todo in each fragment handle screen orientation appropriately

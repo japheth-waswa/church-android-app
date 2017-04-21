@@ -12,7 +12,6 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.japhethwaswa.church.R;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,8 +21,7 @@ import java.util.Iterator;
 
 import db.ChurchContract;
 import db.DatabaseHelper;
-import event.pojo.ConnectionStatus;
-import model.Connectivity;
+import model.dyno.OAuth;
 
 public class ChurchWebService {
 
@@ -192,9 +190,11 @@ public class ChurchWebService {
 
         Resources res = applicationContext.getResources();
         String relativeUrl = res.getString(R.string.app_sermon);
+        String accessToken = OAuth.getClientCredentialsGrantTypeAccessToken();
+        Log.e("jean-accessTok",accessToken);
+        Log.e("jean",OAuth.getTokenEndPoint());
 
-
-        AndroidNetworking.get(getAbsoluteUrl(applicationContext, relativeUrl))
+        /**AndroidNetworking.get(getAbsoluteUrl(applicationContext, relativeUrl))
                 .setPriority(Priority.HIGH)
                 .setTag("laravelApi")
                 .build()
@@ -208,7 +208,7 @@ public class ChurchWebService {
                     public void onError(ANError anError) {
                         Log.e("jeff-json-err",anError.toString());
                     }
-                });
+                });**/
         //todo get jsonObject,if it returns an error then ensure you get a new access_token from OAuth2
         //todo parse and store the data in local db
         //todo post event for all subscribers that data has been received
@@ -218,7 +218,7 @@ public class ChurchWebService {
 
     private static String getAbsoluteUrl(Context context, String relativeUrl) {
         Resources res = context.getResources();
-        String baseUrl = res.getString(R.string.root_domain);
+        String baseUrl = res.getString(R.string.root_domain_api);
         return baseUrl + relativeUrl;
     }
 

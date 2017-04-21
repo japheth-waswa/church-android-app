@@ -1,4 +1,4 @@
-package model;
+package model.dyno;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
