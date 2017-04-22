@@ -95,6 +95,10 @@ public class AllSermonsFragment extends Fragment {
 
     //fetch all sermons from db.
     private void getSermonFromDb() {
+        if (localCursor != null) {
+            localCursor.close();
+            localCursor =  null;
+        }
         //todo show loader
         fragmentSermonsAllBinding.pageloader.startProgress();
 
@@ -142,8 +146,8 @@ public class AllSermonsFragment extends Fragment {
                 ChurchContract.SermonEntry.COLUMN_SERMON_UPDATED_AT
         };
 
-        //String orderBy = "CAST (" + ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER + " AS INTEGER) ASC";
-        String orderBy = null;
+        String orderBy =  ChurchContract.SermonEntry.COLUMN_SERMON_DATE + " DESC";
+        //String orderBy = null;
 
         handler.startQuery(23, null, ChurchContract.SermonEntry.CONTENT_URI, projection, null, null, orderBy);
     }
@@ -207,7 +211,6 @@ public class AllSermonsFragment extends Fragment {
         if (localCursor != null) {
             localCursor.close();
         }
-
     }
 
     @Override

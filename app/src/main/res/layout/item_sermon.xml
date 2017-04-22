@@ -13,11 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="3dp"
         app:cardElevation="8dp"
-        app:contentPadding="@dimen/standardPadding"
-        android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground">
+        app:contentPadding="@dimen/standardPadding">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,15 +27,24 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="165dp"
-                android:scaleType="fitCenter"
-                app:imageUrl="@{sermon.sermon_image_url}"/>
+                android:scaleType="fitXY"
+                app:imageUrl="@{sermon.sermon_image_url}" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/standardPadding"
+                android:text="@={sermon.sermon_title}"
                 android:textSize="19sp"
-                android:textStyle="bold"
-                android:text="@={sermon.sermon_title}" />
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/standardPadding"
+                android:text="@={sermon.sermon_date}"
+                android:textSize="15sp"
+                android:textStyle="italic" />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

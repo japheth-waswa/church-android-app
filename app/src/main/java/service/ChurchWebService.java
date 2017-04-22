@@ -254,5 +254,10 @@ public class ChurchWebService {
         String baseUrl = res.getString(R.string.root_domain_api);
         return baseUrl + relativeUrl;
     }
+    public static String getRootAbsoluteUrl(Context context, String relativeUrl) {
+        Resources res = context.getResources();
+        String baseUrl = res.getString(R.string.root_domain);
+        return baseUrl + relativeUrl;
+    }
 
 }
