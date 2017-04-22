@@ -31,6 +31,8 @@ import app.NavActivity;
 import db.ChurchContract;
 import db.ChurchQueryHandler;
 import es.dmoral.toasty.Toasty;
+import event.ClickListener;
+import event.CustomRecyclerTouchListener;
 import event.pojo.BibleBookPositionEvent;
 import event.pojo.FragConfigChange;
 import event.pojo.SermonDataRetrievedSaved;
@@ -39,7 +41,7 @@ import fragment.bible.BibleChapterFragment;
 import model.dyno.FragDyno;
 
 
-public class AllSermonsFragment extends Fragment {
+public class SermonAllFragment extends Fragment {
 
     private FragmentSermonsAllBinding fragmentSermonsAllBinding;
     public NavActivity navActivity;
@@ -86,8 +88,23 @@ public class AllSermonsFragment extends Fragment {
         fragmentSermonsAllBinding.sermonsRecycler.setAdapter(sermonRecyclerViewAdapter);
         fragmentSermonsAllBinding.sermonsRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         /****/
+        //add touch listener to recyclerview
+        fragmentSermonsAllBinding.sermonsRecycler.addOnItemTouchListener(new CustomRecyclerTouchListener(
+                getActivity(), fragmentSermonsAllBinding.sermonsRecycler, new ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
 
-        /****/
+                //start a new fragment showing specific sermon
+                showSpecificSermon(position);
+
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }
+        ));
 
 
         return fragmentSermonsAllBinding.getRoot();
@@ -99,7 +116,7 @@ public class AllSermonsFragment extends Fragment {
             localCursor.close();
             localCursor =  null;
         }
-        //todo show loader
+        //show loader
         fragmentSermonsAllBinding.pageloader.startProgress();
 
         ChurchQueryHandler handler = new ChurchQueryHandler(getContext().getContentResolver()) {
@@ -114,7 +131,7 @@ public class AllSermonsFragment extends Fragment {
                     showSpecificSermon(sermonPosition);
                 } else {
                     if (cursor.getCount() > 0) {
-                        //todo hide loader here
+                        //hide loader here
                         fragmentSermonsAllBinding.pageloader.stopProgress();
                         //set recycler cursor
                         sermonRecyclerViewAdapter.setCursor(localCursor);
@@ -169,21 +186,17 @@ public class AllSermonsFragment extends Fragment {
 
         }
 
-        /**BibleChapterFragment bibleChapterFragment = new BibleChapterFragment();
-         String bibleBookCode = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE));
-         String bibleBookName = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME));
+        SermonSpecific sermonSpecific =  new SermonSpecific();
+         String sermonId = localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_ID));
 
          Bundle bundle = new Bundle();
-         bundle.putString("bibleBookCode", bibleBookCode);
-         bundle.putString("bibleBookName", bibleBookName);
          bundle.putInt("orientationChange",orientationChange);
-         bundle.putInt("bibleChapterCurrentVisiblePosition",bibleChapterCurrentVisiblePos);
-         bundle.putInt("bibleVerseCurrentVisiblePosition",bibleVerseCurrentVisiblePos);
+         bundle.putInt("sermonId",Integer.valueOf(sermonId));
 
-         bibleChapterFragment.setArguments(bundle);
-         fragmentTransaction.replace(R.id.mainBibleFragment, bibleChapterFragment, "bibleChapterFragment");
+        sermonSpecific.setArguments(bundle);
+         fragmentTransaction.replace(R.id.mainSermonFragment, sermonSpecific, "sermonSpecificFragment");
          //fragmentTransaction.addToBackStack(null);
-         fragmentTransaction.commit();**/
+         fragmentTransaction.commit();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

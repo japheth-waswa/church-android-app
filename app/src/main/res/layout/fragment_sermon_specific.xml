@@ -2,6 +2,12 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+
+        <variable
+            name="sermon"
+            type="model.Sermon" />
+    </data>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -15,7 +21,7 @@
                 android:textSize="17sp"
                 android:textStyle="bold"
                 android:textColor="@color/colorAccent"
-                android:text="@string/all_sermons_title" />
+                android:text="Sermon Name" />
             <id.arieridwan.lib.PageLoader
                 android:id="@+id/pageloader"
                 android:layout_width="match_parent"
@@ -27,10 +33,6 @@
                 app:setErrorImage="@drawable/ic_error"
                 app:setLoadingAnimationMode="rotate"/>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/sermonsRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
         </LinearLayout>
 
 

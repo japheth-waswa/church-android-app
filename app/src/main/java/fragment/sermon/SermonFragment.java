@@ -20,7 +20,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import app.NavActivity;
-import event.pojo.BibleVersePositionEvent;
 import event.pojo.ConnectionStatus;
 import event.pojo.FragConfigChange;
 import event.pojo.SermonPositionEvent;
@@ -71,13 +70,13 @@ public class SermonFragment extends Fragment {
 
         //todo orientation management for tablets ie 2 split views
         //start Fragment to display all sermons
-        AllSermonsFragment allSermonsFragment = new AllSermonsFragment();
+        SermonAllFragment sermonAllFragment = new SermonAllFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("orientationChange", orientationChange);
         bundle.putInt("positionCurrentlyVisible", positionCurrentlyVisible);
 
-        allSermonsFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.mainSermonFragment, allSermonsFragment, "allSermonsFragment");
+        sermonAllFragment.setArguments(bundle);
+        fragmentTransaction.replace(R.id.mainSermonFragment, sermonAllFragment, "sermonAllFragment");
         fragmentTransaction.commit();
 
 
