@@ -80,7 +80,8 @@ public class AllSermonsFragment extends Fragment {
         //set cursor to null
         localCursor = null;
 
-        /**sermon recycler view adapter**/
+
+         /**sermon recycler view adapter**/
         sermonRecyclerViewAdapter = new SermonRecyclerViewAdapter(localCursor);
         fragmentSermonsAllBinding.sermonsRecycler.setAdapter(sermonRecyclerViewAdapter);
         fragmentSermonsAllBinding.sermonsRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
@@ -94,6 +95,9 @@ public class AllSermonsFragment extends Fragment {
 
     //fetch all sermons from db.
     private void getSermonFromDb() {
+        //todo show loader
+        fragmentSermonsAllBinding.pageloader.startProgress();
+
         ChurchQueryHandler handler = new ChurchQueryHandler(getContext().getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
@@ -106,6 +110,8 @@ public class AllSermonsFragment extends Fragment {
                     showSpecificSermon(sermonPosition);
                 } else {
                     if (cursor.getCount() > 0) {
+                        //todo hide loader here
+                        fragmentSermonsAllBinding.pageloader.stopProgress();
                         //set recycler cursor
                         sermonRecyclerViewAdapter.setCursor(localCursor);
 

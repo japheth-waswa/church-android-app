@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -21,6 +22,17 @@
                 android:textStyle="bold"
                 android:textColor="@color/colorAccent"
                 android:text="@string/all_sermons_title" />
+            <id.arieridwan.lib.PageLoader
+                android:id="@+id/pageloader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:setLoadingText="Please wait..."
+                app:setErrorText="Try again later"
+                app:setTextColor="@color/black"
+                app:setLoadingImage="@drawable/ic_loader"
+                app:setErrorImage="@drawable/ic_error"
+                app:setLoadingAnimationMode="rotate"/>
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/sermonsRecycler"
                 android:layout_width="match_parent"
