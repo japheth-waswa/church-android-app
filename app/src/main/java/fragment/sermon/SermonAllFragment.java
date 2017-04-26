@@ -53,6 +53,7 @@ public class SermonAllFragment extends Fragment {
     private int sermonPosition = -1;
     private int orientationChange = -1;
     private int currVisiblePosition = -1;
+    private int previousPosition = -1;
 
     @Nullable
     @Override
@@ -124,7 +125,7 @@ public class SermonAllFragment extends Fragment {
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
 
                 localCursor = cursor;
-                int previousPosition = FragDyno.getPrevPosition(getString(R.string.preference_sermon_position));
+                 previousPosition = FragDyno.getPrevPosition(getString(R.string.preference_sermon_position));
 
                 if (previousPosition != -1 && orientationChange != -1) {
                     sermonPosition = previousPosition;
@@ -179,7 +180,8 @@ public class SermonAllFragment extends Fragment {
 
         //todo on click a sermon,start bg job to get the specific sermon from the server.
         //todo this job should not run if it is orientation change.
-        if (orientationChange == -1) {
+        if (previousPosition == -1) {
+            Log.e("jean-sermon","doing it");
             //start bg job to get specific sermon from the server
             //jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getActivity().getApplicationContext()));
             //jobManager.addJobInBackground(new SermonsJob());

@@ -28,6 +28,7 @@ import db.ChurchQueryHandler;
 import event.pojo.BibleVersePositionEvent;
 import event.pojo.FragConfigChange;
 import model.BibleChapter;
+import model.dyno.FragDyno;
 
 public class SermonSpecific extends Fragment {
     private FragmentSermonSpecificBinding fragmentSermonSpecificBinding;
@@ -76,36 +77,41 @@ public class SermonSpecific extends Fragment {
 
         //show loader
         fragmentSermonSpecificBinding.pageloader.startProgress();
-
         ChurchQueryHandler handler = new ChurchQueryHandler(getContext().getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
 
                 localCursor = cursor;
-
                     if (cursor.getCount() > 0) {
                         //hide loader here
                         fragmentSermonSpecificBinding.pageloader.stopProgress();
-                        //todo set sermon data to the UI object
-
+                        //todo update UI
                     }
+
+
 
 
             }
         };
 
         String[] projection = {
-                ChurchContract.BibleVerseEntry.COLUMN_VERSE,
-                ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE,
-                ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER,
+                ChurchContract.SermonEntry.COLUMN_SERMON_ID,
+                ChurchContract.SermonEntry.COLUMN_SERMON_TITLE,
+                ChurchContract.SermonEntry.COLUMN_SERMON_IMAGE_URL,
+                ChurchContract.SermonEntry.COLUMN_SERMON_BRIEF_DESCRIPTION,
+                ChurchContract.SermonEntry.COLUMN_SERMON_AUDIO_URL,
+                ChurchContract.SermonEntry.COLUMN_SERMON_VIDEO_URL,
+                ChurchContract.SermonEntry.COLUMN_SERMON_PDF_URL,
+                ChurchContract.SermonEntry.COLUMN_SERMON_DATE,
+                ChurchContract.SermonEntry.COLUMN_SERMON_VISIBLE,
+                ChurchContract.SermonEntry.COLUMN_SERMON_CREATED_AT,
+                ChurchContract.SermonEntry.COLUMN_SERMON_UPDATED_AT
         };
 
-        String selection = ChurchContract.BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE + "=?";
-        //String[] selectionArgs = {bibleChapterCode};
-        String[] selectionArgs = null;
-        String orderBy = "CAST (" + ChurchContract.BibleVerseEntry.COLUMN_VERSE_NUMBER + " AS INTEGER) ASC";
+        String selection =  ChurchContract.SermonEntry.COLUMN_SERMON_ID + "=?";
+        String[] selectionArgs = {String.valueOf(sermonId)};
 
-        handler.startQuery(21, null, ChurchContract.BibleVerseEntry.CONTENT_URI, projection,selection, selectionArgs, orderBy);
+        handler.startQuery(23, null, ChurchContract.SermonEntry.CONTENT_URI, projection, selection, selectionArgs, null);
     }
 
 
@@ -126,7 +132,7 @@ public class SermonSpecific extends Fragment {
         super.onStart();
 
         //get this specific sermon
-        //getThisSermonFromDb();
+        getThisSermonFromDb();
 
         //register event
         //EventBus.getDefault().register(this);
