@@ -288,7 +288,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
     //method
     private void startTrackingPosition() {
 
-        timer = new Timer("Sermon Player Timer");
+        /**timer = new Timer("Sermon Player Timer");
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -298,9 +298,20 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
                 }
 
             }
-        }, UPDATE_INTERVAL, UPDATE_INTERVAL);
-
+        }, UPDATE_INTERVAL, UPDATE_INTERVAL);**/
+        progresssTrackingThread.run();
     }
+
+    private Runnable progresssTrackingThread=new Runnable() {
+        @Override
+        public void run() {
+            MediaPlayer tempMediaPlayer = mediaPlayer;
+            if (tempMediaPlayer != null && tempMediaPlayer.isPlaying()) {
+                fragmentSermonSpecificBinding.playLayout.setProgress((float) tempMediaPlayer.getCurrentPosition() / tempMediaPlayer.getDuration());
+            }
+            fragmentSermonSpecificBinding.playLayout.postDelayed(this,UPDATE_INTERVAL);
+        }
+    };
 
 
     //todo rewrite this method
