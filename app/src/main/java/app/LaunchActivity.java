@@ -51,7 +51,7 @@ public class LaunchActivity extends AppCompatActivity {
                 cursor.close();
 
                 if(runBg == true){
-                    //todo this job does not require internet connection therefore remove network persisit in job
+                    //this job does not require internet connection therefore remove network persisit in job
                     dbPreparation();
                 }
             }

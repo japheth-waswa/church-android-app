@@ -3,6 +3,7 @@ package service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.androidnetworking.AndroidNetworking;
@@ -20,24 +21,47 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 
+import app.LaunchActivity;
 import db.ChurchContract;
 import db.ChurchQueryHandler;
 import db.DatabaseHelper;
+import event.pojo.BibleUpdate;
 import event.pojo.SermonDataRetrievedSaved;
 import model.dyno.OAuth;
 
 public class ChurchWebService {
 
+    public static boolean checkDataInDb(Context applicationContext){
+        //start job only if bible db is empty
+
+        boolean dataInDb = false;
+        DatabaseHelper helper = new DatabaseHelper(applicationContext);
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        String[] projection = {ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER};
+        Cursor cursor = db.query(ChurchContract.BibleBookEntry.TABLE_NAME,projection,null,null,null,null,null);
+        if(cursor != null && cursor.getCount() >0){
+            dataInDb = true;
+        }
+        cursor.close();
+        db.close();
+
+        return dataInDb;
+
+    }
     public static void servSaveBibleDataToDb(Context applicationContext) {
 
-        //parse bible books from bible_books.txt
-        parseAndSaveBibleBooks(applicationContext);
+        if(checkDataInDb(applicationContext) == false){
+            //parse bible books from bible_books.txt
+            parseAndSaveBibleBooks(applicationContext);
 
-        //parse bible chapters from bible_chapters.txt
-        parseAndSaveBibleChapters(applicationContext);
+            //parse bible chapters from bible_chapters.txt
+            parseAndSaveBibleChapters(applicationContext);
 
-        //parse bible verses from bible_verses.txt
-        parseAndSaveBibleVerses(applicationContext);
+            //parse bible verses from bible_verses.txt
+            parseAndSaveBibleVerses(applicationContext);
+        }
+
     }
 
     private static void parseAndSaveBibleBooks(Context applicationContext) {
@@ -82,6 +106,9 @@ public class ChurchWebService {
             }
 
             db.close();
+
+            //post event bible books ready
+           EventBus.getDefault().post(new BibleUpdate(0));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -131,6 +158,8 @@ public class ChurchWebService {
             }
 
             db.close();
+            //post event bible chapters ready
+           EventBus.getDefault().post(new BibleUpdate(1));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -180,6 +209,8 @@ public class ChurchWebService {
             }
 
             db.close();
+            //post event bible verses ready
+            EventBus.getDefault().post(new BibleUpdate(2));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -188,7 +219,7 @@ public class ChurchWebService {
 
     }
 
-    //todo create class that handles OAuth2 authentication and access token retrieval
+
     public static void serviceGetSermons(final Context applicationContext) {
 
         Resources res = applicationContext.getResources();

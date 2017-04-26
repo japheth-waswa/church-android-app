@@ -24,6 +24,7 @@ import adapters.recyclerview.bible.BibleVerseRecyclerViewAdapter;
 import app.NavActivity;
 import db.ChurchContract;
 import db.ChurchQueryHandler;
+import event.pojo.BibleUpdate;
 import event.pojo.BibleVersePositionEvent;
 import event.pojo.FragConfigChange;
 import model.BibleChapter;
@@ -90,7 +91,7 @@ public class BibleVerseFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        //set bible books
+        //set bible verses
         setVerseTestaments();
 
         //register event
@@ -98,6 +99,9 @@ public class BibleVerseFragment extends Fragment {
     }
 
     private void setVerseTestaments() {
+        //show loader
+        fragmentBibleVerseBinding.pageloader.startProgress();
+
         ChurchQueryHandler handler = new ChurchQueryHandler(getContext().getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
@@ -105,6 +109,9 @@ public class BibleVerseFragment extends Fragment {
                 localTestamentCursor = cursor;
 
                     if (cursor.getCount() > 0) {
+                        //hide loader here
+                        fragmentBibleVerseBinding.pageloader.stopProgress();
+
                         //set recycler cursor
                         bibleVerseRecyclerViewAdapter.setCursor(localTestamentCursor);
 
@@ -151,6 +158,15 @@ public class BibleVerseFragment extends Fragment {
          EventBus.getDefault().post(new BibleVersePositionEvent((int) bibleVerseCurrentVisiblePosition));
 
         }
+
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onBibleUpdate(BibleUpdate event){
+        if(event.getBibleRank() == 2){
+            //set verses
+            setVerseTestaments();
+        }
+    }
 
 
     @Override

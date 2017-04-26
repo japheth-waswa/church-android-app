@@ -13,9 +13,9 @@ public class SaveBibleDataToDb extends Job{
     public static final int PRIORITY = 1;
 
     public SaveBibleDataToDb() {
-        // This job requires network connectivity,
+        // This job does not require network connectivity,
         // and should be persisted in case the application exits before job is completed.
-        super(new Params(PRIORITY).requireNetwork().persist());
+        super(new Params(PRIORITY).persist());
     }
     @Override
     public void onAdded() {

@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.japhethwaswa.church">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+
     <application
         android:name="model.dyno.ApplicationContextProvider"
         android:allowBackup="true"

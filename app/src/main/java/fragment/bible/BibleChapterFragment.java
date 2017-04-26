@@ -30,6 +30,7 @@ import db.ChurchQueryHandler;
 import event.ClickListener;
 import event.CustomRecyclerTouchListener;
 import event.pojo.BibleChapterPositionEvent;
+import event.pojo.BibleUpdate;
 import event.pojo.FragConfigChange;
 import model.BibleBook;
 
@@ -117,7 +118,7 @@ public class BibleChapterFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        //set bible books
+        //set bible chapters
         setChapterTestaments();
 
         //register event
@@ -125,6 +126,9 @@ public class BibleChapterFragment extends Fragment {
     }
 
     private void setChapterTestaments() {
+        //show loader
+        fragmentBibleChapterBinding.pageloader.startProgress();
+
         ChurchQueryHandler handler = new ChurchQueryHandler(getContext().getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
@@ -137,6 +141,10 @@ public class BibleChapterFragment extends Fragment {
                     launchChapterVerses(chapterPosition);
                 } else {
                     if (cursor.getCount() > 0) {
+
+                        //hide loader here
+                        fragmentBibleChapterBinding.pageloader.stopProgress();
+
                         //set recycler cursor
                         bibleChapterRecyclerViewAdapter.setCursor(localTestamentCursor);
 
@@ -225,6 +233,14 @@ public class BibleChapterFragment extends Fragment {
 
          //post event to EventBus
          EventBus.getDefault().post(new BibleChapterPositionEvent((int) bibleChapterCurrentVisiblePosition));
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onBibleUpdate(BibleUpdate event){
+        if(event.getBibleRank() == 1){
+            //set chapters
+            setChapterTestaments();
+        }
     }
 
 

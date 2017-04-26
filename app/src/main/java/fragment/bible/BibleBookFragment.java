@@ -30,6 +30,7 @@ import db.ChurchQueryHandler;
 import event.ClickListener;
 import event.CustomRecyclerTouchListener;
 import event.pojo.BibleBookPositionEvent;
+import event.pojo.BibleUpdate;
 import event.pojo.FragConfigChange;
 import model.dyno.FragDyno;
 
@@ -128,6 +129,9 @@ public class BibleBookFragment extends Fragment {
     }
 
     private void setBookTestaments() {
+        //show loader
+        fragmentBibleBookBinding.pageloader.startProgress();
+
         ChurchQueryHandler handler = new ChurchQueryHandler(getContext().getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
@@ -140,6 +144,10 @@ public class BibleBookFragment extends Fragment {
                     launchBookChapters(bookPosition);
                 } else {
                     if (cursor.getCount() > 0) {
+
+                        //hide loader here
+                        fragmentBibleBookBinding.pageloader.stopProgress();
+
                         //set recycler cursor
                         bibleBookRecyclerViewAdapter.setCursor(localTestamentCursor);
 
@@ -214,6 +222,14 @@ public class BibleBookFragment extends Fragment {
 
          //post event to EventBus
          EventBus.getDefault().post(new BibleBookPositionEvent((int) bibleBookCurrentVisiblePosition));
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onBibleUpdate(BibleUpdate event){
+        if(event.getBibleRank() == 0){
+            //set bible books
+            setBookTestaments();
+        }
     }
 
 
