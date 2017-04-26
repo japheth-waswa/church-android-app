@@ -1,18 +1,26 @@
 package fragment.sermon;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.os.StrictMode;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +62,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
 
 
+
     private FragmentSermonSpecificBinding fragmentSermonSpecificBinding;
     //public NavActivity navActivity;
 
@@ -71,7 +80,9 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
     private Timer timer;
     private VisualizerShadowChanger mShadowChanger;
     private static final long UPDATE_INTERVAL = 20;
-    private static final String EXTRA_FILE_URIS = "EXTRA_FILE_URIS";
+    public static final String EXTRA_FILE_URIS = "EXTRA_FILE_URIS";
+    public static final String EXTRA_SELECT_TRACK = "EXTRA_SELECT_TRACK";
+    public static final int MY_PERMISSIONS_REQUEST_READ_AUDIO = 11;
 
     /**
      * ======================
@@ -291,6 +302,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
     }
 
 
+    //todo rewrite this method
     //method(use intent from activity)
     private void selectNewTrack(Intent intent) {
         if (preparing) {
@@ -301,8 +313,25 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
             AddNewTracks(intent);
         }
 
+        MusicItem item = intent.getParcelableExtra(EXTRA_SELECT_TRACK);
+
+        if (item == null && playingIndex == -1 || playingIndex != -1 && items.get(playingIndex).equals(item)) {
+            if (mediaPlayer.isPlaying()) {
+                fragmentSermonSpecificBinding.playLayout.startDismissAnimation();
+            } else {
+                fragmentSermonSpecificBinding.playLayout.startRevealAnimation();
+            }
+
+            return;
+        }
+
+        playingIndex = items.indexOf(item);
+        startCurrentTrack();
+
+
     }
 
+    //todo rewrite this method
     //method(use intent from activity)
     private void AddNewTracks(Intent intent) {
 
@@ -310,27 +339,149 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
 
         if (playingIndex != -1)
             playingItem = items.get(playingIndex);
-        items.clear();
+        items.clear();//todo they are sure if current playing item,then it will be available
 
         //get the parcelable
+        Parcelable[] items = intent.getParcelableArrayExtra(EXTRA_FILE_URIS);
+
+        for (Parcelable item : items) {
+            if (item instanceof MusicItem)
+                this.items.add((MusicItem) item);
+        }
+
+        if (playingItem == null) {
+            playingIndex = -1;
+        } else {
+            playingIndex = this.items.indexOf(playingItem);
+        }
+
+        if (playingIndex == -1 && mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+        }
 
 
+    }
+
+    //method(not necessary if permissions set in AndroidManifest)
+    private void checkVisualiserPermissions() {
+
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.MODIFY_AUDIO_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
+            startVisualiser();
+        } else {
+
+            //ask for these permissions in 2 ways
+            if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.RECORD_AUDIO) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.MODIFY_AUDIO_SETTINGS)){
+
+                AlertDialog.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == DialogInterface.BUTTON_POSITIVE) {
+                            requestPermissions();
+                        } else if (which == DialogInterface.BUTTON_NEGATIVE) {
+                            permissionsNotGranted();
+                        }
+                    }
+                };
+                new AlertDialog.Builder(getContext())
+                        .setTitle(getString(R.string.title_permissions))
+                        .setMessage(Html.fromHtml(getString(R.string.message_permissions)))
+                        .setPositiveButton(getString(R.string.btn_next), onClickListener)
+                        .setNegativeButton(getString(R.string.btn_cancel), onClickListener)
+                        .show();
+
+            }else{
+                requestPermissions();
+            }
+
+        }
+
+    }
+
+    //method
+    //todo do it with fragment instead
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(
+                getActivity(),
+                new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS},
+                MY_PERMISSIONS_REQUEST_READ_AUDIO
+        );
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_PERMISSIONS_REQUEST_READ_AUDIO) {
+            boolean bothGranted = true;
+            for (int i = 0; i < permissions.length; i++) {
+                if (Manifest.permission.RECORD_AUDIO.equals(permissions[i]) || Manifest.permission.MODIFY_AUDIO_SETTINGS.equals(permissions[i])) {
+                    bothGranted &= grantResults[i] == PackageManager.PERMISSION_GRANTED;
+                }
+            }
+            if (bothGranted) {
+                startVisualiser();
+            } else {
+                permissionsNotGranted();
+            }
+        }
+    }
+
+    private void permissionsNotGranted() {
+
+    }
+
+    //method start visualizer
+    private void startVisualiser() {
+
+        if(mShadowChanger ==  null){
+            mShadowChanger = VisualizerShadowChanger.newInstance(mediaPlayer.getAudioSessionId());
+            mShadowChanger.setEnabledVisualization(true);
+            fragmentSermonSpecificBinding.playLayout.setShadowProvider(mShadowChanger);
+            Log.i("startVisualiser","startVisualiser " + mediaPlayer.getAudioSessionId());
+
+        }
     }
 
     @Override
     public void onCompletion(MediaPlayer mp) {
 
+        if(playingIndex == -1){
+            if(fragmentSermonSpecificBinding.playLayout != null){
+                fragmentSermonSpecificBinding.playLayout.startDismissAnimation();
+            }
+            return;
+        }
+
+        //play next track
+        playingIndex++;
+        if(playingIndex >= items.size()){
+            playingIndex = 0;
+            if(items.size() == 0){
+                return;
+            }
+        }
+
+        startCurrentTrack();
+
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
+        preparing = true;
         return false;
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-
+        preparing = false;
+        mediaPlayer.start();
+        stopTrackingPosition();
+        startTrackingPosition();
+        checkVisualiserPermissions();
     }
+
 
     /**
      * ======================
@@ -386,11 +537,26 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         /**close cursors**/
         if (localCursor != null) {
             localCursor.close();
         }
+
+        /**=====play widget======**/
+        if(mShadowChanger != null){
+            mShadowChanger.release();
+        }
+
+        stopTrackingPosition();
+        if(mediaPlayer.isPlaying()){
+            mediaPlayer.stop();
+        }
+        mediaPlayer.reset();
+        mediaPlayer.release();
+        mediaPlayer =  null;
+        /**======================**/
+
+        super.onDestroy();
     }
 
 
@@ -411,4 +577,26 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         super.onStop();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        /**=====play widget======**/
+        if(mShadowChanger != null){
+            mShadowChanger.setEnabledVisualization(true);
+        }
+        /**======================**/
+
+    }
+
+    @Override
+    public void onPause() {
+
+        /**=====play widget======**/
+        if(mShadowChanger != null){
+            mShadowChanger.setEnabledVisualization(false);
+        }
+        /**======================**/
+
+        super.onPause();
+    }
 }
