@@ -288,20 +288,10 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
     //method
     private void startTrackingPosition() {
 
-        /**timer = new Timer("Sermon Player Timer");
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                MediaPlayer tempMediaPlayer = mediaPlayer;
-                if (tempMediaPlayer != null && tempMediaPlayer.isPlaying()) {
-                    fragmentSermonSpecificBinding.playLayout.setProgress((float) tempMediaPlayer.getCurrentPosition() / tempMediaPlayer.getDuration());
-                }
-
-            }
-        }, UPDATE_INTERVAL, UPDATE_INTERVAL);**/
         progresssTrackingThread.run();
     }
 
+    //variable
     private Runnable progresssTrackingThread=new Runnable() {
         @Override
         public void run() {
@@ -374,6 +364,21 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         musicItem.setFileUri(albumMusicUri);
 
         this.items.add(musicItem);
+
+        MusicItem musicItemed = new MusicItem();
+        musicItemed.setAlbum("My Album");
+
+        Uri albumArtUrii = Uri.parse("https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/StateLibQld_1_121964_Steel_bridge_over_the_Brisbane_River_at_Chelmer%2C_ca._1900.jpg/800px-StateLibQld_1_121964_Steel_bridge_over_the_Brisbane_River_at_Chelmer%2C_ca._1900.jpg");
+        musicItemed.setAlbumArtUri(albumArtUrii);
+
+        musicItemed.setArtist("Artist Name");
+        musicItemed.setDuration(10000);
+        musicItemed.setTitle("My song title");
+
+        Uri albumMusicUrii = Uri.parse("https://upload.wikimedia.org/wikipedia/commons/3/37/00_Jazz_Violin_Solo.ogg");
+        musicItemed.setFileUri(albumMusicUrii);
+
+        this.items.add(musicItemed);
 
         if (playingItem == null) {
             playingIndex = -1;
