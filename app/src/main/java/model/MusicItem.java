@@ -13,6 +13,30 @@ public class MusicItem implements Parcelable{
     private Uri albumArtUri;
     private Uri fileUri;
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAlbum(String album) {
+        this.album = album;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public void setAlbumArtUri(Uri albumArtUri) {
+        this.albumArtUri = albumArtUri;
+    }
+
+    public void setFileUri(Uri fileUri) {
+        this.fileUri = fileUri;
+    }
+
     public MusicItem title(String title) {
         this.title = title;
         return this;
@@ -122,7 +146,8 @@ public class MusicItem implements Parcelable{
         dest.writeParcelable(this.fileUri, 0);
     }
 
-    protected MusicItem(Parcel in) {
+    public MusicItem() {}
+    public MusicItem(Parcel in) {
         this.title = in.readString();
         this.album = in.readString();
         this.artist = in.readString();

@@ -9,6 +9,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.os.StrictMode;
@@ -308,8 +309,8 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         if (preparing) {
             return;
         }
-
-        if (intent.hasExtra(EXTRA_FILE_URIS)) {
+        AddNewTracks(intent);
+       /** if (intent.hasExtra(EXTRA_FILE_URIS)) {
             AddNewTracks(intent);
         }
 
@@ -325,7 +326,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
             return;
         }
 
-        playingIndex = items.indexOf(item);
+        playingIndex = items.indexOf(item);**/
         startCurrentTrack();
 
 
@@ -342,18 +343,35 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         items.clear();//todo they are sure if current playing item,then it will be available
 
         //get the parcelable
-        Parcelable[] items = intent.getParcelableArrayExtra(EXTRA_FILE_URIS);
+        /**Parcelable[] items = intent.getParcelableArrayExtra(EXTRA_FILE_URIS);
 
         for (Parcelable item : items) {
             if (item instanceof MusicItem)
                 this.items.add((MusicItem) item);
-        }
+        }**/
+        MusicItem musicItem = new MusicItem();
+        musicItem.setAlbum("My Album");
+
+        Uri albumArtUri = Uri.parse("http://www.mulierchile.com/images/free-images/free-images-1.jpg");
+        musicItem.setAlbumArtUri(albumArtUri);
+
+        musicItem.setArtist("Artist Name");
+        musicItem.setDuration(10000);
+        musicItem.setTitle("My song title");
+
+        Uri albumMusicUri = Uri.parse("https://upload.wikimedia.org/wikipedia/commons/6/6c/Grieg_Lyric_Pieces_Kobold.ogg");
+        musicItem.setFileUri(albumMusicUri);
+
+        this.items.add(musicItem);
 
         if (playingItem == null) {
             playingIndex = -1;
         } else {
             playingIndex = this.items.indexOf(playingItem);
         }
+
+        //todo i injected to 0 since it will always be 0 for 1 item
+        playingIndex = 0;
 
         if (playingIndex == -1 && mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
