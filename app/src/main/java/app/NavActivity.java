@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -20,13 +21,14 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import es.dmoral.toasty.Toasty;
 import event.pojo.ConnectionStatus;
+import event.pojo.NavActivityColor;
 import event.pojo.SermonDataRetrievedSaved;
 import fragment.bible.BibleFragment;
 import fragment.sermon.SermonFragment;
 
 public class NavActivity extends AppCompatActivity {
     //todo in each fragment handle screen orientation appropriately
-    private ActivityNavBinding activityNavBinding;
+    public ActivityNavBinding activityNavBinding;
     private int navPosition;
     public FragmentManager fragmentManager = getSupportFragmentManager();
     //public JobManager jobManager;
@@ -151,6 +153,11 @@ public class NavActivity extends AppCompatActivity {
             //notify user to enable internet connection
             Toasty.error(this, "Please check your internet connection.", Toast.LENGTH_SHORT, true).show();
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNavActivityColor(NavActivityColor event){
+        activityNavBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this,event.getColor()));
     }
 
 

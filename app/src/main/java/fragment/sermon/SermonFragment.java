@@ -38,6 +38,8 @@ public class SermonFragment extends Fragment {
     private int orientationChange = -1;
     private int positionCurrentlyVisible = -1;
 
+    //todo top-priority-handle SQLiteDatabaseLockedException if clicked instantly on starting the app
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

@@ -1,6 +1,8 @@
 package fragment.sermon;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +21,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Html;
@@ -55,6 +58,7 @@ import db.ChurchContract;
 import db.ChurchQueryHandler;
 import event.pojo.BibleVersePositionEvent;
 import event.pojo.FragConfigChange;
+import event.pojo.NavActivityColor;
 import model.BibleChapter;
 import model.MusicItem;
 import model.dyno.FragDyno;
@@ -65,7 +69,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
 
 
     private FragmentSermonSpecificBinding fragmentSermonSpecificBinding;
-    //public NavActivity navActivity;
+    public NavActivity navActivity;
 
     private Cursor localCursor;
     private int orientationChange = -1;
@@ -114,7 +118,9 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         //set cursor to null
         localCursor = null;
 
-        //navActivity = (NavActivity) getActivity();
+        navActivity = (NavActivity) getActivity();
+        //todo priorityHIgh-get rid of several instances of navActivity by using event system
+        hideNavigation();
 
         /**=====play widget======**/
         /**======================**/
@@ -182,6 +188,21 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
 
 
         return fragmentSermonSpecificBinding.getRoot();
+    }
+
+    private void hideNavigation() {
+        //navActivity.activityNavBinding.mainNavigationView.setVisibility(View.GONE);
+        navActivity.activityNavBinding.mainNavigationView.animate()
+                .translationY(navActivity.activityNavBinding.mainNavigationView.getHeight())
+                .alpha(0.0f)
+                .setDuration(300)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        navActivity.activityNavBinding.mainNavigationView.setVisibility(View.GONE);
+                    }
+                });
     }
 
 
@@ -568,6 +589,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
 
 
     //todo subscribe to event and update data
+    //todo subscribe to fragmentConfig change to save the current item  playing  and play position
 
     @Override
     public void onDestroy() {
@@ -614,11 +636,15 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
     @Override
     public void onResume() {
         super.onResume();
+        //todo post event to change background color in activity
+        EventBus.getDefault().post(new NavActivityColor(R.color.lightBlack));
         /**=====play widget======**/
         if(mShadowChanger != null){
             mShadowChanger.setEnabledVisualization(true);
         }
         /**======================**/
+
+
 
     }
 

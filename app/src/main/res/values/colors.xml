@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF5722</color>
     <color name="colorSplash">#FFFFFF</color>
     <color name="colorTriadNav">#3ccc0a</color>
+    <color name="lightBlack">#323232</color>
 </resources>
