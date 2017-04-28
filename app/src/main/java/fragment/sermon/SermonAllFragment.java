@@ -44,9 +44,10 @@ import model.dyno.FragDyno;
 public class SermonAllFragment extends Fragment {
 
     private FragmentSermonsAllBinding fragmentSermonsAllBinding;
-    public NavActivity navActivity;
+    //public NavActivity navActivity;
     private JobManager jobManager;
     private FragmentManager localFragmentManager;
+    //private FragmentManager localFragmentManager;
     private FragmentTransaction fragmentTransaction;
     private SermonRecyclerViewAdapter sermonRecyclerViewAdapter;
     private Cursor localCursor;
@@ -76,8 +77,9 @@ public class SermonAllFragment extends Fragment {
 
         //fragment management
 
-        navActivity = (NavActivity) getActivity();
-        localFragmentManager = navActivity.fragmentManager;
+        //navActivity = (NavActivity) getActivity();
+        //localFragmentManager = navActivity.fragmentManager;
+        localFragmentManager = getActivity().getSupportFragmentManager();
         fragmentTransaction = localFragmentManager.beginTransaction();
 
         //set cursor to null

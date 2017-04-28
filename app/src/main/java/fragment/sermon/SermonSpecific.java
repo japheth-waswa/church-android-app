@@ -13,6 +13,9 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.Parcelable;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
@@ -59,6 +62,7 @@ import db.ChurchQueryHandler;
 import event.pojo.BibleVersePositionEvent;
 import event.pojo.FragConfigChange;
 import event.pojo.NavActivityColor;
+import event.pojo.NavActivityHideNavigation;
 import model.BibleChapter;
 import model.MusicItem;
 import model.dyno.FragDyno;
@@ -66,10 +70,9 @@ import model.dyno.FragDyno;
 public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
 
-
-
+    private static final int MESSAGE_ID = 5;
     private FragmentSermonSpecificBinding fragmentSermonSpecificBinding;
-    public NavActivity navActivity;
+   // public NavActivity navActivity;
 
     private Cursor localCursor;
     private int orientationChange = -1;
@@ -118,8 +121,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         //set cursor to null
         localCursor = null;
 
-        navActivity = (NavActivity) getActivity();
-        //todo priorityHIgh-get rid of several instances of navActivity by using event system
+        //navActivity = (NavActivity) getActivity();
         hideNavigation();
 
         /**=====play widget======**/
@@ -182,7 +184,8 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         mediaPlayer.setOnErrorListener(this);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         fragmentSermonSpecificBinding.playLayout.fastOpen();
-        selectNewTrack(getActivity().getIntent());
+        //selectNewTrack(getActivity().getIntent());
+        selectNewTrack();
 
         /**======================**/
 
@@ -191,18 +194,8 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
     }
 
     private void hideNavigation() {
-        //navActivity.activityNavBinding.mainNavigationView.setVisibility(View.GONE);
-        navActivity.activityNavBinding.mainNavigationView.animate()
-                .translationY(navActivity.activityNavBinding.mainNavigationView.getHeight())
-                .alpha(0.0f)
-                .setDuration(300)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        navActivity.activityNavBinding.mainNavigationView.setVisibility(View.GONE);
-                    }
-                });
+       //post event
+        EventBus.getDefault().post(new NavActivityHideNavigation(false));
     }
 
 
@@ -309,29 +302,37 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
     //method
     private void startTrackingPosition() {
 
-        progresssTrackingThread.run();
-    }
+        //progresssTrackingThread.run();
+        timer = new Timer("MainActivity Timer");
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        MediaPlayer tempMediaPlayer = mediaPlayer;
+                        if (tempMediaPlayer != null && tempMediaPlayer != null && tempMediaPlayer.isPlaying()) {
 
-    //variable
-    private Runnable progresssTrackingThread=new Runnable() {
-        @Override
-        public void run() {
-            MediaPlayer tempMediaPlayer = mediaPlayer;
-            if (tempMediaPlayer != null && tempMediaPlayer.isPlaying()) {
-                fragmentSermonSpecificBinding.playLayout.setProgress((float) tempMediaPlayer.getCurrentPosition() / tempMediaPlayer.getDuration());
+                            fragmentSermonSpecificBinding.playLayout.setProgress((float) tempMediaPlayer.getCurrentPosition() / tempMediaPlayer.getDuration());
+                        }
+                    }
+                });
+
             }
-            fragmentSermonSpecificBinding.playLayout.postDelayed(this,UPDATE_INTERVAL);
-        }
-    };
+        }, UPDATE_INTERVAL, UPDATE_INTERVAL);
+
+    }
 
 
     //todo rewrite this method
     //method(use intent from activity)
-    private void selectNewTrack(Intent intent) {
+    //private void selectNewTrack(Intent intent) {
+    private void selectNewTrack() {
         if (preparing) {
             return;
         }
-        AddNewTracks(intent);
+        //AddNewTracks(intent);
+        AddNewTracks();
        /** if (intent.hasExtra(EXTRA_FILE_URIS)) {
             AddNewTracks(intent);
         }
@@ -356,7 +357,8 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
 
     //todo rewrite this method
     //method(use intent from activity)
-    private void AddNewTracks(Intent intent) {
+    //private void AddNewTracks(Intent intent) {
+    private void AddNewTracks() {
 
         MusicItem playingItem = null;
 
@@ -421,7 +423,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
     //method(not necessary if permissions set in AndroidManifest)
     private void checkVisualiserPermissions() {
 
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+       /** if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.MODIFY_AUDIO_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
             startVisualiser();
         } else {
@@ -451,18 +453,18 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
                 requestPermissions();
             }
 
-        }
+        }**/
 
     }
 
     //method
     //todo do it with fragment instead
     private void requestPermissions() {
-        ActivityCompat.requestPermissions(
+        /**ActivityCompat.requestPermissions(
                 getActivity(),
                 new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS},
                 MY_PERMISSIONS_REQUEST_READ_AUDIO
-        );
+        );**/
     }
 
     @Override
@@ -550,16 +552,12 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
             localCursor = null;
         }
 
-        //todo show loader
-        //fragmentSermonSpecificBinding.pageloader.startProgress();
         ChurchQueryHandler handler = new ChurchQueryHandler(getContext().getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
 
                 localCursor = cursor;
                 if (cursor.getCount() > 0) {
-                    //todo hide loader here
-                    //fragmentSermonSpecificBinding.pageloader.stopProgress();
                     //todo update UI
                 }
 
@@ -636,7 +634,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
     @Override
     public void onResume() {
         super.onResume();
-        //todo post event to change background color in activity
+        //post event to change background color in activity
         EventBus.getDefault().post(new NavActivityColor(R.color.lightBlack));
         /**=====play widget======**/
         if(mShadowChanger != null){

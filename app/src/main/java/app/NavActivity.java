@@ -1,19 +1,25 @@
 package app;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.cleveroad.loopbar.widget.OnItemClickListener;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.ActivityNavBinding;
+import com.squareup.leakcanary.LeakCanary;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -22,13 +28,15 @@ import org.greenrobot.eventbus.ThreadMode;
 import es.dmoral.toasty.Toasty;
 import event.pojo.ConnectionStatus;
 import event.pojo.NavActivityColor;
+import event.pojo.NavActivityHideNavigation;
 import event.pojo.SermonDataRetrievedSaved;
 import fragment.bible.BibleFragment;
 import fragment.sermon.SermonFragment;
+import model.dyno.ApplicationContextProvider;
 
 public class NavActivity extends AppCompatActivity {
     //todo in each fragment handle screen orientation appropriately
-    public ActivityNavBinding activityNavBinding;
+    private ActivityNavBinding activityNavBinding;
     private int navPosition;
     public FragmentManager fragmentManager = getSupportFragmentManager();
     //public JobManager jobManager;
@@ -43,6 +51,7 @@ public class NavActivity extends AppCompatActivity {
         StrictMode.setVmPolicy(vmPolicy);
         /**==============**/
         super.onCreate(savedInstanceState);
+
 
         //get data from HomeActivity
         Intent intent = getIntent();
@@ -74,9 +83,7 @@ public class NavActivity extends AppCompatActivity {
             }
         });
 
-
     }
-
 
 
     //handle menu clicks
@@ -161,6 +168,24 @@ public class NavActivity extends AppCompatActivity {
     }
 
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNavActivityHideNav(NavActivityHideNavigation event){
+       if(event.isHide()){
+           activityNavBinding.mainNavigationView.animate()
+                   .translationY(activityNavBinding.mainNavigationView.getHeight())
+                   .alpha(0.0f)
+                   .setDuration(300)
+                   .setListener(new AnimatorListenerAdapter() {
+                       @Override
+                       public void onAnimationEnd(Animator animation) {
+                           super.onAnimationEnd(animation);
+                           activityNavBinding.mainNavigationView.setVisibility(View.GONE);
+                       }
+                   });
+       }
+    }
+
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -177,4 +202,9 @@ public class NavActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //((ApplicationContextProvider)getApplication()).getRefWatcher().watch(this);
+    }
 }

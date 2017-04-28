@@ -1,5 +1,7 @@
 package fragment.sermon;
 
+import android.app.Activity;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -31,9 +33,10 @@ import model.dyno.Connectivity;
 public class SermonFragment extends Fragment {
 
     private FragmentSermonsBinding fragmentSermonsBinding;
-    public NavActivity navActivity;
+    //public NavActivity navActivity;
     private JobManager jobManager;
     private FragmentManager localFragmentManager;
+    //private FragmentManager localFragmentManager;
     private FragmentTransaction fragmentTransaction;
     private int orientationChange = -1;
     private int positionCurrentlyVisible = -1;
@@ -66,8 +69,9 @@ public class SermonFragment extends Fragment {
         }
 
         //fragment management
-        navActivity = (NavActivity) getActivity();
-        localFragmentManager = navActivity.fragmentManager;
+        //navActivity = (NavActivity) getActivity();
+        //localFragmentManager = navActivity.fragmentManager;
+        localFragmentManager = getActivity().getSupportFragmentManager();
         fragmentTransaction = localFragmentManager.beginTransaction();
 
         //todo orientation management for tablets ie 2 split views
@@ -119,4 +123,5 @@ public class SermonFragment extends Fragment {
         //check for internet connection and post to subscribers
         EventBus.getDefault().post(new ConnectionStatus(Connectivity.isConnected(getActivity().getApplicationContext())));
     }
+
 }

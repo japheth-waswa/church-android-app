@@ -22,16 +22,6 @@
                 android:textStyle="bold"
                 android:textColor="@color/colorAccent"
                 android:text="Sermon Name" />
-            <id.arieridwan.lib.PageLoader
-                android:id="@+id/pageloader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:setLoadingText="Please wait..."
-                app:setErrorText="Try again later"
-                app:setTextColor="@color/black"
-                app:setLoadingImage="@drawable/ic_loader"
-                app:setErrorImage="@drawable/ic_error"
-                app:setLoadingAnimationMode="rotate"/>
 
             <com.cleveroad.play_widget.PlayLayout
                 android:id="@+id/playLayout"
