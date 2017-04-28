@@ -183,7 +183,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnErrorListener(this);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        fragmentSermonSpecificBinding.playLayout.fastOpen();
+        //fragmentSermonSpecificBinding.playLayout.fastOpen();
         //selectNewTrack(getActivity().getIntent());
         selectNewTrack();
 
@@ -195,7 +195,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
 
     private void hideNavigation() {
        //post event
-        EventBus.getDefault().post(new NavActivityHideNavigation(false));
+        EventBus.getDefault().post(new NavActivityHideNavigation(true));
     }
 
 
@@ -214,6 +214,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
             mediaPlayer.pause();
             fragmentSermonSpecificBinding.playLayout.startDismissAnimation();
         } else {
+            startCurrentTrack(false);
             mediaPlayer.start();
             fragmentSermonSpecificBinding.playLayout.startRevealAnimation();
         }
@@ -230,7 +231,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
             playingIndex = 0;
         }
 
-        startCurrentTrack();
+        startCurrentTrack(false);
     }
 
     //method
@@ -242,27 +243,31 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
             playingIndex = items.size() - 1;
         }
 
-        startCurrentTrack();
+        startCurrentTrack(false);
     }
 
     //method
-    private void startCurrentTrack() {
+    private void startCurrentTrack(boolean firstTime) {
 
         setImageForItem();
-        if (mediaPlayer.isPlaying() || paused) {
-            mediaPlayer.stop();
-            paused = false;
+        if(firstTime == false){
+            //ie play,previous,next clicked
+            if (mediaPlayer.isPlaying() || paused) {
+                mediaPlayer.stop();
+                paused = false;
+            }
+
+            mediaPlayer.reset();
+
+            try {
+                mediaPlayer.setDataSource(getContext(), items.get(playingIndex).fileUri());
+                mediaPlayer.prepareAsync();
+                preparing = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
-        mediaPlayer.reset();
-
-        try {
-            mediaPlayer.setDataSource(getContext(), items.get(playingIndex).fileUri());
-            mediaPlayer.prepareAsync();
-            preparing = true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -350,7 +355,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         }
 
         playingIndex = items.indexOf(item);**/
-        startCurrentTrack();
+        startCurrentTrack(true);
 
 
     }
@@ -365,28 +370,6 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         if (playingIndex != -1)
             playingItem = items.get(playingIndex);
         items.clear();//todo they are sure if current playing item,then it will be available
-
-        //get the parcelable
-        /**Parcelable[] items = intent.getParcelableArrayExtra(EXTRA_FILE_URIS);
-
-        for (Parcelable item : items) {
-            if (item instanceof MusicItem)
-                this.items.add((MusicItem) item);
-        }**/
-        MusicItem musicItem = new MusicItem();
-        musicItem.setAlbum("My Album");
-
-        Uri albumArtUri = Uri.parse("http://www.mulierchile.com/images/free-images/free-images-1.jpg");
-        musicItem.setAlbumArtUri(albumArtUri);
-
-        musicItem.setArtist("Artist Name");
-        musicItem.setDuration(10000);
-        musicItem.setTitle("My song title");
-
-        Uri albumMusicUri = Uri.parse("https://upload.wikimedia.org/wikipedia/commons/6/6c/Grieg_Lyric_Pieces_Kobold.ogg");
-        musicItem.setFileUri(albumMusicUri);
-
-        this.items.add(musicItem);
 
         MusicItem musicItemed = new MusicItem();
         musicItemed.setAlbum("My Album");
@@ -418,53 +401,6 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         }
 
 
-    }
-
-    //method(not necessary if permissions set in AndroidManifest)
-    private void checkVisualiserPermissions() {
-
-       /** if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.MODIFY_AUDIO_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
-            startVisualiser();
-        } else {
-
-            //ask for these permissions in 2 ways
-            if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.RECORD_AUDIO) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.MODIFY_AUDIO_SETTINGS)){
-
-                AlertDialog.OnClickListener onClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == DialogInterface.BUTTON_POSITIVE) {
-                            requestPermissions();
-                        } else if (which == DialogInterface.BUTTON_NEGATIVE) {
-                            permissionsNotGranted();
-                        }
-                    }
-                };
-                new AlertDialog.Builder(getContext())
-                        .setTitle(getString(R.string.title_permissions))
-                        .setMessage(Html.fromHtml(getString(R.string.message_permissions)))
-                        .setPositiveButton(getString(R.string.btn_next), onClickListener)
-                        .setNegativeButton(getString(R.string.btn_cancel), onClickListener)
-                        .show();
-
-            }else{
-                requestPermissions();
-            }
-
-        }**/
-
-    }
-
-    //method
-    //todo do it with fragment instead
-    private void requestPermissions() {
-        /**ActivityCompat.requestPermissions(
-                getActivity(),
-                new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.MODIFY_AUDIO_SETTINGS},
-                MY_PERMISSIONS_REQUEST_READ_AUDIO
-        );**/
     }
 
     @Override
@@ -520,7 +456,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
             }
         }
 
-        startCurrentTrack();
+        startCurrentTrack(false);
 
     }
 
@@ -536,7 +472,6 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         mediaPlayer.start();
         stopTrackingPosition();
         startTrackingPosition();
-        checkVisualiserPermissions();
     }
 
 
