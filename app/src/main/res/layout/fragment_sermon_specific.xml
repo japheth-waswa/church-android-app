@@ -44,6 +44,13 @@
                         android:textStyle="bold"
                         android:textColor="@color/colorAccent"
                         android:text="@{sermon.sermon_title}" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/standardPadding"
+                        android:textSize="13sp"
+                        android:text="@{sermon.sermon_date}"
+                        android:textStyle="italic"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -66,7 +73,17 @@
                         android:layout_height="wrap_content"
                         android:text="Watch Video"/>
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/standardPadding"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:text="Listen Sermon Audio" />
+
                     <WebView
+                        android:id="@+id/audioPlayer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"></WebView>
 

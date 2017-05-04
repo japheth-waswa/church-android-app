@@ -51,8 +51,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -194,6 +198,9 @@ public class SermonSpecific extends Fragment{
 
         ======================**/
 
+        fragmentSermonSpecificBinding.audioPlayer.getSettings().setJavaScriptEnabled(true);
+        fragmentSermonSpecificBinding.audioPlayer.getSettings().setLoadWithOverviewMode(true);
+        fragmentSermonSpecificBinding.audioPlayer.getSettings().setUseWideViewPort(true);
 
         return fragmentSermonSpecificBinding.getRoot();
     }
@@ -532,7 +539,32 @@ public class SermonSpecific extends Fragment{
                     sermon.setSermon_audio_url(localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_AUDIO_URL)));
                     sermon.setSermon_video_url(localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_VIDEO_URL)));
                     sermon.setSermon_pdf_url(localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_PDF_URL)));
+                    /**date format**/
+                    String sermonDate = "";
+                    String dateString = cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_DATE));
+                    SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                    try {
+                        Date date = dtFormat.parse(dateString);
+                        SimpleDateFormat dtFormatOutPut = new SimpleDateFormat("EEE, d MMM yyyy");
+                        sermonDate =  dtFormatOutPut.format(date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    sermon.setSermon_date(sermonDate);
+                    /****/
+
                     fragmentSermonSpecificBinding.setSermon(sermon);
+
+                    /**handle the audio webview**/
+                    String VIDEO_URL = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/108641951?iframe=true&width=400&height=200";
+
+                    String html = "<!DOCTYPE html><html> <head> <meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"target-densitydpi=high-dpi\" /> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <link rel=\"stylesheet\" media=\"screen and (-webkit-device-pixel-ratio:1.5)\" href=\"hdpi.css\" /></head> <body style=\"background:black;margin:0 0 0 0; padding:0 0 0 0;\"> <iframe id=\"sc-widget " +
+                            "\" width=\"100%\" height=\"50%\"" + // Set Appropriate Width and Height that you want for SoundCloud Player
+                            " src=\"" + VIDEO_URL   // Set Embedded url
+                            + "\" frameborder=\"no\" scrolling=\"no\"></iframe>" +
+                            "<script src=\"https://w.soundcloud.com/player/api.js\" type=\"text/javascript\"></script> </body> </html> ";
+
+                    fragmentSermonSpecificBinding.audioPlayer.loadDataWithBaseURL("",html,"text/html", "UTF-8", "");
                 }
 
 
@@ -628,6 +660,8 @@ public class SermonSpecific extends Fragment{
         /**======================**/
 
         super.onPause();
+
+        fragmentSermonSpecificBinding.audioPlayer.loadUrl("about:blank");
     }
 
 
