@@ -92,6 +92,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
     public static final String EXTRA_SELECT_TRACK = "EXTRA_SELECT_TRACK";
     public static final int MY_PERMISSIONS_REQUEST_READ_AUDIO = 11;
     private boolean mediaPlayerPaused = false;
+    private boolean mediaPlayerWasPlaying = false;
 
     /**
      * ======================
@@ -274,6 +275,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
                 mediaPlayer.setDataSource(getContext(), items.get(playingIndex).fileUri());
                 mediaPlayer.prepareAsync();
                 preparing = true;
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -454,23 +456,32 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         //completed not paused
         mediaPlayerPaused = false;
 
-        if(playingIndex == -1){
+       /** if(playingIndex == -1){
             if(fragmentSermonSpecificBinding.playLayout != null){
                 fragmentSermonSpecificBinding.playLayout.startDismissAnimation();
             }
             return;
-        }
+        }**/
 
-        //play next track
-        playingIndex++;
-        if(playingIndex >= items.size()){
+       if(mediaPlayerWasPlaying == true){
+           if(fragmentSermonSpecificBinding.playLayout != null){
+               fragmentSermonSpecificBinding.playLayout.startDismissAnimation();
+               fragmentSermonSpecificBinding.playLayout.setProgress(0);
+           }
+           mediaPlayerWasPlaying =  false;
+       }
+
+        //play next track(not applicable in this case since we are only playing one track)
+
+        /**if(playingIndex >= items.size()){
             playingIndex = 0;
             if(items.size() == 0){
                 return;
             }
         }
 
-        startCurrentTrack(false);
+
+        startCurrentTrack(false);**/
 
     }
 
@@ -486,6 +497,8 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         mediaPlayer.start();
         stopTrackingPosition();
         startTrackingPosition();
+
+        mediaPlayerWasPlaying = true;
     }
 
 
