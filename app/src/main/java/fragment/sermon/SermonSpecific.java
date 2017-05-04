@@ -91,6 +91,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
     public static final String EXTRA_FILE_URIS = "EXTRA_FILE_URIS";
     public static final String EXTRA_SELECT_TRACK = "EXTRA_SELECT_TRACK";
     public static final int MY_PERMISSIONS_REQUEST_READ_AUDIO = 11;
+    private boolean mediaPlayerPaused = false;
 
     /**
      * ======================
@@ -152,6 +153,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
                 }
             }
 
+
             @Override
             public void onShuffleClicked() {
                 Toast.makeText(getContext(), "shuffle", Toast.LENGTH_SHORT);
@@ -161,6 +163,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
             public void onRepeatClicked() {
                 Toast.makeText(getContext(), "repeat", Toast.LENGTH_SHORT);
             }
+
 
         });
 
@@ -212,9 +215,17 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
 
         if (fragmentSermonSpecificBinding.playLayout.isOpen()) {
             mediaPlayer.pause();
+            mediaPlayerPaused = true;
             fragmentSermonSpecificBinding.playLayout.startDismissAnimation();
         } else {
-            startCurrentTrack(false);
+            if(mediaPlayerPaused){
+                //repause
+                startCurrentTrack(true);
+            }else{
+                //first time
+                startCurrentTrack(false);
+            }
+
             mediaPlayer.start();
             fragmentSermonSpecificBinding.playLayout.startRevealAnimation();
         }
@@ -439,6 +450,9 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
 
     @Override
     public void onCompletion(MediaPlayer mp) {
+
+        //completed not paused
+        mediaPlayerPaused = false;
 
         if(playingIndex == -1){
             if(fragmentSermonSpecificBinding.playLayout != null){
