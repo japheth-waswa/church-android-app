@@ -27,6 +27,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import es.dmoral.toasty.Toasty;
 import event.pojo.ConnectionStatus;
+import event.pojo.DownloadSermonPdf;
+import event.pojo.DownloadSermonPdfStatus;
 import event.pojo.NavActivityColor;
 import event.pojo.NavActivityHideNavigation;
 import event.pojo.SermonDataRetrievedSaved;
@@ -99,7 +101,7 @@ public class NavActivity extends AppCompatActivity {
 
                 //sermons
                 SermonFragment sermonFragment = new SermonFragment();
-                fragmentTransaction.replace(R.id.navFragmentHolder,sermonFragment,"sermonFragment");
+                fragmentTransaction.replace(R.id.navFragmentHolder, sermonFragment, "sermonFragment");
                 fragmentTransaction.commit();
                 break;
 
@@ -113,7 +115,7 @@ public class NavActivity extends AppCompatActivity {
 
                 //bible
                 BibleFragment bibleFragment = new BibleFragment();
-                fragmentTransaction.replace(R.id.navFragmentHolder,bibleFragment,"bibleFragment");
+                fragmentTransaction.replace(R.id.navFragmentHolder, bibleFragment, "bibleFragment");
                 fragmentTransaction.commit();
                 break;
 
@@ -154,35 +156,57 @@ public class NavActivity extends AppCompatActivity {
     }
 
 
+    public void startPdfDownload(View view) {
+        //post event
+        EventBus.getDefault().post(new DownloadSermonPdf());
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onConnectionStatus(ConnectionStatus connectionStatus){
-        if(connectionStatus.isConnected() == false){
+    public void onConnectionStatus(ConnectionStatus connectionStatus) {
+        if (connectionStatus.isConnected() == false) {
             //notify user to enable internet connection
             Toasty.error(this, "Please check your internet connection.", Toast.LENGTH_SHORT, true).show();
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNavActivityColor(NavActivityColor event){
+    public void onDownloadSermonPdfStatus(DownloadSermonPdfStatus event) {
+
+        //notify download started
+        if (event.getStatus() == 0)
+            Toasty.info(this, "Pdf download started.Please wait.", Toast.LENGTH_SHORT, true).show();
+
+        //notify download success
+        if (event.getStatus() == 1)
+            Toasty.success(this, "Pdf download successful.", Toast.LENGTH_SHORT, true).show();
+
+        //notify download error
+        if (event.getStatus() == 2)
+            Toasty.error(this, "An error occurred while downloading.", Toast.LENGTH_SHORT, true).show();
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNavActivityColor(NavActivityColor event) {
         //activityNavBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this,event.getColor()));
     }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNavActivityHideNav(NavActivityHideNavigation event){
-       if(event.isHide()){
-           activityNavBinding.mainNavigationView.animate()
-                   .translationY(activityNavBinding.mainNavigationView.getHeight())
-                   .alpha(0.0f)
-                   .setDuration(300)
-                   .setListener(new AnimatorListenerAdapter() {
-                       @Override
-                       public void onAnimationEnd(Animator animation) {
-                           super.onAnimationEnd(animation);
-                           activityNavBinding.mainNavigationView.setVisibility(View.GONE);
-                       }
-                   });
-       }
+    public void onNavActivityHideNav(NavActivityHideNavigation event) {
+        if (event.isHide()) {
+            activityNavBinding.mainNavigationView.animate()
+                    .translationY(activityNavBinding.mainNavigationView.getHeight())
+                    .alpha(0.0f)
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            activityNavBinding.mainNavigationView.setVisibility(View.GONE);
+                        }
+                    });
+        }
     }
 
 

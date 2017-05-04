@@ -200,16 +200,6 @@ public class SermonAllFragment extends Fragment {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onFragConfigChange(FragConfigChange event) {
-        //save current recyclerview position for bible book
-        long dtCurrentVisiblePosition;
-        dtCurrentVisiblePosition = ((LinearLayoutManager) fragmentSermonsAllBinding.sermonsRecycler.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-
-        //post event to EventBus
-        EventBus.getDefault().post(new SermonPositionEvent((int) dtCurrentVisiblePosition));
-    }
-
     @Override
     public void onPause() {
         super.onPause();

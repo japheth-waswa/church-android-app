@@ -17,7 +17,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:orientation="vertical">
 
             <LinearLayout
@@ -70,11 +70,14 @@
                         android:text="@{sermon.sermon_brief_description}" />
 
                     <Button
+                        android:id="@+id/pdfUrlBtn"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Watch Video"/>
+                        android:text="Download Sermon Pdf"
+                        android:onClick="startPdfDownload"/>
 
                     <TextView
+                        android:id="@+id/audioPlayerTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/standardPadding"
@@ -89,6 +92,7 @@
                         android:layout_height="wrap_content"></WebView>
 
                     <TextView
+                        android:id="@+id/videoPlayerTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/standardPadding"
