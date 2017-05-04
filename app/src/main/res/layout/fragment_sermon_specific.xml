@@ -17,6 +17,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
             android:orientation="vertical">
 
             <LinearLayout
@@ -79,7 +80,7 @@
                         android:layout_margin="@dimen/standardPadding"
                         android:textSize="17sp"
                         android:textStyle="bold"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorAccent"
                         android:text="Listen Sermon Audio" />
 
                     <WebView
@@ -93,7 +94,7 @@
                         android:layout_margin="@dimen/standardPadding"
                         android:textSize="17sp"
                         android:textStyle="bold"
-                        android:textColor="@color/black"
+                        android:textColor="@color/colorAccent"
                         android:text="Watch Sermon Video" />
 
                     <WebView

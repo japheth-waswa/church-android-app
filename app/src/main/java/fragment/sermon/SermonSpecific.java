@@ -583,9 +583,17 @@ public class SermonSpecific extends Fragment{
                             "<script src=\"https://w.soundcloud.com/player/api.js\" type=\"text/javascript\"></script> </body> </html> ";
 
                     fragmentSermonSpecificBinding.audioPlayer.loadDataWithBaseURL("",html,"text/html", "UTF-8", "");
-
+//todo center all the items in the layout view.
                     /**handle the video webview**/
-                    String videoCode = "47yJ2XCRLZs";
+                    //get the video code from end of url
+                    String videoCode =  null;
+                    String videoUrl = sermon.getSermon_video_url();
+                    int start = videoUrl.indexOf("=");
+
+                    if(start >= 0)
+                    videoCode = videoUrl.substring(start + 1);
+                    //String videoCode = "47yJ2XCRLZs";
+
                     int screenWidth = getScreenDimensions();
                     int videoWidth = 420;
                     int videoHeight = 315;
