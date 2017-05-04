@@ -9,6 +9,7 @@
             type="model.Sermon" />
     </data>
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -21,15 +22,32 @@
                 android:textSize="17sp"
                 android:textStyle="bold"
                 android:textColor="@color/colorAccent"
-                android:text="Sermon Name" />
+                android:text="@{sermon.sermon_title}" />
 
-            <com.cleveroad.play_widget.PlayLayout
-                android:id="@+id/playLayout"
-                android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="263dp"
+                android:layout_height="165dp"
+                android:scaleType="fitXY"
+                app:imageUrl="@{sermon.sermon_image_url}" />
+
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                android:layout_margin="@dimen/standardPadding"
+                android:textSize="15sp"
+                android:textColor="@color/colorAccent"
+                android:text="@{sermon.sermon_brief_description}" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Watch Video"/>
+
+            <WebView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></WebView>
+
 
         </LinearLayout>
-
 
 </layout>

@@ -32,6 +32,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.MediaController;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -65,10 +66,12 @@ import event.pojo.NavActivityColor;
 import event.pojo.NavActivityHideNavigation;
 import model.BibleChapter;
 import model.MusicItem;
+import model.Sermon;
+import model.dyno.ApplicationContextProvider;
 import model.dyno.FragDyno;
+import service.ChurchWebService;
 
-public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedListener,
-        MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
+public class SermonSpecific extends Fragment{
 
     private static final int MESSAGE_ID = 5;
     private FragmentSermonSpecificBinding fragmentSermonSpecificBinding;
@@ -126,10 +129,8 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         //navActivity = (NavActivity) getActivity();
         hideNavigation();
 
-        /**=====play widget======**/
-        /**======================**/
 
-        /**=====play widget======**/
+        /**=====play widget======
         fragmentSermonSpecificBinding.playLayout.setOnButtonsClickListener(new PlayLayout.OnButtonsClickListener() {
 
             @Override
@@ -191,7 +192,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         //selectNewTrack(getActivity().getIntent());
         selectNewTrack();
 
-        /**======================**/
+        ======================**/
 
 
         return fragmentSermonSpecificBinding.getRoot();
@@ -205,7 +206,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
 
     /**
      * =====play widget======
-     **/
+
 
     //method
     private void playButtonClicked() {
@@ -275,6 +276,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
                 mediaPlayer.setDataSource(getContext(), items.get(playingIndex).fileUri());
                 mediaPlayer.prepareAsync();
                 preparing = true;
+
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -368,7 +370,8 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         }
 
         playingIndex = items.indexOf(item);**/
-        startCurrentTrack(true);
+
+    /**startCurrentTrack(true);
 
 
     }
@@ -463,7 +466,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
             return;
         }**/
 
-       if(mediaPlayerWasPlaying == true){
+       /**if(mediaPlayerWasPlaying == true){
            if(fragmentSermonSpecificBinding.playLayout != null){
                fragmentSermonSpecificBinding.playLayout.startDismissAnimation();
                fragmentSermonSpecificBinding.playLayout.setProgress(0);
@@ -483,7 +486,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
 
         startCurrentTrack(false);**/
 
-    }
+    /**}
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
@@ -498,9 +501,9 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         stopTrackingPosition();
         startTrackingPosition();
 
+
         mediaPlayerWasPlaying = true;
     }
-
 
     /**
      * ======================
@@ -519,8 +522,17 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
 
                 localCursor = cursor;
-                if (cursor.getCount() > 0) {
-                    //todo update UI
+                if (localCursor.getCount() > 0 && localCursor != null) {
+                    localCursor.moveToFirst();
+                    //update UI
+                    Sermon sermon = new Sermon();
+                    sermon.setSermon_title(localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_TITLE)));
+                    sermon.setSermon_image_url(ChurchWebService.getRootAbsoluteUrl(ApplicationContextProvider.getsContext(),localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_IMAGE_URL))));
+                    sermon.setSermon_brief_description(localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_BRIEF_DESCRIPTION)));
+                    sermon.setSermon_audio_url(localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_AUDIO_URL)));
+                    sermon.setSermon_video_url(localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_VIDEO_URL)));
+                    sermon.setSermon_pdf_url(localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_PDF_URL)));
+                    fragmentSermonSpecificBinding.setSermon(sermon);
                 }
 
 
@@ -547,8 +559,6 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         handler.startQuery(23, null, ChurchContract.SermonEntry.CONTENT_URI, projection, selection, selectionArgs, null);
     }
 
-
-    //todo subscribe to event and update data
     //todo subscribe to fragmentConfig change to save the current item  playing  and play position
 
     @Override
@@ -558,7 +568,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
             localCursor.close();
         }
 
-        /**=====play widget======**/
+        /**=====play widget======
         if(mShadowChanger != null){
             mShadowChanger.release();
         }
@@ -582,10 +592,10 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
 
         //get this specific sermon
         getThisSermonFromDb();
-
         //register event
         //EventBus.getDefault().register(this);
     }
+
 
     @Override
     public void onStop() {
@@ -598,7 +608,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
         super.onResume();
         //post event to change background color in activity
         EventBus.getDefault().post(new NavActivityColor(R.color.lightBlack));
-        /**=====play widget======**/
+        /**=====play widget======
         if(mShadowChanger != null){
             mShadowChanger.setEnabledVisualization(true);
         }
@@ -611,7 +621,7 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
     @Override
     public void onPause() {
 
-        /**=====play widget======**/
+        /**=====play widget======
         if(mShadowChanger != null){
             mShadowChanger.setEnabledVisualization(false);
         }
@@ -619,4 +629,6 @@ public class SermonSpecific extends Fragment implements MediaPlayer.OnPreparedLi
 
         super.onPause();
     }
+
+
 }

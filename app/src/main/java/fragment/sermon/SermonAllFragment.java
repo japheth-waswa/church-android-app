@@ -180,16 +180,6 @@ public class SermonAllFragment extends Fragment {
 
         localCursor.moveToPosition(position);
 
-        //todo on click a sermon,start bg job to get the specific sermon from the server.
-        //todo this job should not run if it is orientation change.
-        if (previousPosition == -1) {
-            Log.e("jean-sermon","doing it");
-            //start bg job to get specific sermon from the server
-            //jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getActivity().getApplicationContext()));
-            //jobManager.addJobInBackground(new SermonsJob());
-
-        }
-
         SermonSpecific sermonSpecific =  new SermonSpecific();
          String sermonId = localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_ID));
 
