@@ -28,10 +28,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Html;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.MediaController;
 import android.widget.Toast;
 
@@ -198,9 +201,23 @@ public class SermonSpecific extends Fragment{
 
         ======================**/
 
+        //audio player settings
         fragmentSermonSpecificBinding.audioPlayer.getSettings().setJavaScriptEnabled(true);
         fragmentSermonSpecificBinding.audioPlayer.getSettings().setLoadWithOverviewMode(true);
         fragmentSermonSpecificBinding.audioPlayer.getSettings().setUseWideViewPort(true);
+
+        //video player settings
+        fragmentSermonSpecificBinding.videoPlayer.getSettings().setJavaScriptEnabled(true);
+        //fragmentSermonSpecificBinding.videoPlayer.getSettings().setLoadWithOverviewMode(true);
+        //fragmentSermonSpecificBinding.videoPlayer.getSettings().setUseWideViewPort(true);
+        /**fragmentSermonSpecificBinding.videoPlayer.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return false;
+            }
+        });**/
+
+
 
         return fragmentSermonSpecificBinding.getRoot();
     }
@@ -556,15 +573,33 @@ public class SermonSpecific extends Fragment{
                     fragmentSermonSpecificBinding.setSermon(sermon);
 
                     /**handle the audio webview**/
-                    String VIDEO_URL = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/108641951?iframe=true&width=400&height=200";
+                    //String AUDIO_URL = "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/108641951?iframe=true&width=400&height=200";
+                    String AUDIO_URL = sermon.getSermon_audio_url();
 
                     String html = "<!DOCTYPE html><html> <head> <meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"target-densitydpi=high-dpi\" /> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <link rel=\"stylesheet\" media=\"screen and (-webkit-device-pixel-ratio:1.5)\" href=\"hdpi.css\" /></head> <body style=\"background:black;margin:0 0 0 0; padding:0 0 0 0;\"> <iframe id=\"sc-widget " +
                             "\" width=\"100%\" height=\"50%\"" + // Set Appropriate Width and Height that you want for SoundCloud Player
-                            " src=\"" + VIDEO_URL   // Set Embedded url
+                            " src=\"" + AUDIO_URL   // Set Embedded url
                             + "\" frameborder=\"no\" scrolling=\"no\"></iframe>" +
                             "<script src=\"https://w.soundcloud.com/player/api.js\" type=\"text/javascript\"></script> </body> </html> ";
 
                     fragmentSermonSpecificBinding.audioPlayer.loadDataWithBaseURL("",html,"text/html", "UTF-8", "");
+
+                    /**handle the video webview**/
+                    String videoCode = "47yJ2XCRLZs";
+                    int screenWidth = getScreenDimensions();
+                    int videoWidth = 420;
+                    int videoHeight = 315;
+
+                    if(screenWidth < 420){
+
+                        //calculate new video height
+                        videoHeight = (videoHeight*screenWidth) / videoWidth;
+                        //videoHeight = Math.round(floatVidHeight);
+                        videoWidth = screenWidth;
+                    }
+
+                    String frameVideo = "<html><body><iframe width=\""+ videoWidth +"\" height=\""+ videoHeight +"\" src=\"https://www.youtube.com/embed/"+ videoCode +"\" frameborder=\"0\" allowfullscreen></iframe></body></html>";
+                    fragmentSermonSpecificBinding.videoPlayer.loadData(frameVideo, "text/html", "utf-8");
                 }
 
 
@@ -592,6 +627,20 @@ public class SermonSpecific extends Fragment{
     }
 
     //todo subscribe to fragmentConfig change to save the current item  playing  and play position
+
+    public int getScreenDimensions() {
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;
+        /**int height = dm.heightPixels;
+         int dens = dm.densityDpi;
+         double wi = (double)width / (double)dens;
+         double hi = (double)height / (double)dens;
+         double x = Math.pow(wi,2);
+         double y = Math.pow(hi,2);
+         double screenInches = Math.sqrt(x+y);**/
+        return width;
+    }
 
     @Override
     public void onDestroy() {
@@ -662,6 +711,7 @@ public class SermonSpecific extends Fragment{
         super.onPause();
 
         fragmentSermonSpecificBinding.audioPlayer.loadUrl("about:blank");
+        fragmentSermonSpecificBinding.videoPlayer.loadUrl("about:blank");
     }
 
 

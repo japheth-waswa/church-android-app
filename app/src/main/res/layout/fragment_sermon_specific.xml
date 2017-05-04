@@ -87,6 +87,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"></WebView>
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/standardPadding"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:text="Watch Sermon Video" />
+
+                    <WebView
+                        android:id="@+id/videoPlayer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"></WebView>
+
                 </LinearLayout>
 
         </LinearLayout>
