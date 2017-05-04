@@ -164,7 +164,7 @@ public class NavActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNavActivityColor(NavActivityColor event){
-        activityNavBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this,event.getColor()));
+        //activityNavBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this,event.getColor()));
     }
 
 

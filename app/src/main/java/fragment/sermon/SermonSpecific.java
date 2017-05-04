@@ -200,7 +200,7 @@ public class SermonSpecific extends Fragment{
 
     private void hideNavigation() {
        //post event
-        EventBus.getDefault().post(new NavActivityHideNavigation(true));
+        EventBus.getDefault().post(new NavActivityHideNavigation(false));
     }
 
 

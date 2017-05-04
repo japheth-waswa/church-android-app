@@ -10,44 +10,70 @@
     </data>
 
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/standardPadding"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorAccent"
-                android:text="@{sermon.sermon_title}" />
+                android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="263dp"
-                android:layout_height="165dp"
-                android:scaleType="fitXY"
-                app:imageUrl="@{sermon.sermon_image_url}" />
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="165dp"
+                    android:layout_weight="2"
+                    android:scaleType="fitXY"
+                    app:imageUrl="@{sermon.sermon_image_url}" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/standardPadding"
-                android:textSize="15sp"
-                android:textColor="@color/colorAccent"
-                android:text="@{sermon.sermon_brief_description}" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/standardPadding"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorAccent"
+                        android:text="@{sermon.sermon_title}" />
+                </LinearLayout>
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Watch Video"/>
+            </LinearLayout>
 
-            <WebView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"></WebView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/standardPadding"
+                        android:textSize="15sp"
+                        android:text="@{sermon.sermon_brief_description}" />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Watch Video"/>
+
+                    <WebView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"></WebView>
+
+                </LinearLayout>
 
         </LinearLayout>
+
+    </ScrollView>
 
 </layout>
