@@ -14,7 +14,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,8 +114,11 @@ public class SermonAllFragment extends Fragment {
         };
 
         fragmentSermonsAllBinding.sermonsRecycler.setAdapter(sermonRecyclerViewAdapter);
-        //fragmentSermonsAllBinding.sermonsRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         fragmentSermonsAllBinding.sermonsRecycler.setLayoutManager(linearLayoutManagerRecycler);
+
+        /**SnapHelper helper = new LinearSnapHelper();
+        helper.attachToRecyclerView(fragmentSermonsAllBinding.sermonsRecycler);**/
+
         /****/
         //add touch listener to recyclerview
         fragmentSermonsAllBinding.sermonsRecycler.addOnItemTouchListener(new CustomRecyclerTouchListener(

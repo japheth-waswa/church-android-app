@@ -1,5 +1,7 @@
 package fragment.bible;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -9,12 +11,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.FragmentBibleVerseBinding;
+import com.willowtreeapps.spruce.Spruce;
+import com.willowtreeapps.spruce.animation.DefaultAnimations;
+import com.willowtreeapps.spruce.sort.DefaultSort;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,6 +47,7 @@ public class BibleVerseFragment extends Fragment {
     private String bibleBookName = null;
     private int orientationChange = -1;
     private int bibleVerseCurrentVisiblePos = -1;
+    private Animator spruceAnimator;
 
     @Nullable
     @Override
@@ -80,8 +87,22 @@ public class BibleVerseFragment extends Fragment {
 
         /**bible books recycler view**/
         bibleVerseRecyclerViewAdapter = new BibleVerseRecyclerViewAdapter(localTestamentCursor);
+        LinearLayoutManager linearLayoutManagerRecycler = new LinearLayoutManager(getContext()){
+            @Override
+            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+                super.onLayoutChildren(recycler, state);
+                //Animate in the visible children
+                spruceAnimator = new Spruce.SpruceBuilder(fragmentBibleVerseBinding.bibleVersesRecycler)
+                        .sortWith(new DefaultSort(100))
+                        .animateWith(DefaultAnimations.shrinkAnimator(fragmentBibleVerseBinding.bibleVersesRecycler,800),
+                                ObjectAnimator.ofFloat(fragmentBibleVerseBinding.bibleVersesRecycler,
+                                        "translationX",-fragmentBibleVerseBinding.bibleVersesRecycler.getWidth(),0f)
+                                        .setDuration(800)).start();
+            }
+        };
         fragmentBibleVerseBinding.bibleVersesRecycler.setAdapter(bibleVerseRecyclerViewAdapter);
-        fragmentBibleVerseBinding.bibleVersesRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        //fragmentBibleVerseBinding.bibleVersesRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        fragmentBibleVerseBinding.bibleVersesRecycler.setLayoutManager(linearLayoutManagerRecycler);
         /****/
 
         return fragmentBibleVerseBinding.getRoot();

@@ -1,5 +1,7 @@
 package fragment.bible;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -12,12 +14,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.FragmentBibleBookBinding;
+import com.willowtreeapps.spruce.Spruce;
+import com.willowtreeapps.spruce.animation.DefaultAnimations;
+import com.willowtreeapps.spruce.sort.DefaultSort;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -46,6 +52,7 @@ public class BibleBookFragment extends Fragment {
     private int bibleBookCurrentVisiblePos = -1;
     private int bibleChapterCurrentVisiblePos = -1;
     private int bibleVerseCurrentVisiblePos = -1;
+    private Animator spruceAnimator;
 //todo subscribe to event for bible update complete
 
     @Nullable
@@ -80,8 +87,22 @@ public class BibleBookFragment extends Fragment {
 
         /**bible books recycler view**/
         bibleBookRecyclerViewAdapter = new BibleBookRecyclerViewAdapter(localTestamentCursor);
+        LinearLayoutManager linearLayoutManagerRecycler = new LinearLayoutManager(getContext()){
+            @Override
+            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+                super.onLayoutChildren(recycler, state);
+                //Animate in the visible children
+                spruceAnimator = new Spruce.SpruceBuilder(fragmentBibleBookBinding.bibleBooksRecycler)
+                        .sortWith(new DefaultSort(100))
+                        .animateWith(DefaultAnimations.shrinkAnimator(fragmentBibleBookBinding.bibleBooksRecycler,800),
+                                ObjectAnimator.ofFloat(fragmentBibleBookBinding.bibleBooksRecycler,
+                                        "translationX",-fragmentBibleBookBinding.bibleBooksRecycler.getWidth(),0f)
+                                        .setDuration(800)).start();
+            }
+        };
         fragmentBibleBookBinding.bibleBooksRecycler.setAdapter(bibleBookRecyclerViewAdapter);
-        fragmentBibleBookBinding.bibleBooksRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        //fragmentBibleBookBinding.bibleBooksRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        fragmentBibleBookBinding.bibleBooksRecycler.setLayoutManager(linearLayoutManagerRecycler);
         /****/
 
         //add touch listener to recyclerview
