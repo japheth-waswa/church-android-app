@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ public class SermonFragment extends Fragment {
     private FragmentTransaction fragmentTransaction;
     private int orientationChange = -1;
     private int positionCurrentlyVisible = -1;
+    private int dualPane = -1;
 
     //todo top-priority-handle SQLiteDatabaseLockedException if clicked instantly on starting the app
 
@@ -80,6 +82,10 @@ public class SermonFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putInt("orientationChange", orientationChange);
         bundle.putInt("positionCurrentlyVisible", positionCurrentlyVisible);
+        if (fragmentSermonsBinding.mainSermonSpecific != null) {
+            dualPane = 1;
+        }
+        bundle.putInt("dualPane", dualPane);
 
         sermonAllFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.mainSermonFragment, sermonAllFragment, "sermonAllFragment");

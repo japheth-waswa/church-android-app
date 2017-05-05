@@ -55,6 +55,7 @@ public class SermonAllFragment extends Fragment {
     private int orientationChange = -1;
     private int currVisiblePosition = -1;
     private int previousPosition = -1;
+    private int dualPane = -1;
 
     @Nullable
     @Override
@@ -74,13 +75,14 @@ public class SermonAllFragment extends Fragment {
         Bundle bundle = getArguments();
         orientationChange = bundle.getInt("orientationChange");
         currVisiblePosition = bundle.getInt("positionCurrentlyVisible");
+        dualPane = bundle.getInt("dualPane");
 
         //fragment management
 
         //navActivity = (NavActivity) getActivity();
         //localFragmentManager = navActivity.fragmentManager;
         localFragmentManager = getActivity().getSupportFragmentManager();
-        fragmentTransaction = localFragmentManager.beginTransaction();
+        //fragmentTransaction = localFragmentManager.beginTransaction();
 
         //set cursor to null
         localCursor = null;
@@ -175,6 +177,9 @@ public class SermonAllFragment extends Fragment {
 
     private void showSpecificSermon(int position) {
 
+        //reset the fragment transaction
+        fragmentTransaction = localFragmentManager.beginTransaction();
+
         //save the current position in preferences
         FragDyno.saveToPreference(getString(R.string.preference_sermon_position), position);
 
@@ -188,7 +193,14 @@ public class SermonAllFragment extends Fragment {
          bundle.putInt("sermonId",Integer.valueOf(sermonId));
 
         sermonSpecific.setArguments(bundle);
-         fragmentTransaction.replace(R.id.mainSermonFragment, sermonSpecific, "sermonSpecificFragment");
+
+        if(dualPane == -1){
+            fragmentTransaction.replace(R.id.mainSermonFragment, sermonSpecific, "sermonSpecificFragment");
+        }else{
+            fragmentTransaction.replace(R.id.mainSermonSpecific, sermonSpecific, "sermonSpecificFragment");
+        }
+
+
          //fragmentTransaction.addToBackStack(null);
          fragmentTransaction.commit();
     }
