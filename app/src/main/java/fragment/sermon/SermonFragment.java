@@ -70,6 +70,10 @@ public class SermonFragment extends Fragment {
             positionCurrentlyVisible = savedInstanceState.getInt("sermonPosition");
         }
 
+        if (fragmentSermonsBinding.mainSermonSpecific != null) {
+            dualPane = 1;
+        }
+
         //fragment management
         //navActivity = (NavActivity) getActivity();
         //localFragmentManager = navActivity.fragmentManager;
@@ -82,9 +86,6 @@ public class SermonFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putInt("orientationChange", orientationChange);
         bundle.putInt("positionCurrentlyVisible", positionCurrentlyVisible);
-        if (fragmentSermonsBinding.mainSermonSpecific != null) {
-            dualPane = 1;
-        }
         bundle.putInt("dualPane", dualPane);
 
         sermonAllFragment.setArguments(bundle);

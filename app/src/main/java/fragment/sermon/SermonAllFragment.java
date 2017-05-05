@@ -82,13 +82,12 @@ public class SermonAllFragment extends Fragment {
         //navActivity = (NavActivity) getActivity();
         //localFragmentManager = navActivity.fragmentManager;
         localFragmentManager = getActivity().getSupportFragmentManager();
-        //fragmentTransaction = localFragmentManager.beginTransaction();
 
         //set cursor to null
         localCursor = null;
 
 
-         /**sermon recycler view adapter**/
+        /**sermon recycler view adapter**/
         sermonRecyclerViewAdapter = new SermonRecyclerViewAdapter(localCursor);
         fragmentSermonsAllBinding.sermonsRecycler.setAdapter(sermonRecyclerViewAdapter);
         fragmentSermonsAllBinding.sermonsRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
@@ -119,7 +118,7 @@ public class SermonAllFragment extends Fragment {
     private void getSermonFromDb() {
         if (localCursor != null) {
             localCursor.close();
-            localCursor =  null;
+            localCursor = null;
         }
         //show loader
         fragmentSermonsAllBinding.pageloader.startProgress();
@@ -129,24 +128,15 @@ public class SermonAllFragment extends Fragment {
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
 
                 localCursor = cursor;
-                 previousPosition = FragDyno.getPrevPosition(getString(R.string.preference_sermon_position));
+                previousPosition = FragDyno.getPrevPosition(getString(R.string.preference_sermon_position));
 
                 if (previousPosition != -1 && orientationChange != -1) {
                     sermonPosition = previousPosition;
+                    if (dualPane != -1)
+                        loadSermonListToRecyclerView();
                     showSpecificSermon(sermonPosition);
                 } else {
-                    if (cursor.getCount() > 0) {
-                        //hide loader here
-                        fragmentSermonsAllBinding.pageloader.stopProgress();
-                        //set recycler cursor
-                        sermonRecyclerViewAdapter.setCursor(localCursor);
-
-                        //scroll to position if set
-                        if (currVisiblePosition != -1) {
-                            fragmentSermonsAllBinding.sermonsRecycler.scrollToPosition(currVisiblePosition);
-                        }
-
-                    }
+                    loadSermonListToRecyclerView();
 
                 }
 
@@ -168,10 +158,25 @@ public class SermonAllFragment extends Fragment {
                 ChurchContract.SermonEntry.COLUMN_SERMON_UPDATED_AT
         };
 
-        String orderBy =  ChurchContract.SermonEntry.COLUMN_SERMON_DATE + " DESC";
+        String orderBy = ChurchContract.SermonEntry.COLUMN_SERMON_DATE + " DESC";
         //String orderBy = null;
 
         handler.startQuery(23, null, ChurchContract.SermonEntry.CONTENT_URI, projection, null, null, orderBy);
+    }
+
+    private void loadSermonListToRecyclerView() {
+        if (localCursor.getCount() > 0) {
+            //hide loader here
+            fragmentSermonsAllBinding.pageloader.stopProgress();
+            //set recycler cursor
+            sermonRecyclerViewAdapter.setCursor(localCursor);
+
+            //scroll to position if set
+            if (currVisiblePosition != -1) {
+                fragmentSermonsAllBinding.sermonsRecycler.scrollToPosition(currVisiblePosition);
+            }
+
+        }
     }
 
 
@@ -185,24 +190,24 @@ public class SermonAllFragment extends Fragment {
 
         localCursor.moveToPosition(position);
 
-        SermonSpecific sermonSpecific =  new SermonSpecific();
-         String sermonId = localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_ID));
+        SermonSpecific sermonSpecific = new SermonSpecific();
+        String sermonId = localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_ID));
 
-         Bundle bundle = new Bundle();
-         bundle.putInt("orientationChange",orientationChange);
-         bundle.putInt("sermonId",Integer.valueOf(sermonId));
+        Bundle bundle = new Bundle();
+        bundle.putInt("orientationChange", orientationChange);
+        bundle.putInt("sermonId", Integer.valueOf(sermonId));
 
         sermonSpecific.setArguments(bundle);
 
-        if(dualPane == -1){
+        if (dualPane == -1) {
             fragmentTransaction.replace(R.id.mainSermonFragment, sermonSpecific, "sermonSpecificFragment");
-        }else{
+        } else {
             fragmentTransaction.replace(R.id.mainSermonSpecific, sermonSpecific, "sermonSpecificFragment");
         }
 
 
-         //fragmentTransaction.addToBackStack(null);
-         fragmentTransaction.commit();
+        //fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
