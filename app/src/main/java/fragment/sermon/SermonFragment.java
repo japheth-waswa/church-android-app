@@ -80,7 +80,7 @@ public class SermonFragment extends Fragment {
         localFragmentManager = getActivity().getSupportFragmentManager();
         fragmentTransaction = localFragmentManager.beginTransaction();
 
-        //todo orientation management for tablets ie 2 split views
+
         //start Fragment to display all sermons
         SermonAllFragment sermonAllFragment = new SermonAllFragment();
         Bundle bundle = new Bundle();

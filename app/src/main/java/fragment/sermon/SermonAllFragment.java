@@ -1,5 +1,7 @@
 package fragment.sermon;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -12,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +24,9 @@ import android.widget.Toast;
 import com.birbit.android.jobqueue.JobManager;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.FragmentSermonsAllBinding;
+import com.willowtreeapps.spruce.Spruce;
+import com.willowtreeapps.spruce.animation.DefaultAnimations;
+import com.willowtreeapps.spruce.sort.DefaultSort;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -56,6 +62,7 @@ public class SermonAllFragment extends Fragment {
     private int currVisiblePosition = -1;
     private int previousPosition = -1;
     private int dualPane = -1;
+    private Animator spruceAnimator;
 
     @Nullable
     @Override
@@ -89,8 +96,24 @@ public class SermonAllFragment extends Fragment {
 
         /**sermon recycler view adapter**/
         sermonRecyclerViewAdapter = new SermonRecyclerViewAdapter(localCursor);
+
+        LinearLayoutManager linearLayoutManagerRecycler = new LinearLayoutManager(getContext()){
+            @Override
+            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+                super.onLayoutChildren(recycler, state);
+                //Animate in the visible children
+                spruceAnimator = new Spruce.SpruceBuilder(fragmentSermonsAllBinding.sermonsRecycler)
+                        .sortWith(new DefaultSort(100))
+                        .animateWith(DefaultAnimations.shrinkAnimator(fragmentSermonsAllBinding.sermonsRecycler,800),
+                                ObjectAnimator.ofFloat(fragmentSermonsAllBinding.sermonsRecycler,
+                                        "translationX",-fragmentSermonsAllBinding.sermonsRecycler.getWidth(),0f)
+                                        .setDuration(800)).start();
+            }
+        };
+
         fragmentSermonsAllBinding.sermonsRecycler.setAdapter(sermonRecyclerViewAdapter);
-        fragmentSermonsAllBinding.sermonsRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        //fragmentSermonsAllBinding.sermonsRecycler.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        fragmentSermonsAllBinding.sermonsRecycler.setLayoutManager(linearLayoutManagerRecycler);
         /****/
         //add touch listener to recyclerview
         fragmentSermonsAllBinding.sermonsRecycler.addOnItemTouchListener(new CustomRecyclerTouchListener(
@@ -206,7 +229,7 @@ public class SermonAllFragment extends Fragment {
         }
 
 
-        //fragmentTransaction.addToBackStack(null);
+
         fragmentTransaction.commit();
     }
 
