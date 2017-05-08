@@ -54,7 +54,6 @@ public class BibleBookFragment extends Fragment {
     private int bibleVerseCurrentVisiblePos = -1;
     private Animator spruceAnimator;
     private int dualPane = -1;
-//todo subscribe to event for bible update complete
 
     @Nullable
     @Override

@@ -5,6 +5,9 @@
         android:icon="@drawable/ic_home_nav"
         android:title="Home"/>
     <item
+        android:icon="@drawable/ic_bible_nav"
+        android:title="Holy Bible"/>
+    <item
         android:icon="@drawable/ic_sermon_nav"
         android:title="Sermons"/>
     <item
@@ -14,30 +17,12 @@
         android:icon="@drawable/ic_schedule_nav"
         android:title="Schedule"/>
     <item
-        android:icon="@drawable/ic_bible_nav"
-        android:title="Holy Bible"/>
-    <item
-        android:icon="@drawable/ic_hymn_nav"
-        android:title="Hymn Book"/>
-    <item
-        android:icon="@drawable/ic_service_nav"
-        android:title="Service Book"/>
-    <item
         android:icon="@drawable/ic_donate_nav"
         android:title="Donate"/>
     <item
         android:icon="@drawable/ic_gallery_nav"
         android:title="Gallery"/>
     <item
-        android:icon="@drawable/ic_video_nav"
-        android:title="Videos"/>
-    <item
         android:icon="@drawable/ic_news_nav"
         android:title="News Feed"/>
-    <item
-        android:icon="@drawable/ic_chat_nav"
-        android:title="Connect"/>
-    <item
-        android:icon="@drawable/ic_login_nav"
-        android:title="Login"/>
 </menu>

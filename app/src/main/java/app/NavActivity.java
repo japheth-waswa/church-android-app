@@ -37,7 +37,7 @@ import fragment.sermon.SermonFragment;
 import model.dyno.ApplicationContextProvider;
 
 public class NavActivity extends AppCompatActivity {
-    //todo in each fragment handle screen orientation appropriately
+
     private ActivityNavBinding activityNavBinding;
     private int navPosition;
     public FragmentManager fragmentManager = getSupportFragmentManager();
@@ -99,24 +99,23 @@ public class NavActivity extends AppCompatActivity {
                 break;
             case 1:
 
+                //bible
+                BibleFragment bibleFragment = new BibleFragment();
+                fragmentTransaction.replace(R.id.navFragmentHolder, bibleFragment, "bibleFragment");
+                fragmentTransaction.commit();
+                break;
+
+            case 2:
                 //sermons
                 SermonFragment sermonFragment = new SermonFragment();
                 fragmentTransaction.replace(R.id.navFragmentHolder, sermonFragment, "sermonFragment");
                 fragmentTransaction.commit();
                 break;
-
-            case 2:
-                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
-                break;
             case 3:
                 Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
                 break;
             case 4:
-
-                //bible
-                BibleFragment bibleFragment = new BibleFragment();
-                fragmentTransaction.replace(R.id.navFragmentHolder, bibleFragment, "bibleFragment");
-                fragmentTransaction.commit();
+                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
                 break;
 
             case 5:
@@ -129,18 +128,6 @@ public class NavActivity extends AppCompatActivity {
                 Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
                 break;
             case 8:
-                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
-                break;
-            case 9:
-                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
-                break;
-            case 10:
-                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
-                break;
-            case 11:
-                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
-                break;
-            case 12:
                 Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
                 break;
             default:

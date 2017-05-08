@@ -49,8 +49,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.cleveroad.play_widget.PlayLayout;
-import com.cleveroad.play_widget.VisualizerShadowChanger;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.FragmentBibleVerseBinding;
 import com.japhethwaswa.church.databinding.FragmentSermonSpecificBinding;
@@ -96,26 +94,6 @@ public class SermonSpecific extends Fragment{
     private Cursor localCursor;
     private int orientationChange = -1;
     private int sermonId = -1;
-    /**
-     * =====play widget======
-     **/
-    private MediaPlayer mediaPlayer;
-    private final List<MusicItem> items = new ArrayList<>();
-    private int playingIndex = -1;
-    private boolean paused;
-    private boolean preparing;
-    private Timer timer;
-    private VisualizerShadowChanger mShadowChanger;
-    private static final long UPDATE_INTERVAL = 20;
-    public static final String EXTRA_FILE_URIS = "EXTRA_FILE_URIS";
-    public static final String EXTRA_SELECT_TRACK = "EXTRA_SELECT_TRACK";
-    public static final int MY_PERMISSIONS_REQUEST_READ_AUDIO = 11;
-    private boolean mediaPlayerPaused = false;
-    private boolean mediaPlayerWasPlaying = false;
-
-    /**
-     * ======================
-     **/
 
 
     @Nullable

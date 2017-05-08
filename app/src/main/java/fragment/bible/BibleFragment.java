@@ -26,7 +26,6 @@ import event.pojo.BibleChapterPositionEvent;
 import event.pojo.BibleVersePositionEvent;
 import event.pojo.FragConfigChange;
 
-//todo 2layouts ie sw600dp for tablet view
 
 public class BibleFragment extends Fragment {
     private FragmentBibleBinding fragmentBibleBinding;
@@ -73,7 +72,6 @@ public class BibleFragment extends Fragment {
             dualPane = 1;
         }
 
-        //todo orientation management for tablets ie 2 split views
         //variable to indicate orientation change
         Bundle bundle = new Bundle();
         bundle.putInt("orientationChange", orientationChange);
