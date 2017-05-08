@@ -302,8 +302,6 @@ public class SermonSpecific extends Fragment{
     public void onStart() {
         super.onStart();
 
-        //get this specific sermon
-        getThisSermonFromDb();
         //register event
         EventBus.getDefault().register(this);
     }
@@ -318,6 +316,9 @@ public class SermonSpecific extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        //get this specific sermon
+        getThisSermonFromDb();
+
         //post event to change background color in activity
         EventBus.getDefault().post(new NavActivityColor(R.color.lightBlack));
 

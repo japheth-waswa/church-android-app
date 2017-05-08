@@ -48,6 +48,7 @@ public class BibleVerseFragment extends Fragment {
     private int orientationChange = -1;
     private int bibleVerseCurrentVisiblePos = -1;
     private Animator spruceAnimator;
+    private int dualPane = -1;
 
     @Nullable
     @Override
@@ -69,6 +70,7 @@ public class BibleVerseFragment extends Fragment {
         bibleBookName = bundle.getString("bibleBookName");
         bibleChapterNumber = bundle.getString("bibleChapterNumber");
         bibleChapterCode = bundle.getString("bibleChapterCode");
+        dualPane = bundle.getInt("dualPane");
 
         //set title etc
         BibleChapter bibleChapter = new BibleChapter();

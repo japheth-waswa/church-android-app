@@ -37,6 +37,7 @@ public class BibleFragment extends Fragment {
     private int bibleBookCurrentVisiblePosition = -1;
     private int bibleChapterCurrentVisiblePosition = -1;
     private int bibleVerseCurrentVisiblePosition = -1;
+    private int dualPane = -1;
 
     @Nullable
     @Override
@@ -67,6 +68,11 @@ public class BibleFragment extends Fragment {
             bibleVerseCurrentVisiblePosition = savedInstanceState.getInt("bibleVerseCurrentVisiblePosition");
         }
 
+
+        if (fragmentBibleBinding.mainBibleFragmentSpecs != null) {
+            dualPane = 1;
+        }
+
         //todo orientation management for tablets ie 2 split views
         //variable to indicate orientation change
         Bundle bundle = new Bundle();
@@ -74,6 +80,7 @@ public class BibleFragment extends Fragment {
         bundle.putInt("bibleBookCurrentVisiblePosition", bibleBookCurrentVisiblePosition);
         bundle.putInt("bibleChapterCurrentVisiblePosition",bibleChapterCurrentVisiblePosition);
         bundle.putInt("bibleVerseCurrentVisiblePosition",bibleVerseCurrentVisiblePosition);
+        bundle.putInt("dualPane", dualPane);
 
         bibleBookFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.mainBibleFragment,bibleBookFragment,"bibleBookFragment");

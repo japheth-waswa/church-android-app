@@ -53,6 +53,7 @@ public class BibleBookFragment extends Fragment {
     private int bibleChapterCurrentVisiblePos = -1;
     private int bibleVerseCurrentVisiblePos = -1;
     private Animator spruceAnimator;
+    private int dualPane = -1;
 //todo subscribe to event for bible update complete
 
     @Nullable
@@ -75,6 +76,7 @@ public class BibleBookFragment extends Fragment {
         bibleBookCurrentVisiblePos = bundle.getInt("bibleBookCurrentVisiblePosition");
         bibleChapterCurrentVisiblePos = bundle.getInt("bibleChapterCurrentVisiblePosition");
         bibleVerseCurrentVisiblePos = bundle.getInt("bibleVerseCurrentVisiblePosition");
+        dualPane = bundle.getInt("dualPane");
 
         //set cursor to null
         localTestamentCursor = null;
@@ -82,7 +84,7 @@ public class BibleBookFragment extends Fragment {
         navActivity = (NavActivity) getActivity();
         //code snippets come here
         localFragmentManager = navActivity.fragmentManager;
-        fragmentTransaction = localFragmentManager.beginTransaction();
+        //fragmentTransaction = localFragmentManager.beginTransaction();
 
 
         /**bible books recycler view**/
@@ -162,22 +164,12 @@ public class BibleBookFragment extends Fragment {
 
                 if (previousBookPosition != -1 && orientationChange != -1) {
                     bookPosition = previousBookPosition;
+
+                    if (dualPane != -1)
+                        populateBibleRecyclerView();
                     launchBookChapters(bookPosition);
                 } else {
-                    if (cursor.getCount() > 0) {
-
-                        //hide loader here
-                        fragmentBibleBookBinding.pageloader.stopProgress();
-
-                        //set recycler cursor
-                        bibleBookRecyclerViewAdapter.setCursor(localTestamentCursor);
-
-                        //scroll to position if set
-                        if(bibleBookCurrentVisiblePos != -1){
-                            fragmentBibleBookBinding.bibleBooksRecycler.scrollToPosition(bibleBookCurrentVisiblePos);
-                        }
-
-                    }
+                    populateBibleRecyclerView();
 
                 }
 
@@ -197,28 +189,59 @@ public class BibleBookFragment extends Fragment {
         handler.startQuery(21, null, ChurchContract.BibleBookEntry.CONTENT_URI, projection, null, null, orderBy);
     }
 
+    private void populateBibleRecyclerView() {
+        if (localTestamentCursor.getCount() > 0) {
+
+            //hide loader here
+            fragmentBibleBookBinding.pageloader.stopProgress();
+
+            //set recycler cursor
+            bibleBookRecyclerViewAdapter.setCursor(localTestamentCursor);
+
+            //scroll to position if set
+            if(bibleBookCurrentVisiblePos != -1){
+                fragmentBibleBookBinding.bibleBooksRecycler.scrollToPosition(bibleBookCurrentVisiblePos);
+            }
+
+        }
+    }
+
 
     private void launchBookChapters(int position) {
+
+        //reset the fragment transaction
+        fragmentTransaction = localFragmentManager.beginTransaction();
 
         //save the current book in preferences
         FragDyno.saveToPreference(getString(R.string.preference_book_position), bookPosition);
 
-        localTestamentCursor.moveToPosition(position);
-        BibleChapterFragment bibleChapterFragment = new BibleChapterFragment();
-        String bibleBookCode = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE));
-        String bibleBookName = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME));
+        if(localTestamentCursor.moveToPosition(position)){
 
-        Bundle bundle = new Bundle();
-        bundle.putString("bibleBookCode", bibleBookCode);
-        bundle.putString("bibleBookName", bibleBookName);
-        bundle.putInt("orientationChange",orientationChange);
-        bundle.putInt("bibleChapterCurrentVisiblePosition",bibleChapterCurrentVisiblePos);
-        bundle.putInt("bibleVerseCurrentVisiblePosition",bibleVerseCurrentVisiblePos);
+            localTestamentCursor.moveToPosition(position);
+            BibleChapterFragment bibleChapterFragment = new BibleChapterFragment();
+            String bibleBookCode = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_CODE));
+            String bibleBookName = localTestamentCursor.getString(localTestamentCursor.getColumnIndex(ChurchContract.BibleBookEntry.COLUMN_BIBLE_BOOK_NAME));
 
-        bibleChapterFragment.setArguments(bundle);
-        fragmentTransaction.replace(R.id.mainBibleFragment, bibleChapterFragment, "bibleChapterFragment");
-        //fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+            Bundle bundle = new Bundle();
+            bundle.putString("bibleBookCode", bibleBookCode);
+            bundle.putString("bibleBookName", bibleBookName);
+            bundle.putInt("orientationChange",orientationChange);
+            bundle.putInt("bibleChapterCurrentVisiblePosition",bibleChapterCurrentVisiblePos);
+            bundle.putInt("bibleVerseCurrentVisiblePosition",bibleVerseCurrentVisiblePos);
+
+            bibleChapterFragment.setArguments(bundle);
+
+            if (dualPane == -1) {
+                fragmentTransaction.replace(R.id.mainBibleFragment, bibleChapterFragment, "bibleChapterFragment");
+            } else {
+                fragmentTransaction.replace(R.id.mainBibleFragmentSpecs, bibleChapterFragment, "bibleChapterFragment");
+            }
+
+
+            //fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+
     }
 
 

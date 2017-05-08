@@ -216,26 +216,29 @@ public class SermonAllFragment extends Fragment {
         //save the current position in preferences
         FragDyno.saveToPreference(getString(R.string.preference_sermon_position), position);
 
-        localCursor.moveToPosition(position);
+        if(localCursor.moveToPosition(position)){
 
-        SermonSpecific sermonSpecific = new SermonSpecific();
-        String sermonId = localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_ID));
 
-        Bundle bundle = new Bundle();
-        bundle.putInt("orientationChange", orientationChange);
-        bundle.putInt("sermonId", Integer.valueOf(sermonId));
+            SermonSpecific sermonSpecific = new SermonSpecific();
+            String sermonId = localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_ID));
 
-        sermonSpecific.setArguments(bundle);
+            Bundle bundle = new Bundle();
+            bundle.putInt("orientationChange", orientationChange);
+            bundle.putInt("sermonId", Integer.valueOf(sermonId));
 
-        if (dualPane == -1) {
-            fragmentTransaction.replace(R.id.mainSermonFragment, sermonSpecific, "sermonSpecificFragment");
-        } else {
-            fragmentTransaction.replace(R.id.mainSermonSpecific, sermonSpecific, "sermonSpecificFragment");
+            sermonSpecific.setArguments(bundle);
+
+            if (dualPane == -1) {
+                fragmentTransaction.replace(R.id.mainSermonFragment, sermonSpecific, "sermonSpecificFragment");
+            } else {
+                fragmentTransaction.replace(R.id.mainSermonSpecific, sermonSpecific, "sermonSpecificFragment");
+            }
+
+
+
+            fragmentTransaction.commit();
         }
 
-
-
-        fragmentTransaction.commit();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
