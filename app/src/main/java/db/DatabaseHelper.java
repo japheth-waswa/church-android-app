@@ -4,40 +4,13 @@ package db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import db.ChurchContract.BibleBookEntry;
-import db.ChurchContract.BibleChapterEntry;
-import db.ChurchContract.BibleVerseEntry;
 import db.ChurchContract.SermonEntry;
+import db.ChurchContract.EventCategoryEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "churchapp.db";
     private static final int DATABASE_VERSION = 1;
-
-    private static final String TABLE_BIBLE_BOOK_CREATE=
-            "CREATE TABLE " + BibleBookEntry.TABLE_NAME + " (" +
-                    BibleBookEntry._ID + " INTEGER PRIMARY KEY, " +
-                    BibleBookEntry.COLUMN_BIBLE_BOOK_VERSION + " TEXT, " +
-                    BibleBookEntry.COLUMN_BIBLE_BOOK_CODE + " TEXT, " +
-                    BibleBookEntry.COLUMN_BIBLE_BOOK_NUMBER + " TEXT, " +
-                    BibleBookEntry.COLUMN_BIBLE_BOOK_NAME + " TEXT " +
-                    ")";
-
-    private static final String TABLE_BIBLE_CHAPTER_CREATE=
-            "CREATE TABLE " + BibleChapterEntry.TABLE_NAME + " (" +
-                    BibleChapterEntry._ID + " INTEGER PRIMARY KEY, " +
-                    BibleChapterEntry.COLUMN_CHAPTER_NUMBER + " TEXT, " +
-                    BibleChapterEntry.COLUMN_CHAPTER_BOOK_CODE + " TEXT, " +
-                    BibleChapterEntry.COLUMN_CHAPTER_CODE + " TEXT " +
-                    ")";
-
-    private static final String TABLE_BIBLE_VERSE_CREATE=
-            "CREATE TABLE " + BibleVerseEntry.TABLE_NAME + " (" +
-                    BibleVerseEntry._ID + " INTEGER PRIMARY KEY, " +
-                    BibleVerseEntry.COLUMN_VERSE_NUMBER + " TEXT, " +
-                    BibleVerseEntry.COLUMN_VERSE_CHAPTER_CODE + " TEXT, " +
-                    BibleVerseEntry.COLUMN_VERSE + " TEXT " +
-                    ")";
 
     private static final String TABLE_SERMON_CREATE=
             "CREATE TABLE " + SermonEntry.TABLE_NAME + " (" +
@@ -55,6 +28,18 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                     SermonEntry.COLUMN_SERMON_UPDATED_AT + " TEXT " +
                     ")";
 
+    private static final String TABLE_EVENTCATEGORY_CREATE=
+            "CREATE TABLE " + EventCategoryEntry.TABLE_NAME + " (" +
+                    EventCategoryEntry._ID + " INTEGER PRIMARY KEY, " +
+                    EventCategoryEntry.COLUMN_EVENT_CATEGORY_ID + " TEXT, " +
+                    EventCategoryEntry.COLUMN__TITLE + " TEXT, " +
+                    EventCategoryEntry.COLUMN_URL_KEY + " TEXT, " +
+                    EventCategoryEntry.COLUMN_DESCRIPTION + " TEXT, " +
+                    EventCategoryEntry.COLUMN_VISIBLE + " TEXT, " +
+                    EventCategoryEntry.COLUMN_CREATED_AT + " TEXT, " +
+                    EventCategoryEntry.COLUMN_UPDATED_AT + " TEXT " +
+                    ")";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -62,17 +47,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TABLE_BIBLE_BOOK_CREATE);
-        db.execSQL(TABLE_BIBLE_CHAPTER_CREATE);
-        db.execSQL(TABLE_BIBLE_VERSE_CREATE);
         db.execSQL(TABLE_SERMON_CREATE);
+        db.execSQL(TABLE_EVENTCATEGORY_CREATE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + BibleBookEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + BibleChapterEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + BibleVerseEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SermonEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + EventCategoryEntry.TABLE_NAME);
     }
 }
