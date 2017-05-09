@@ -15,14 +15,6 @@
             android:layout_centerInParent="true">
 
             <com.imangazaliev.circlemenu.CircleMenuButton
-                android:id="@+id/bibleMenu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:colorNormal="#2196F3"
-                app:colorPressed="#2196F3"
-                app:icon="@drawable/ic_bible_nav" />
-
-            <com.imangazaliev.circlemenu.CircleMenuButton
                 android:id="@+id/sermonsMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,8 +59,8 @@
                 android:id="@+id/newsFeedMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:colorNormal="#884444"
-                app:colorPressed="#884444"
+                app:colorNormal="#2196F3"
+                app:colorPressed="#2196F3"
                 app:icon="@drawable/ic_news_nav" />
 
         </com.imangazaliev.circlemenu.CircleMenu>

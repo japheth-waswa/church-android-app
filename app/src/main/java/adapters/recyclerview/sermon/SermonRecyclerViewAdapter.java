@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.japhethwaswa.church.R;
 
-import adapters.recyclerview.bible.BibleBookViewHolder;
 
 public class SermonRecyclerViewAdapter extends RecyclerView.Adapter<SermonViewHolder> {
 

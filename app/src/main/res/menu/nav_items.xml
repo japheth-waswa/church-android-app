@@ -5,9 +5,6 @@
         android:icon="@drawable/ic_home_nav"
         android:title="Home"/>
     <item
-        android:icon="@drawable/ic_bible_nav"
-        android:title="Holy Bible"/>
-    <item
         android:icon="@drawable/ic_sermon_nav"
         android:title="Sermons"/>
     <item

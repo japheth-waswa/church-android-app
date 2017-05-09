@@ -2,9 +2,6 @@ package fragment.sermon;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -14,14 +11,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.birbit.android.jobqueue.JobManager;
 import com.japhethwaswa.church.R;
@@ -35,17 +28,11 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import adapters.recyclerview.sermon.SermonRecyclerViewAdapter;
-import app.NavActivity;
 import db.ChurchContract;
 import db.ChurchQueryHandler;
-import es.dmoral.toasty.Toasty;
 import event.ClickListener;
 import event.CustomRecyclerTouchListener;
-import event.pojo.BibleBookPositionEvent;
-import event.pojo.FragConfigChange;
 import event.pojo.SermonDataRetrievedSaved;
-import event.pojo.SermonPositionEvent;
-import fragment.bible.BibleChapterFragment;
 import model.dyno.FragDyno;
 
 

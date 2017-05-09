@@ -1,56 +1,24 @@
 package fragment.sermon;
 
-import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
-import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Parcelable;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.MediaController;
-import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.DownloadListener;
 import com.androidnetworking.interfaces.DownloadProgressListener;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.japhethwaswa.church.R;
-import com.japhethwaswa.church.databinding.FragmentBibleVerseBinding;
 import com.japhethwaswa.church.databinding.FragmentSermonSpecificBinding;
 
 import org.greenrobot.eventbus.EventBus;
@@ -58,38 +26,25 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import adapters.recyclerview.bible.BibleVerseRecyclerViewAdapter;
-import app.NavActivity;
 import db.ChurchContract;
 import db.ChurchQueryHandler;
-import event.pojo.BibleVersePositionEvent;
 import event.pojo.DownloadSermonPdf;
 import event.pojo.DownloadSermonPdfStatus;
-import event.pojo.FragConfigChange;
 import event.pojo.NavActivityColor;
 import event.pojo.NavActivityHideNavigation;
-import model.BibleChapter;
-import model.MusicItem;
 import model.Sermon;
 import model.dyno.ApplicationContextProvider;
-import model.dyno.FragDyno;
 import service.ChurchWebService;
 
 public class SermonSpecific extends Fragment{
 
     private static final int MESSAGE_ID = 5;
     private FragmentSermonSpecificBinding fragmentSermonSpecificBinding;
-   // public NavActivity navActivity;
 
     private Cursor localCursor;
     private int orientationChange = -1;
@@ -117,7 +72,6 @@ public class SermonSpecific extends Fragment{
         //set cursor to null
         localCursor = null;
 
-        //navActivity = (NavActivity) getActivity();
         hideNavigation();
 
 

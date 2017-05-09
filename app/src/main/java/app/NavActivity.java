@@ -4,13 +4,10 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.os.SystemClock;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +16,6 @@ import android.widget.Toast;
 import com.cleveroad.loopbar.widget.OnItemClickListener;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.ActivityNavBinding;
-import com.squareup.leakcanary.LeakCanary;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -31,10 +27,7 @@ import event.pojo.DownloadSermonPdf;
 import event.pojo.DownloadSermonPdfStatus;
 import event.pojo.NavActivityColor;
 import event.pojo.NavActivityHideNavigation;
-import event.pojo.SermonDataRetrievedSaved;
-import fragment.bible.BibleFragment;
 import fragment.sermon.SermonFragment;
-import model.dyno.ApplicationContextProvider;
 
 public class NavActivity extends AppCompatActivity {
 
@@ -99,17 +92,14 @@ public class NavActivity extends AppCompatActivity {
                 break;
             case 1:
 
-                //bible
-                BibleFragment bibleFragment = new BibleFragment();
-                fragmentTransaction.replace(R.id.navFragmentHolder, bibleFragment, "bibleFragment");
-                fragmentTransaction.commit();
-                break;
-
-            case 2:
                 //sermons
                 SermonFragment sermonFragment = new SermonFragment();
                 fragmentTransaction.replace(R.id.navFragmentHolder, sermonFragment, "sermonFragment");
                 fragmentTransaction.commit();
+                break;
+
+            case 2:
+                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
                 break;
             case 3:
                 Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");

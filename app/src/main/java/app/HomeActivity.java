@@ -32,56 +32,29 @@ public class HomeActivity extends AppCompatActivity {
 
         activityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home);
 
-                //instantiate navigation items in ArrayList.
-        /**navigations = new ArrayList<>();
-
-        navigationRecyclerAdapter = new NavigationRecyclerAdapter(navigations);
-
-        //fan layout manager
-        FanLayoutManagerSettings fanLayoutManagerSettings = FanLayoutManagerSettings
-                .newBuilder(this)
-                .withFanRadius(true)
-                .withAngleItemBounce(5)
-                .withViewWidthDp(150)
-                .withViewHeightDp(200)
-                .build();
-        fanLayoutManager = new FanLayoutManager(this, fanLayoutManagerSettings);
-
-        //recyclerviea adapter
-        activityHomeBinding.homeNavigationItems.setLayoutManager(fanLayoutManager);
-        activityHomeBinding.homeNavigationItems.setItemAnimator(new DefaultItemAnimator());
-
-        //set adapter
-        activityHomeBinding.homeNavigationItems.setAdapter(navigationRecyclerAdapter);
-        activityHomeBinding.homeNavigationItems.setChildDrawingOrderCallback(new FanChildDrawingOrderCallback(fanLayoutManager));
-
-        //fan layout collapse views
-        fanLayoutManager.collapseViews();**/
 
         activityHomeBinding.homeCircleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener(){
             @Override
             public void onItemClick(CircleMenuButton menuButton) {
                 switch (menuButton.getId()){
-                    case R.id.bibleMenu:
+
+                    case R.id.sermonsMenu:
                         startNavigationActivity(0);
                         break;
-                    case R.id.sermonsMenu:
+                    case R.id.eventsMenu:
                         startNavigationActivity(1);
                         break;
-                    case R.id.eventsMenu:
+                    case R.id.scheduleMenu:
                         startNavigationActivity(2);
                         break;
-                    case R.id.scheduleMenu:
+                    case R.id.donateMenu:
                         startNavigationActivity(3);
                         break;
-                    case R.id.donateMenu:
+                    case R.id.galleryMenu:
                         startNavigationActivity(4);
                         break;
-                    case R.id.galleryMenu:
-                        startNavigationActivity(5);
-                        break;
                     case R.id.newsFeedMenu:
-                        startNavigationActivity(6);
+                        startNavigationActivity(5);
                         break;
                     default:
                         return;
@@ -89,33 +62,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        //add touch listener to recyclerview
-         /**activityHomeBinding.homeNavigationItems.addOnItemTouchListener(new CustomRecyclerTouchListener(
-                this, activityHomeBinding.homeNavigationItems, new ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                //start new activity passing the position of the item selected
-                Intent intent = new Intent(HomeActivity.this,NavActivity.class);
-                intent.putExtra("navPosition",position);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));**/
-
-        //prepare navigation items
-        //prepareNavigationitems();
-
-        //set onclick listener on brand logo
-        /**activityHomeBinding.brandHome.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                fanLayoutManager.collapseViews();
-            }
-        });**/
 
     }
 
@@ -125,17 +71,5 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra("navPosition",position);
         startActivity(intent);
     }
-
-    /**private void prepareNavigationitems() {
-        navigations.clear();
-        for (int i = 0; i < 12; i++) {
-            Navigation navigation = new Navigation();
-            navigation.setTitle(NavigationItem.homeTitles(i));
-            navigation.setColor(NavigationItem.getBgColor(i));
-            navigation.setNavIcon(NavigationItem.homeIcon(i));
-            navigations.add(navigation);
-        }
-        navigationRecyclerAdapter.notifyDataSetChanged();
-    }**/
 
 }
