@@ -7,6 +7,7 @@ public class ChurchContract {
     public static final String CONTENT_AUTHORITY = "com.japhethwaswa.church.db.churchprovider";
     public static final String PATH_SERMONS = "sermons";
     public static final String PATH_EVENT_CATEGORIES = "event_categories";
+    public static final String PATH_EVENTS = "events";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://"+CONTENT_AUTHORITY);
 
 
@@ -47,4 +48,26 @@ public class ChurchContract {
         public static final String COLUMN_CREATED_AT= "created_at";
         public static final String COLUMN_UPDATED_AT= "updated_at";
     }
+
+    public static final class EventsEntry implements BaseColumns{
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI,PATH_EVENTS);
+
+        //Table name
+        public static final String TABLE_NAME = "sermons";
+        //column field names
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_EVENT_ID = "event_id";
+        public static final String COLUMN_TITLE = "event_title";
+        public static final String COLUMN_IMAGE_URL= "image_url";
+        public static final String COLUMN_BRIEF_DESCRIPTION= "brief_description";
+        public static final String COLUMN_CONTENT= "content";
+        public static final String COLUMN_EVENT_DATE= "event_date";
+        public static final String COLUMN_EVENT_LOCATION= "event_location";
+        public static final String COLUMN_EVENT_CATEGORY_ID= "event_category_id";
+        public static final String COLUMN_VISIBLE= "visible";
+        public static final String COLUMN_CREATED_AT= "created_at";
+        public static final String COLUMN_UPDATED_AT= "updated_at";
+    }
+
 }

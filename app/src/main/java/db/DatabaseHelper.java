@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import db.ChurchContract.SermonEntry;
 import db.ChurchContract.EventCategoryEntry;
+import db.ChurchContract.EventsEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
 
@@ -40,6 +41,23 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                     EventCategoryEntry.COLUMN_UPDATED_AT + " TEXT " +
                     ")";
 
+    private static final String TABLE_EVENT_CREATE=
+            "CREATE TABLE " + SermonEntry.TABLE_NAME + " (" +
+                    EventsEntry._ID + " INTEGER PRIMARY KEY, " +
+                    EventsEntry.COLUMN_EVENT_ID + " TEXT, " +
+                    EventsEntry.COLUMN_TITLE + " TEXT, " +
+                    EventsEntry.COLUMN_IMAGE_URL + " TEXT, " +
+                    EventsEntry.COLUMN_BRIEF_DESCRIPTION + " TEXT, " +
+                    EventsEntry.COLUMN_CONTENT + " TEXT, " +
+                    EventsEntry.COLUMN_EVENT_DATE + " TEXT, " +
+                    EventsEntry.COLUMN_EVENT_LOCATION + " TEXT, " +
+                    EventsEntry.COLUMN_EVENT_CATEGORY_ID + " TEXT, " +
+                    EventsEntry.COLUMN_VISIBLE + " TEXT, " +
+                    EventsEntry.COLUMN_CREATED_AT + " TEXT, " +
+                    EventsEntry.COLUMN_UPDATED_AT + " TEXT " +
+                    ")";
+
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -49,11 +67,13 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(TABLE_SERMON_CREATE);
         db.execSQL(TABLE_EVENTCATEGORY_CREATE);
+        db.execSQL(TABLE_EVENT_CREATE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + SermonEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EventCategoryEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + EventsEntry.TABLE_NAME);
     }
 }
