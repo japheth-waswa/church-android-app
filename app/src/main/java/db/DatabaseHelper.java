@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import db.ChurchContract.SermonEntry;
 import db.ChurchContract.EventCategoryEntry;
 import db.ChurchContract.EventsEntry;
+import db.ChurchContract.SchedulesEntry;
+import db.ChurchContract.SchedulePagesEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
 
@@ -42,7 +44,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                     ")";
 
     private static final String TABLE_EVENT_CREATE=
-            "CREATE TABLE " + SermonEntry.TABLE_NAME + " (" +
+            "CREATE TABLE " + EventsEntry.TABLE_NAME + " (" +
                     EventsEntry._ID + " INTEGER PRIMARY KEY, " +
                     EventsEntry.COLUMN_EVENT_ID + " TEXT, " +
                     EventsEntry.COLUMN_TITLE + " TEXT, " +
@@ -57,6 +59,31 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                     EventsEntry.COLUMN_UPDATED_AT + " TEXT " +
                     ")";
 
+    private static final String TABLE_SCHEDULE_CREATE=
+            "CREATE TABLE " + SchedulesEntry.TABLE_NAME + " (" +
+                    SchedulesEntry._ID + " INTEGER PRIMARY KEY, " +
+                    SchedulesEntry.COLUMN_SCHEDULE_ID + " TEXT, " +
+                    SchedulesEntry.COLUMN_THEME_TITLE + " TEXT, " +
+                    SchedulesEntry.COLUMN_THEME_DESCRIPTION + " TEXT, " +
+                    SchedulesEntry.COLUMN_SUNDAY_DATE + " TEXT, " +
+                    SchedulesEntry.COLUMN_COLUMN_COUNT + " TEXT, " +
+                    SchedulesEntry.COLUMN_VISIBLE + " TEXT, " +
+                    SchedulesEntry.COLUMN_CREATED_AT + " TEXT, " +
+                    SchedulesEntry.COLUMN_UPDATED_AT + " TEXT " +
+                    ")";
+
+    private static final String TABLE_SCHEDULEPAGES_CREATE=
+            "CREATE TABLE " + SchedulePagesEntry.TABLE_NAME + " (" +
+                    SchedulePagesEntry._ID + " INTEGER PRIMARY KEY, " +
+                    SchedulePagesEntry.COLUMN_SCHEDULE_PAGES_ID + " TEXT, " +
+                    SchedulePagesEntry.COLUMN_PAGE_CONTENT + " TEXT, " +
+                    SchedulePagesEntry.COLUMN_SUNDAY_SCHEDULE_ID + " TEXT, " +
+                    SchedulePagesEntry.COLUMN_PAGE_ORDER + " TEXT, " +
+                    SchedulePagesEntry.COLUMN_VISIBLE + " TEXT, " +
+                    SchedulePagesEntry.COLUMN_CREATED_AT + " TEXT, " +
+                    SchedulePagesEntry.COLUMN_UPDATED_AT + " TEXT " +
+                    ")";
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -68,6 +95,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.execSQL(TABLE_SERMON_CREATE);
         db.execSQL(TABLE_EVENTCATEGORY_CREATE);
         db.execSQL(TABLE_EVENT_CREATE);
+        db.execSQL(TABLE_SCHEDULE_CREATE);
+        db.execSQL(TABLE_SCHEDULEPAGES_CREATE);
     }
 
     @Override
@@ -75,5 +104,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + SermonEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EventCategoryEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EventsEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + SchedulesEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + SchedulePagesEntry.TABLE_NAME);
     }
 }

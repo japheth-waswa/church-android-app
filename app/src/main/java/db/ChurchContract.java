@@ -8,6 +8,8 @@ public class ChurchContract {
     public static final String PATH_SERMONS = "sermons";
     public static final String PATH_EVENT_CATEGORIES = "event_categories";
     public static final String PATH_EVENTS = "events";
+    public static final String PATH_SCHEDULES = "schedules";
+    public static final String PATH_SCHEDULE_PAGES = "schedule_pages";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://"+CONTENT_AUTHORITY);
 
 
@@ -54,7 +56,7 @@ public class ChurchContract {
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI,PATH_EVENTS);
 
         //Table name
-        public static final String TABLE_NAME = "sermons";
+        public static final String TABLE_NAME = "events";
         //column field names
         public static final String _ID = BaseColumns._ID;
         public static final String COLUMN_EVENT_ID = "event_id";
@@ -65,6 +67,41 @@ public class ChurchContract {
         public static final String COLUMN_EVENT_DATE= "event_date";
         public static final String COLUMN_EVENT_LOCATION= "event_location";
         public static final String COLUMN_EVENT_CATEGORY_ID= "event_category_id";
+        public static final String COLUMN_VISIBLE= "visible";
+        public static final String COLUMN_CREATED_AT= "created_at";
+        public static final String COLUMN_UPDATED_AT= "updated_at";
+    }
+
+    public static final class SchedulesEntry implements BaseColumns{
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI,PATH_SCHEDULES);
+
+        //Table name
+        public static final String TABLE_NAME = "schedules";
+        //column field names
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_SCHEDULE_ID = "schedule_id";
+        public static final String COLUMN_THEME_TITLE = "theme_title";
+        public static final String COLUMN_THEME_DESCRIPTION = "theme_description";
+        public static final String COLUMN_SUNDAY_DATE= "sunday_date";
+        public static final String COLUMN_COLUMN_COUNT= "column_count";
+        public static final String COLUMN_VISIBLE= "visible";
+        public static final String COLUMN_CREATED_AT= "created_at";
+        public static final String COLUMN_UPDATED_AT= "updated_at";
+    }
+
+    public static final class SchedulePagesEntry implements BaseColumns{
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI,PATH_SCHEDULE_PAGES);
+
+        //Table name
+        public static final String TABLE_NAME = "schedule_pages";
+        //column field names
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_SCHEDULE_PAGES_ID = "schedule_pages_id";
+        public static final String COLUMN_PAGE_CONTENT = "page_content";
+        public static final String COLUMN_SUNDAY_SCHEDULE_ID = "sunday_schedule_id";
+        public static final String COLUMN_PAGE_ORDER= "page_order";
         public static final String COLUMN_VISIBLE= "visible";
         public static final String COLUMN_CREATED_AT= "created_at";
         public static final String COLUMN_UPDATED_AT= "updated_at";
