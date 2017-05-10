@@ -35,6 +35,7 @@ import event.pojo.DownloadSermonPdf;
 import event.pojo.DownloadSermonPdfStatus;
 import event.pojo.NavActivityColor;
 import event.pojo.NavActivityHideNavigation;
+import fragment.event.EventFragment;
 import fragment.sermon.SermonFragment;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -120,7 +121,10 @@ public class NavActivity extends AppCompatActivity {
                 break;
 
             case 2:
-                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
+                //sermons
+                EventFragment eventFragment = new EventFragment();
+                fragmentTransaction.replace(R.id.navFragmentHolder, eventFragment, "eventFragment");
+                fragmentTransaction.commit();
                 break;
             case 3:
                 Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
@@ -294,7 +298,7 @@ public class NavActivity extends AppCompatActivity {
                     someRejected = true;
                 }
 
-                //todo use the statuses ie someAccepted/someRejected where appropriate
+                //use the statuses ie someAccepted/someRejected where appropriate
 
                 break;
         }
