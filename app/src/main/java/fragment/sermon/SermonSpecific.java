@@ -276,6 +276,7 @@ public class SermonSpecific extends Fragment{
 
         String url = localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_PDF_URL));
         String fileName = localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_TITLE));
+        //String fileName = "file_name_comes_here";
         String dirPath = downloadDir.toString();
         Log.e("jean",dirPath);
 
@@ -296,6 +297,7 @@ public class SermonSpecific extends Fragment{
                     }
                     @Override
                     public void onError(ANError error) {
+                        Log.e("jean-error",error.toString());
                         EventBus.getDefault().post(new DownloadSermonPdfStatus(2));
                     }
                 });
