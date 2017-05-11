@@ -39,6 +39,7 @@ import event.ClickListener;
 import event.CustomRecyclerTouchListener;
 import event.OnChurchButtonItemClickListener;
 import event.pojo.ConnectionStatus;
+import event.pojo.DynamicToastStatusUpdate;
 import event.pojo.EventDataRetrievedSaved;
 import event.pojo.SermonDataRetrievedSaved;
 import job.EventsJob;
@@ -130,9 +131,7 @@ public class EventFragment extends Fragment {
 
     private void registerForEvent(int position) {
 
-        //todo start dialog to register this event
         //todo handle data in dialog on screen orientation and restore by also showing the dialog back
-        //todo add floating hint text to dialog
 
         //inflate dialog view
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
@@ -179,7 +178,8 @@ public class EventFragment extends Fragment {
         regDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo handle form validation
+
+                //handle form validation
                 String fullNames = registerEventBindingDialog.fullNames.getText().toString();
                 String emailAddress = registerEventBindingDialog.emailAddress.getText().toString();
                 String phone = registerEventBindingDialog.phone.getText().toString();
@@ -198,9 +198,16 @@ public class EventFragment extends Fragment {
                     registerEventBindingDialog.fullNames.setError("Please Enter");
                 }
 
-                //todo iniate a background job to register this user after successful validation of input data
-                //todo dismiss dialog after form validation has been successful
-                //regDialog.dismiss();
+                if(checkedEmailAddress == true && checkedPhone == true && checkedFullNames == true){
+                    //dismiss dialog
+                    regDialog.dismiss();
+
+                    //notify user
+                    EventBus.getDefault().post(new DynamicToastStatusUpdate(0,"We are registering you thanks."));
+                    //todo initiate a background job to register this user after successful validation of input data(write api endpoint in church application to receive the data)
+
+                }
+
             }
         });
 

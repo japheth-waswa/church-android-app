@@ -33,6 +33,7 @@ import es.dmoral.toasty.Toasty;
 import event.pojo.ConnectionStatus;
 import event.pojo.DownloadSermonPdf;
 import event.pojo.DownloadSermonPdfStatus;
+import event.pojo.DynamicToastStatusUpdate;
 import event.pojo.NavActivityColor;
 import event.pojo.NavActivityHideNavigation;
 import fragment.event.EventFragment;
@@ -189,6 +190,27 @@ public class NavActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDynamicToastStatusUpdate(DynamicToastStatusUpdate event) {
+
+        //info
+        if (event.getStatus() == 0)
+            Toasty.info(this, event.getStatusMessage(), Toast.LENGTH_SHORT, true).show();
+
+        //warning
+        if (event.getStatus() == 1)
+            Toasty.warning(this,event.getStatusMessage(), Toast.LENGTH_SHORT, true).show();
+
+        //success
+        if (event.getStatus() == 2)
+            Toasty.success(this,event.getStatusMessage(), Toast.LENGTH_SHORT, true).show();
+
+        //error
+        if (event.getStatus() == 2)
+            Toasty.error(this,event.getStatusMessage(), Toast.LENGTH_SHORT, true).show();
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNavActivityColor(NavActivityColor event) {
         //activityNavBinding.getRoot().setBackgroundColor(ContextCompat.getColor(this,event.getColor()));
     }
@@ -231,7 +253,6 @@ public class NavActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //((ApplicationContextProvider)getApplication()).getRefWatcher().watch(this);
     }
 
     @Override
