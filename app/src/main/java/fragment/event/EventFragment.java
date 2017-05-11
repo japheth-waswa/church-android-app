@@ -2,12 +2,15 @@ package fragment.event;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +21,7 @@ import android.view.ViewGroup;
 import com.birbit.android.jobqueue.JobManager;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.FragmentEventsBinding;
+import com.japhethwaswa.church.databinding.RegisterEventDialogBinding;
 import com.willowtreeapps.spruce.Spruce;
 import com.willowtreeapps.spruce.animation.DefaultAnimations;
 import com.willowtreeapps.spruce.sort.DefaultSort;
@@ -92,7 +96,8 @@ public class EventFragment extends Fragment {
         eventRecyclerViewAdapter.setRegisterButtonListener(new OnChurchButtonItemClickListener() {
             @Override
             public void onRegisterEventClicked(View view, int position) {
-                Log.e("jean-register","registration clicked by the user at"+String.valueOf(position));
+                //start dialog to register this event
+                registerForEvent(position);
             }
         });
 
@@ -115,24 +120,48 @@ public class EventFragment extends Fragment {
         fragmentEventsBinding.eventsRecycler.setAdapter(eventRecyclerViewAdapter);
         fragmentEventsBinding.eventsRecycler.setLayoutManager(linearLayoutManagerRecycler);
 
-        //add touch listener to recyclerview
-        /**fragmentEventsBinding.eventsRecycler.addOnItemTouchListener(new CustomRecyclerTouchListener(
-                getActivity(), fragmentEventsBinding.eventsRecycler, new ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-
-                //todo show floating dialog to send registration to remote server
-
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }
-        ));**/
 
         return fragmentEventsBinding.getRoot();
+    }
+
+    private void registerForEvent(int position) {
+
+        //todo android.view.WindowLeaked: Activity on screen rotation
+        //todo start dialog to register this event
+
+        //inflate dialog view
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        View registerEventBindingDialogInflated = layoutInflater.inflate(R.layout.register_event_dialog, null, false);
+
+        final RegisterEventDialogBinding registerEventBindingDialog = DataBindingUtil.bind(registerEventBindingDialogInflated);
+
+        AlertDialog.Builder regEventDialog = new AlertDialog.Builder(getContext());
+
+        regEventDialog.setView(registerEventBindingDialogInflated);
+        regEventDialog.setCancelable(false)
+                .setPositiveButton("Register", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.e("jean-data", String.valueOf(registerEventBindingDialog.fullNames.getText()));
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+
+        //create alert dialog
+        AlertDialog regDialog = regEventDialog.create();
+        //show it
+        regDialog.show();
+        //registerEventBindingDialog
+        /**RegisterEventDialogBinding registerEventBindingDialog = DataBindingUtil.inflate(layoutInflater,
+                R.layout.register_event_dialog,fragmentEventsBinding.getRoot(),false);**/
+
+
     }
 
     //fetch all from db.
