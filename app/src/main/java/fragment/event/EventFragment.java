@@ -43,6 +43,7 @@ import event.pojo.SermonDataRetrievedSaved;
 import job.EventsJob;
 import job.builder.MyJobsBuilder;
 import model.dyno.Connectivity;
+import model.dyno.FormValidation;
 import model.dyno.FragDyno;
 
 
@@ -178,8 +179,24 @@ public class EventFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //todo handle form validation
-                Log.e("jean-data", String.valueOf(registerEventBindingDialog.fullNames.getText()));
+                String fullNames = registerEventBindingDialog.fullNames.getText().toString();
+                String emailAddress = registerEventBindingDialog.emailAddress.getText().toString();
+                String phone = registerEventBindingDialog.phone.getText().toString();
+                Log.e("jean-data-names", fullNames);
+                Log.e("jean-data-email", emailAddress);
+                Log.e("jean-data-phone", phone);
+                /**if(FormValidation.checkEmail(emailAddress)){
+                    Log.e("jean-email-val","email is valid");
+                }else{
+                    Log.e("jean-email-inval","email is invalid");
+                }**/
+                if(FormValidation.checkInt(emailAddress,10,10)){
+                    Log.e("jean-l","valid");
+                }else{
+                    Log.e("jean-l","invalid");
+                }
                 //todo iniate a background job to register this user after successful validation of input data
+                //todo dismiss dialog after form validation has been successful
                 //regDialog.dismiss();
             }
         });
