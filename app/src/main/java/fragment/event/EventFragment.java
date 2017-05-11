@@ -63,7 +63,11 @@ public class EventFragment extends Fragment {
     private Animator spruceAnimator;
     private EventRecyclerViewAdapter eventRecyclerViewAdapter;
     private AlertDialog regDialog;
-    //private int dualPane = -1;
+    private String fullNames;
+    private String emailAddress;
+    private String phone;
+    private int currentDialogedItem = -1;
+    private RegisterEventDialogBinding registerEventBindingDialog;
 
 
     @Nullable
@@ -89,8 +93,11 @@ public class EventFragment extends Fragment {
         } else {
             //orientationChange = 1;
             positionCurrentlyVisible = savedInstanceState.getInt("eventPosition");
+            currentDialogedItem = savedInstanceState.getInt("currentDialogedItem");
+            fullNames = savedInstanceState.getString("fullNames");
+            emailAddress = savedInstanceState.getString("emailAddress");
+            phone = savedInstanceState.getString("phone");
         }
-
 
         //set cursor to null
         localCursor = null;
@@ -102,22 +109,23 @@ public class EventFragment extends Fragment {
             @Override
             public void onRegisterEventClicked(View view, int position) {
                 //start dialog to register this event
+                currentDialogedItem = position;
                 registerForEvent(position);
             }
         });
 
         //todo large screens-(change recyclerview layout)-(number of items diplayed in width)-(data placement and format)
         //todo change recyclerview layout for larger scrren devices and include appropriate animation
-        LinearLayoutManager linearLayoutManagerRecycler = new LinearLayoutManager(getContext()){
+        LinearLayoutManager linearLayoutManagerRecycler = new LinearLayoutManager(getContext()) {
             @Override
             public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
                 super.onLayoutChildren(recycler, state);
                 //Animate in the visible children
                 spruceAnimator = new Spruce.SpruceBuilder(fragmentEventsBinding.eventsRecycler)
                         .sortWith(new DefaultSort(100))
-                        .animateWith(DefaultAnimations.shrinkAnimator(fragmentEventsBinding.eventsRecycler,800),
+                        .animateWith(DefaultAnimations.shrinkAnimator(fragmentEventsBinding.eventsRecycler, 800),
                                 ObjectAnimator.ofFloat(fragmentEventsBinding.eventsRecycler,
-                                        "translationX",-fragmentEventsBinding.eventsRecycler.getWidth(),0f)
+                                        "translationX", -fragmentEventsBinding.eventsRecycler.getWidth(), 0f)
                                         .setDuration(800)).start();
             }
         };
@@ -138,7 +146,14 @@ public class EventFragment extends Fragment {
         View registerEventBindingDialogInflated = layoutInflater.inflate(R.layout.register_event_dialog, null, false);
 
         //binding
-        final RegisterEventDialogBinding registerEventBindingDialog = DataBindingUtil.bind(registerEventBindingDialogInflated);
+        registerEventBindingDialog = DataBindingUtil.bind(registerEventBindingDialogInflated);
+        //set data if they are not null
+        if(fullNames != null)
+            registerEventBindingDialog.fullNames.setText(fullNames);
+        if(emailAddress != null)
+        registerEventBindingDialog.emailAddress.setText(emailAddress);
+        if(phone != null)
+        registerEventBindingDialog.phone.setText(phone);
 
         //dialog builder
         AlertDialog.Builder regEventDialogBuilder = new AlertDialog.Builder(getContext());
@@ -161,11 +176,13 @@ public class EventFragment extends Fragment {
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        regDialog =  null;
+                        currentDialogedItem = -1;
+                    }
+                });
 
 
         //create alert dialog
@@ -180,32 +197,38 @@ public class EventFragment extends Fragment {
             public void onClick(View v) {
 
                 //handle form validation
-                String fullNames = registerEventBindingDialog.fullNames.getText().toString();
-                String emailAddress = registerEventBindingDialog.emailAddress.getText().toString();
-                String phone = registerEventBindingDialog.phone.getText().toString();
+                fullNames = registerEventBindingDialog.fullNames.getText().toString();
+                emailAddress = registerEventBindingDialog.emailAddress.getText().toString();
+                phone = registerEventBindingDialog.phone.getText().toString();
                 //form validation
                 boolean checkedEmailAddress = FormValidation.checkEmail(emailAddress);
-                boolean checkedPhone = FormValidation.checkInt(phone,10,10);
-                boolean checkedFullNames = FormValidation.checkString(fullNames,0,0);
+                boolean checkedPhone = FormValidation.checkInt(phone, 10, 10);
+                boolean checkedFullNames = FormValidation.checkString(fullNames, 0, 0);
 
-                if(checkedEmailAddress == false){
+                if (checkedEmailAddress == false) {
                     registerEventBindingDialog.emailAddress.setError("Invalid Email Address");
                 }
-                if(checkedPhone == false){
+                if (checkedPhone == false) {
                     registerEventBindingDialog.phone.setError("Must be 10 chars long");
                 }
-                if(checkedFullNames == false){
+                if (checkedFullNames == false) {
                     registerEventBindingDialog.fullNames.setError("Please Enter");
                 }
 
-                if(checkedEmailAddress == true && checkedPhone == true && checkedFullNames == true){
+                if (checkedEmailAddress == true && checkedPhone == true && checkedFullNames == true) {
                     //dismiss dialog
                     regDialog.dismiss();
+                    regDialog =  null;
+                    currentDialogedItem = -1;
 
                     //notify user
-                    EventBus.getDefault().post(new DynamicToastStatusUpdate(0,"We are registering you thanks."));
+                    EventBus.getDefault().post(new DynamicToastStatusUpdate(0, "We are registering you thanks."));
                     //todo initiate a background job to register this user after successful validation of input data(write api endpoint in church application to receive the data)
 
+                    //set the variables null after posting a background job
+                    fullNames = null;
+                    emailAddress = null;
+                    phone = null;
                 }
 
             }
@@ -215,8 +238,8 @@ public class EventFragment extends Fragment {
     }
 
 
-    private void requestFocus(View view){
-        if(view.requestFocus()){
+    private void requestFocus(View view) {
+        if (view.requestFocus()) {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
@@ -235,7 +258,7 @@ public class EventFragment extends Fragment {
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
 
                 localCursor = cursor;
-                    loadSermonListToRecyclerView();
+                loadSermonListToRecyclerView();
             }
         };
 
@@ -266,19 +289,18 @@ public class EventFragment extends Fragment {
             //set recycler cursor
             eventRecyclerViewAdapter.setCursor(localCursor);
 
-            //scroll to position if set
-            if (positionCurrentlyVisible != -1) {
-                fragmentEventsBinding.eventsRecycler.scrollToPosition(positionCurrentlyVisible);
+            if (currentDialogedItem != -1) {
+                fragmentEventsBinding.eventsRecycler.scrollToPosition(currentDialogedItem);
+            } else {
+                //scroll to position if set
+                if (positionCurrentlyVisible != -1) {
+                    fragmentEventsBinding.eventsRecycler.scrollToPosition(positionCurrentlyVisible);
+                }
             }
+
 
         }
     }
-
-    //todo on eventposition-not necessary
-    /**@Subscribe(threadMode = ThreadMode.MAIN)
-    public void onBibleVesePositionEvent(SermonPositionEvent event) {
-        positionCurrentlyVisible = event.getPosition();
-    }**/
 
 
     @Override
@@ -290,6 +312,16 @@ public class EventFragment extends Fragment {
 
         //todo save current visible position
         outState.putInt("eventPosition", positionCurrentlyVisible);
+
+        //save dialog data
+        outState.putInt("currentDialogedItem", currentDialogedItem);
+
+        if (regDialog != null) {
+            outState.putString("fullNames", registerEventBindingDialog.fullNames.getText().toString());
+            outState.putString("emailAddress", registerEventBindingDialog.emailAddress.getText().toString());
+            outState.putString("phone", registerEventBindingDialog.phone.getText().toString());
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -303,6 +335,11 @@ public class EventFragment extends Fragment {
         super.onStart();
 
         getEventFromDb();
+
+
+        if (currentDialogedItem != -1) {
+            registerForEvent(currentDialogedItem);
+        }
 
         EventBus.getDefault().register(this);
     }
@@ -328,7 +365,7 @@ public class EventFragment extends Fragment {
             localCursor.close();
         }
 
-        if(regDialog != null){
+        if (regDialog != null) {
             regDialog.dismiss();
         }
 
