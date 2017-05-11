@@ -51,8 +51,12 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/standardPadding"
                 android:text="@={event.brief_description}"
-                android:textSize="15sp"
-                android:textStyle="italic" />
+                android:textSize="15sp" />
+            <Button
+                android:id="@+id/registerEvent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Register"/>
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

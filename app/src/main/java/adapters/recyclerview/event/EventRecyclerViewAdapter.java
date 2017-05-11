@@ -9,10 +9,13 @@ import android.view.ViewGroup;
 
 import com.japhethwaswa.church.R;
 
+import event.OnChurchButtonItemClickListener;
+
 
 public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventViewHolder> {
 
     private Cursor cursor;
+    private OnChurchButtonItemClickListener registerButtonListener;
 
     public EventRecyclerViewAdapter(Cursor cursor) {
         this.cursor = cursor;
@@ -31,9 +34,19 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventViewHold
     }
 
     @Override
-    public void onBindViewHolder(EventViewHolder holder, int position) {
+    public void onBindViewHolder(EventViewHolder holder, final int position) {
         if(cursor.isClosed() == false && cursor != null){
             cursor.moveToPosition(position);
+
+            /**set clicklistener to button**/
+            holder.getRegisterButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    registerButtonListener.onRegisterEventClicked(v,position);
+                }
+            });
+            /****/
+
             holder.bind(cursor);
         }
     }
@@ -51,4 +64,11 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventViewHold
         this.cursor = cursor;
         notifyDataSetChanged();
     }
+
+    /**button events**/
+
+    public void setRegisterButtonListener(OnChurchButtonItemClickListener registerButtonListener) {
+        this.registerButtonListener = registerButtonListener;
+    }
+
 }

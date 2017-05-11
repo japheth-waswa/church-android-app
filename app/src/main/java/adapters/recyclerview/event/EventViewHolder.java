@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import com.japhethwaswa.church.databinding.ItemEventBinding;
 import com.japhethwaswa.church.databinding.ItemSermonBinding;
@@ -22,10 +23,12 @@ import service.ChurchWebService;
 public class EventViewHolder extends RecyclerView.ViewHolder{
 
     private ItemEventBinding itemEventBinding;
+    private final Button registerButton;
 
     public EventViewHolder(View itemView) {
         super(itemView);
         itemEventBinding = DataBindingUtil.bind(itemView);
+        registerButton = itemEventBinding.registerEvent;
     }
 
     public void bind(Cursor cursor){
@@ -57,6 +60,11 @@ public class EventViewHolder extends RecyclerView.ViewHolder{
         }
 
         itemEventBinding.setEvent(event);
+    }
+
+    //return register button
+    public Button getRegisterButton(){
+        return registerButton;
     }
 
 }

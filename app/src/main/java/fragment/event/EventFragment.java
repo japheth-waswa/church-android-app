@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import db.ChurchContract;
 import db.ChurchQueryHandler;
 import event.ClickListener;
 import event.CustomRecyclerTouchListener;
+import event.OnChurchButtonItemClickListener;
 import event.pojo.ConnectionStatus;
 import event.pojo.EventDataRetrievedSaved;
 import event.pojo.SermonDataRetrievedSaved;
@@ -87,6 +89,12 @@ public class EventFragment extends Fragment {
 
         /**recycler view adapter**/
         eventRecyclerViewAdapter = new EventRecyclerViewAdapter(localCursor);
+        eventRecyclerViewAdapter.setRegisterButtonListener(new OnChurchButtonItemClickListener() {
+            @Override
+            public void onRegisterEventClicked(View view, int position) {
+                Log.e("jean-register","registration clicked by the user at"+String.valueOf(position));
+            }
+        });
 
         //todo large screens-(change recyclerview layout)-(number of items diplayed in width)-(data placement and format)
         //todo change recyclerview layout for larger scrren devices and include appropriate animation
@@ -108,7 +116,7 @@ public class EventFragment extends Fragment {
         fragmentEventsBinding.eventsRecycler.setLayoutManager(linearLayoutManagerRecycler);
 
         //add touch listener to recyclerview
-        fragmentEventsBinding.eventsRecycler.addOnItemTouchListener(new CustomRecyclerTouchListener(
+        /**fragmentEventsBinding.eventsRecycler.addOnItemTouchListener(new CustomRecyclerTouchListener(
                 getActivity(), fragmentEventsBinding.eventsRecycler, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -122,7 +130,7 @@ public class EventFragment extends Fragment {
 
             }
         }
-        ));
+        ));**/
 
         return fragmentEventsBinding.getRoot();
     }
