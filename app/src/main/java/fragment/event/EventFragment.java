@@ -58,6 +58,7 @@ public class EventFragment extends Fragment {
     private Cursor localCursor;
     private Animator spruceAnimator;
     private EventRecyclerViewAdapter eventRecyclerViewAdapter;
+    private AlertDialog regDialog;
     //private int dualPane = -1;
 
 
@@ -128,6 +129,7 @@ public class EventFragment extends Fragment {
 
         //todo android.view.WindowLeaked: Activity on screen rotation
         //todo start dialog to register this event
+        //todo handle data in dialog on screen orientation and restore by also showing the dialog back
 
         //inflate dialog view
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
@@ -154,9 +156,10 @@ public class EventFragment extends Fragment {
 
 
         //create alert dialog
-        AlertDialog regDialog = regEventDialog.create();
+        regDialog = regEventDialog.create();
         //show it
         regDialog.show();
+
         //registerEventBindingDialog
         /**RegisterEventDialogBinding registerEventBindingDialog = DataBindingUtil.inflate(layoutInflater,
                 R.layout.register_event_dialog,fragmentEventsBinding.getRoot(),false);**/
@@ -270,5 +273,11 @@ public class EventFragment extends Fragment {
         if (localCursor != null) {
             localCursor.close();
         }
+
+        if(regDialog != null){
+            regDialog.dismiss();
+        }
+
+
     }
 }
