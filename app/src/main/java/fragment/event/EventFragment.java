@@ -127,24 +127,36 @@ public class EventFragment extends Fragment {
 
     private void registerForEvent(int position) {
 
-        //todo android.view.WindowLeaked: Activity on screen rotation
         //todo start dialog to register this event
         //todo handle data in dialog on screen orientation and restore by also showing the dialog back
+        //todo add floating hint text to dialog
 
         //inflate dialog view
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         View registerEventBindingDialogInflated = layoutInflater.inflate(R.layout.register_event_dialog, null, false);
 
+        //binding
         final RegisterEventDialogBinding registerEventBindingDialog = DataBindingUtil.bind(registerEventBindingDialogInflated);
 
-        AlertDialog.Builder regEventDialog = new AlertDialog.Builder(getContext());
+        //dialog builder
+        AlertDialog.Builder regEventDialogBuilder = new AlertDialog.Builder(getContext());
 
-        regEventDialog.setView(registerEventBindingDialogInflated);
-        regEventDialog.setCancelable(false)
+        //dialog title
+        regEventDialogBuilder.setTitle("Register For Event");
+
+        //dialog icon
+        regEventDialogBuilder.setIcon(R.drawable.ic_register);
+
+        //set view
+        regEventDialogBuilder.setView(registerEventBindingDialogInflated);
+
+        //set dialog message
+        regEventDialogBuilder.setCancelable(false)
                 .setPositiveButton("Register", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Log.e("jean-data", String.valueOf(registerEventBindingDialog.fullNames.getText()));
+                        //todo iniate a background job to register this user after successful validation of input data
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -156,13 +168,9 @@ public class EventFragment extends Fragment {
 
 
         //create alert dialog
-        regDialog = regEventDialog.create();
+        regDialog = regEventDialogBuilder.create();
         //show it
         regDialog.show();
-
-        //registerEventBindingDialog
-        /**RegisterEventDialogBinding registerEventBindingDialog = DataBindingUtil.inflate(layoutInflater,
-                R.layout.register_event_dialog,fragmentEventsBinding.getRoot(),false);**/
 
 
     }

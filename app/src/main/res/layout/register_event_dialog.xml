@@ -5,27 +5,52 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/standardPadding">
 
-            <EditText
-                android:id="@+id/fullNames"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Full Names">
-                <requestFocus/>
+                android:layout_marginTop="@dimen/standardPadding">
+                <EditText
+                    android:id="@+id/fullNames"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:hint="Full Names">
+                    <requestFocus/>
                 </EditText>
 
-            <EditText
-                android:id="@+id/emailAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email Address"/>
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/phone"
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Phone"/>
+                android:layout_marginTop="@dimen/standardPadding">
+                <EditText
+                    android:id="@+id/phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:inputType="number"
+                    android:hint="Phone"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/standardPadding"
+                android:layout_marginBottom="@dimen/standardPadding">
+                <EditText
+                    android:id="@+id/emailAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:hint="Email Address"/>
+            </android.support.design.widget.TextInputLayout>
+
 
 
         </LinearLayout>
