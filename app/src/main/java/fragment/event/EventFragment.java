@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import com.birbit.android.jobqueue.JobManager;
@@ -182,19 +183,21 @@ public class EventFragment extends Fragment {
                 String fullNames = registerEventBindingDialog.fullNames.getText().toString();
                 String emailAddress = registerEventBindingDialog.emailAddress.getText().toString();
                 String phone = registerEventBindingDialog.phone.getText().toString();
-                Log.e("jean-data-names", fullNames);
-                Log.e("jean-data-email", emailAddress);
-                Log.e("jean-data-phone", phone);
-                /**if(FormValidation.checkEmail(emailAddress)){
-                    Log.e("jean-email-val","email is valid");
-                }else{
-                    Log.e("jean-email-inval","email is invalid");
-                }**/
-                if(FormValidation.checkInt(emailAddress,10,10)){
-                    Log.e("jean-l","valid");
-                }else{
-                    Log.e("jean-l","invalid");
+                //form validation
+                boolean checkedEmailAddress = FormValidation.checkEmail(emailAddress);
+                boolean checkedPhone = FormValidation.checkInt(phone,10,10);
+                boolean checkedFullNames = FormValidation.checkString(fullNames,0,0);
+
+                if(checkedEmailAddress == false){
+                    registerEventBindingDialog.emailAddress.setError("Invalid Email Address");
                 }
+                if(checkedPhone == false){
+                    registerEventBindingDialog.phone.setError("Must be 10 chars long");
+                }
+                if(checkedFullNames == false){
+                    registerEventBindingDialog.fullNames.setError("Please Enter");
+                }
+
                 //todo iniate a background job to register this user after successful validation of input data
                 //todo dismiss dialog after form validation has been successful
                 //regDialog.dismiss();
@@ -202,6 +205,13 @@ public class EventFragment extends Fragment {
         });
 
 
+    }
+
+
+    private void requestFocus(View view){
+        if(view.requestFocus()){
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
     }
 
     //fetch all from db.

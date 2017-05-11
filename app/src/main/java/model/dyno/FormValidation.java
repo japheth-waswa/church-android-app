@@ -21,8 +21,14 @@ public class FormValidation {
 
             value = Integer.parseInt(num);
 
-            if(minlength > 0 && maxlength > 0){
-                if(num.length() < minlength || num.length() > maxlength){
+            if(minlength > 0){
+                if(num.length() < minlength){
+                    return false;
+                }
+            }
+
+            if(maxlength > 0){
+                if(num.length() > maxlength){
                     return false;
                 }
             }
@@ -40,11 +46,17 @@ public class FormValidation {
             if(num.isEmpty())
                 return false;
 
-            if(minlength > 0 && maxlength > 0){
-                if(num.length() < minlength || num.length() > maxlength){
-                    return false;
-                }
+        if(minlength > 0){
+            if(num.length() < minlength){
+                return false;
             }
+        }
+
+        if(maxlength > 0){
+            if(num.length() > maxlength){
+                return false;
+            }
+        }
 
             return true;
 
