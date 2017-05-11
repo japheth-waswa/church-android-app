@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.birbit.android.jobqueue.JobManager;
 import com.japhethwaswa.church.R;
@@ -155,8 +156,7 @@ public class EventFragment extends Fragment {
                 .setPositiveButton("Register", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.e("jean-data", String.valueOf(registerEventBindingDialog.fullNames.getText()));
-                        //todo iniate a background job to register this user after successful validation of input data
+
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -170,7 +170,19 @@ public class EventFragment extends Fragment {
         //create alert dialog
         regDialog = regEventDialogBuilder.create();
         //show it
+
         regDialog.show();
+
+        //override the button positive handler
+        regDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //todo handle form validation
+                Log.e("jean-data", String.valueOf(registerEventBindingDialog.fullNames.getText()));
+                //todo iniate a background job to register this user after successful validation of input data
+                //regDialog.dismiss();
+            }
+        });
 
 
     }
