@@ -29,6 +29,7 @@ import db.ChurchContract;
 import db.ChurchQueryHandler;
 import db.DatabaseHelper;
 import event.pojo.BibleUpdate;
+import event.pojo.EventDataRetrievedSaved;
 import event.pojo.SermonDataRetrievedSaved;
 import model.dyno.OAuth;
 
@@ -109,7 +110,7 @@ public class ChurchWebService {
                 .build().getAsJSONObject(new JSONObjectRequestListener() {
             @Override
             public void onResponse(JSONObject response) {
-                parseEventsData(response,applicationContext);
+                parseEventsData(response, applicationContext);
             }
 
             @Override
@@ -122,11 +123,15 @@ public class ChurchWebService {
     private static void parseEventsData(JSONObject response, Context applicationContext) {
         //parse and store the data in local db
         JSONObject jObject = response;
-        JSONArray eventCategoriesJArray =  null;
-        JSONArray eventsJArray =  null;
+        JSONArray eventCategoriesJArray = null;
+        JSONArray eventsJArray = null;
         try {
             eventCategoriesJArray = jObject.getJSONArray("eventCategories");
             eventsJArray = jObject.getJSONArray("events");
+
+            //parse the data and store in local database
+            parseRealEventCategories(eventCategoriesJArray, applicationContext);
+            parseRealEvents(eventsJArray, applicationContext);
 
 
         } catch (JSONException e) {
@@ -163,6 +168,75 @@ public class ChurchWebService {
          }
          //post event for all subscribers that data has been received and saved in local database
          EventBus.getDefault().post(new SermonDataRetrievedSaved());**/
+    }
+
+
+    private static void parseRealEventCategories(JSONArray eventCategoriesJArray, Context applicationContext) {
+
+        JSONArray jArray = eventCategoriesJArray;
+
+        ChurchQueryHandler handler = new ChurchQueryHandler(applicationContext.getContentResolver());
+        handler.startDelete(5, null, ChurchContract.EventCategoryEntry.CONTENT_URI, null, null);
+
+        if (jArray.length() > 0) {
+            for (int i = 0; i < jArray.length(); i++) {
+                try {
+
+                    JSONObject jObj = jArray.getJSONObject(i);
+                    ContentValues values = new ContentValues();
+                    values.put(ChurchContract.EventCategoryEntry.COLUMN_EVENT_CATEGORY_ID, jObj.getString("id"));
+                    values.put(ChurchContract.EventCategoryEntry.COLUMN__TITLE, jObj.getString("title"));
+                    values.put(ChurchContract.EventCategoryEntry.COLUMN_URL_KEY, jObj.getString("url_key"));
+                    values.put(ChurchContract.EventCategoryEntry.COLUMN_DESCRIPTION, jObj.getString("description"));
+                    values.put(ChurchContract.EventCategoryEntry.COLUMN_VISIBLE, jObj.getString("visible"));
+                    values.put(ChurchContract.EventCategoryEntry.COLUMN_CREATED_AT, jObj.getString("created_at"));
+                    values.put(ChurchContract.EventCategoryEntry.COLUMN_UPDATED_AT, jObj.getString("updated_at"));
+
+                    handler.startInsert(5, null, ChurchContract.EventCategoryEntry.CONTENT_URI, values);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        // todo post event for all subscribers that data has been received and saved in local database
+        //EventBus.getDefault().post(new SermonDataRetrievedSaved());
+    }
+
+
+    private static void parseRealEvents(JSONArray eventsJArray, Context applicationContext) {
+
+        JSONArray jArray = eventsJArray;
+
+        ChurchQueryHandler handler = new ChurchQueryHandler(applicationContext.getContentResolver());
+        handler.startDelete(3, null, ChurchContract.EventsEntry.CONTENT_URI, null, null);
+
+        if (jArray.length() > 0) {
+            for (int i = 0; i < jArray.length(); i++) {
+                try {
+
+                    JSONObject jObj = jArray.getJSONObject(i);
+                    ContentValues values = new ContentValues();
+                    values.put(ChurchContract.EventsEntry.COLUMN_EVENT_ID, jObj.getString("id"));
+                    values.put(ChurchContract.EventsEntry.COLUMN_TITLE, jObj.getString("title"));
+                    values.put(ChurchContract.EventsEntry.COLUMN_IMAGE_URL, jObj.getString("image_url"));
+                    values.put(ChurchContract.EventsEntry.COLUMN_BRIEF_DESCRIPTION, jObj.getString("brief_description"));
+                    values.put(ChurchContract.EventsEntry.COLUMN_CONTENT, jObj.getString("content"));
+                    values.put(ChurchContract.EventsEntry.COLUMN_EVENT_DATE, jObj.getString("event_date"));
+                    values.put(ChurchContract.EventsEntry.COLUMN_EVENT_LOCATION, jObj.getString("event_location"));
+                    values.put(ChurchContract.EventsEntry.COLUMN_EVENT_CATEGORY_ID, jObj.getString("event_category_id"));
+                    values.put(ChurchContract.EventsEntry.COLUMN_VISIBLE, jObj.getString("visible"));
+                    values.put(ChurchContract.EventsEntry.COLUMN_CREATED_AT, jObj.getString("created_at"));
+                    values.put(ChurchContract.EventsEntry.COLUMN_UPDATED_AT, jObj.getString("updated_at"));
+
+                    handler.startInsert(5, null, ChurchContract.EventsEntry.CONTENT_URI, values);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        //todo post event for all subscribers that data has been received and saved in local database
+        EventBus.getDefault().post(new EventDataRetrievedSaved());
+
     }
 
     private static String getAbsoluteUrl(Context context, String relativeUrl) {

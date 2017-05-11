@@ -35,7 +35,7 @@ import event.CustomRecyclerTouchListener;
 import event.pojo.SermonDataRetrievedSaved;
 import model.dyno.FragDyno;
 
-
+//todo error-attempt to re-open an already-closed object: SQLiteQuery on navigating to different frags instantly
 public class SermonAllFragment extends Fragment {
 
     private FragmentSermonsAllBinding fragmentSermonsAllBinding;
@@ -238,7 +238,7 @@ public class SermonAllFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-
+//todo try to move up before super.onPause to remove the above error
         /**close cursors**/
         if (localCursor != null) {
             localCursor.close();
