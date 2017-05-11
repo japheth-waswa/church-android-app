@@ -35,7 +35,6 @@ import event.CustomRecyclerTouchListener;
 import event.pojo.SermonDataRetrievedSaved;
 import model.dyno.FragDyno;
 
-//todo error-attempt to re-open an already-closed object: SQLiteQuery on navigating to different frags instantly
 public class SermonAllFragment extends Fragment {
 
     private FragmentSermonsAllBinding fragmentSermonsAllBinding;
@@ -86,16 +85,16 @@ public class SermonAllFragment extends Fragment {
         /**sermon recycler view adapter**/
         sermonRecyclerViewAdapter = new SermonRecyclerViewAdapter(localCursor);
 
-        LinearLayoutManager linearLayoutManagerRecycler = new LinearLayoutManager(getContext()){
+        LinearLayoutManager linearLayoutManagerRecycler = new LinearLayoutManager(getContext()) {
             @Override
             public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
                 super.onLayoutChildren(recycler, state);
                 //Animate in the visible children
                 spruceAnimator = new Spruce.SpruceBuilder(fragmentSermonsAllBinding.sermonsRecycler)
                         .sortWith(new DefaultSort(100))
-                        .animateWith(DefaultAnimations.shrinkAnimator(fragmentSermonsAllBinding.sermonsRecycler,800),
+                        .animateWith(DefaultAnimations.shrinkAnimator(fragmentSermonsAllBinding.sermonsRecycler, 800),
                                 ObjectAnimator.ofFloat(fragmentSermonsAllBinding.sermonsRecycler,
-                                        "translationX",-fragmentSermonsAllBinding.sermonsRecycler.getWidth(),0f)
+                                        "translationX", -fragmentSermonsAllBinding.sermonsRecycler.getWidth(), 0f)
                                         .setDuration(800)).start();
             }
         };
@@ -104,7 +103,7 @@ public class SermonAllFragment extends Fragment {
         fragmentSermonsAllBinding.sermonsRecycler.setLayoutManager(linearLayoutManagerRecycler);
 
         /**SnapHelper helper = new LinearSnapHelper();
-        helper.attachToRecyclerView(fragmentSermonsAllBinding.sermonsRecycler);**/
+         helper.attachToRecyclerView(fragmentSermonsAllBinding.sermonsRecycler);**/
 
         /****/
         //add touch listener to recyclerview
@@ -203,27 +202,29 @@ public class SermonAllFragment extends Fragment {
         //save the current position in preferences
         FragDyno.saveToPreference(getString(R.string.preference_sermon_position), position);
 
-        if(localCursor.moveToPosition(position)){
+        if (localCursor != null) {
+            if (localCursor.moveToPosition(position)) {
 
 
-            SermonSpecific sermonSpecific = new SermonSpecific();
-            String sermonId = localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_ID));
+                SermonSpecific sermonSpecific = new SermonSpecific();
+                String sermonId = localCursor.getString(localCursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_ID));
 
-            Bundle bundle = new Bundle();
-            bundle.putInt("orientationChange", orientationChange);
-            bundle.putInt("sermonId", Integer.valueOf(sermonId));
+                Bundle bundle = new Bundle();
+                bundle.putInt("orientationChange", orientationChange);
+                bundle.putInt("sermonId", Integer.valueOf(sermonId));
 
-            sermonSpecific.setArguments(bundle);
+                sermonSpecific.setArguments(bundle);
 
-            if (dualPane == -1) {
-                fragmentTransaction.replace(R.id.mainSermonFragment, sermonSpecific, "sermonSpecificFragment");
-            } else {
-                fragmentTransaction.replace(R.id.mainSermonSpecific, sermonSpecific, "sermonSpecificFragment");
+                if (dualPane == -1) {
+                    fragmentTransaction.replace(R.id.mainSermonFragment, sermonSpecific, "sermonSpecificFragment");
+                } else {
+                    fragmentTransaction.replace(R.id.mainSermonSpecific, sermonSpecific, "sermonSpecificFragment");
+                }
+
+
+                fragmentTransaction.commit();
             }
 
-
-
-            fragmentTransaction.commit();
         }
 
     }
@@ -238,9 +239,8 @@ public class SermonAllFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-//todo try to move up before super.onPause to remove the above error
         /**close cursors**/
-        if (localCursor != null) {
+        if (localCursor != null && localCursor.isClosed() == false) {
             localCursor.close();
         }
     }

@@ -54,7 +54,6 @@ public class EventFragment extends Fragment {
     private EventRecyclerViewAdapter eventRecyclerViewAdapter;
     //private int dualPane = -1;
 
-    //todo top-priority-handle SQLiteDatabaseLockedException if clicked instantly on starting the app
 
     @Nullable
     @Override
@@ -89,6 +88,8 @@ public class EventFragment extends Fragment {
         /**recycler view adapter**/
         eventRecyclerViewAdapter = new EventRecyclerViewAdapter(localCursor);
 
+        //todo large screens-(change recyclerview layout)-(number of items diplayed in width)-(data placement and format)
+        //todo change recyclerview layout for larger scrren devices and include appropriate animation
         LinearLayoutManager linearLayoutManagerRecycler = new LinearLayoutManager(getContext()){
             @Override
             public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {

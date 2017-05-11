@@ -32,8 +32,10 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventViewHold
 
     @Override
     public void onBindViewHolder(EventViewHolder holder, int position) {
-        cursor.moveToPosition(position);
-        holder.bind(cursor);
+        if(cursor.isClosed() == false && cursor != null){
+            cursor.moveToPosition(position);
+            holder.bind(cursor);
+        }
     }
 
 

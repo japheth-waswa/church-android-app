@@ -32,8 +32,11 @@ public class SermonRecyclerViewAdapter extends RecyclerView.Adapter<SermonViewHo
 
     @Override
     public void onBindViewHolder(SermonViewHolder holder, int position) {
-        cursor.moveToPosition(position);
-        holder.bind(cursor);
+        if(cursor.isClosed() == false && cursor != null){
+            cursor.moveToPosition(position);
+            holder.bind(cursor);
+        }
+
     }
 
 
