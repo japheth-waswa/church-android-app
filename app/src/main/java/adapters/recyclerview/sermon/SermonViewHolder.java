@@ -30,28 +30,31 @@ public class SermonViewHolder extends RecyclerView.ViewHolder{
     public void bind(Cursor cursor){
 
         Sermon sermon =new Sermon();
-        sermon.setSermon_title(cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_TITLE)));
-        sermon.setSermon_image_url(ChurchWebService.getRootAbsoluteUrl(ApplicationContextProvider.getsContext(),cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_IMAGE_URL))));
-        sermon.setSermon_brief_description(cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_BRIEF_DESCRIPTION)));
-        sermon.setSermon_audio_url(cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_AUDIO_URL)));
-        sermon.setSermon_video_url(cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_VIDEO_URL)));
-        sermon.setSermon_pdf_url(cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_PDF_URL)));
+        if(cursor.isClosed() == false && cursor != null){
+            sermon.setSermon_title(cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_TITLE)));
+            sermon.setSermon_image_url(ChurchWebService.getRootAbsoluteUrl(ApplicationContextProvider.getsContext(),cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_IMAGE_URL))));
+            sermon.setSermon_brief_description(cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_BRIEF_DESCRIPTION)));
+            sermon.setSermon_audio_url(cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_AUDIO_URL)));
+            sermon.setSermon_video_url(cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_VIDEO_URL)));
+            sermon.setSermon_pdf_url(cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_PDF_URL)));
 
-        /**date format**/
-        String sermonDate = "";
-        String dateString = cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_DATE));
-        SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        try {
-            Date date = dtFormat.parse(dateString);
-            SimpleDateFormat dtFormatOutPut = new SimpleDateFormat("EEE, d MMM yyyy");
-            sermonDate =  dtFormatOutPut.format(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
+            /**date format**/
+            String sermonDate = "";
+            String dateString = cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_DATE));
+            SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            try {
+                Date date = dtFormat.parse(dateString);
+                SimpleDateFormat dtFormatOutPut = new SimpleDateFormat("EEE, d MMM yyyy");
+                sermonDate =  dtFormatOutPut.format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            sermon.setSermon_date(sermonDate);
+            /****/
+
+            sermon.setSermon_created_at(cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_CREATED_AT)));
+
         }
-        sermon.setSermon_date(sermonDate);
-        /****/
-
-        sermon.setSermon_created_at(cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_CREATED_AT)));
 
         itemSermonBinding.setSermon(sermon);
     }
