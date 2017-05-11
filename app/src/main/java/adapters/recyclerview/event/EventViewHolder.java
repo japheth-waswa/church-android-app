@@ -40,11 +40,11 @@ public class EventViewHolder extends RecyclerView.ViewHolder{
             /**date format**/
             String eventDate = "";
             String dateString = cursor.getString(cursor.getColumnIndex(ChurchContract.EventsEntry.COLUMN_EVENT_DATE));
-            SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            SimpleDateFormat dtFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             try {
                 Date date = dtFormat.parse(dateString);
-                //todo add time ie pm,am
-                SimpleDateFormat dtFormatOutPut = new SimpleDateFormat("EEE, d MMM yyyy");
+
+                SimpleDateFormat dtFormatOutPut = new SimpleDateFormat("EEE, d MMM yyyy 'at' hh:mm aaa");
                 eventDate =  dtFormatOutPut.format(date);
             } catch (ParseException e) {
                 e.printStackTrace();
