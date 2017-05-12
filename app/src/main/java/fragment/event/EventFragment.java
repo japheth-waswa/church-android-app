@@ -131,7 +131,7 @@ public class EventFragment extends Fragment {
 
         if(scrWidth >=800)
             numItems = 2;
-        if(scrWidth >=1280)
+        if(scrWidth >=1600)
             numItems = 3;
 
         if(scrWidth >=800){
@@ -141,12 +141,7 @@ public class EventFragment extends Fragment {
                 public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
                     super.onLayoutChildren(recycler, state);
                     //Animate in the visible children
-                    if(localCursor != null && localCursor.isClosed() == false){
-                        spruceAnimator = new Spruce.SpruceBuilder(fragmentEventsBinding.eventsRecycler)
-                                .sortWith(new DefaultSort(100))
-                                .animateWith(DefaultAnimations.growAnimator(fragmentEventsBinding.eventsRecycler, 800))
-                                .start();
-                    }
+                    customAnimation();
 
                 }
             };
@@ -161,12 +156,7 @@ public class EventFragment extends Fragment {
                 public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
                     super.onLayoutChildren(recycler, state);
                     //Animate in the visible children
-                    if(localCursor != null && localCursor.isClosed() == false){
-                        spruceAnimator = new Spruce.SpruceBuilder(fragmentEventsBinding.eventsRecycler)
-                                .sortWith(new DefaultSort(100))
-                                .animateWith(DefaultAnimations.growAnimator(fragmentEventsBinding.eventsRecycler, 800))
-                                .start();
-                    }
+                    customAnimation();
                 }
             };
 
@@ -177,6 +167,16 @@ public class EventFragment extends Fragment {
 
 
         return fragmentEventsBinding.getRoot();
+    }
+
+    //animation
+    private void customAnimation() {
+        if(localCursor != null && localCursor.isClosed() == false){
+            spruceAnimator = new Spruce.SpruceBuilder(fragmentEventsBinding.eventsRecycler)
+                    .sortWith(new DefaultSort(100))
+                    .animateWith(DefaultAnimations.growAnimator(fragmentEventsBinding.eventsRecycler, 800))
+                    .start();
+        }
     }
 
     private void registerForEvent(int position) {
