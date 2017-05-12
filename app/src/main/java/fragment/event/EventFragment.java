@@ -31,6 +31,8 @@ import com.japhethwaswa.church.databinding.RegisterEventDialogBinding;
 import com.willowtreeapps.spruce.Spruce;
 import com.willowtreeapps.spruce.animation.DefaultAnimations;
 import com.willowtreeapps.spruce.sort.DefaultSort;
+import com.willowtreeapps.spruce.sort.LinearSort;
+import com.willowtreeapps.spruce.sort.RadialSort;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -130,13 +132,24 @@ public class EventFragment extends Fragment {
         if(scrWidth >=800)
             numItems = 2;
         if(scrWidth >=1280)
-            numItems = 4;
+            numItems = 3;
 
-        //todo large screens-(change recyclerview layout)-(number of items diplayed in width)-(data placement and format)
-        //todo change recyclerview layout for larger scrren devices and include appropriate animation
         if(scrWidth >=800){
 
-            GridLayoutManager gridLayoutMgr = new GridLayoutManager(getContext(),numItems);
+            GridLayoutManager gridLayoutMgr = new GridLayoutManager(getContext(),numItems){
+                @Override
+                public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+                    super.onLayoutChildren(recycler, state);
+                    //Animate in the visible children
+                    if(localCursor != null && localCursor.isClosed() == false){
+                        spruceAnimator = new Spruce.SpruceBuilder(fragmentEventsBinding.eventsRecycler)
+                                .sortWith(new DefaultSort(100))
+                                .animateWith(DefaultAnimations.growAnimator(fragmentEventsBinding.eventsRecycler, 800))
+                                .start();
+                    }
+
+                }
+            };
 
             fragmentEventsBinding.eventsRecycler.setLayoutManager(gridLayoutMgr);
 
@@ -148,12 +161,12 @@ public class EventFragment extends Fragment {
                 public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
                     super.onLayoutChildren(recycler, state);
                     //Animate in the visible children
-                    spruceAnimator = new Spruce.SpruceBuilder(fragmentEventsBinding.eventsRecycler)
-                            .sortWith(new DefaultSort(100))
-                            .animateWith(DefaultAnimations.shrinkAnimator(fragmentEventsBinding.eventsRecycler, 800),
-                                    ObjectAnimator.ofFloat(fragmentEventsBinding.eventsRecycler,
-                                            "translationX", -fragmentEventsBinding.eventsRecycler.getWidth(), 0f)
-                                            .setDuration(800)).start();
+                    if(localCursor != null && localCursor.isClosed() == false){
+                        spruceAnimator = new Spruce.SpruceBuilder(fragmentEventsBinding.eventsRecycler)
+                                .sortWith(new DefaultSort(100))
+                                .animateWith(DefaultAnimations.growAnimator(fragmentEventsBinding.eventsRecycler, 800))
+                                .start();
+                    }
                 }
             };
 
@@ -318,7 +331,7 @@ public class EventFragment extends Fragment {
                 ChurchContract.EventsEntry.COLUMN_UPDATED_AT
         };
 
-        String orderBy = ChurchContract.EventsEntry.COLUMN_EVENT_DATE + " DESC";
+        String orderBy = ChurchContract.EventsEntry.COLUMN_EVENT_DATE + " ASC";
         //String orderBy = null;
 
         handler.startQuery(23, null, ChurchContract.EventsEntry.CONTENT_URI, projection, null, null, orderBy);
