@@ -239,6 +239,14 @@ public class ChurchWebService {
 
     }
 
+
+
+    public static void serviceRegisterForEvent(Context applicationContext, String eventId, String fullNames, String emailAddress, String phone) {
+        //todo implement logic to post registration to remote server-rem to add the logic in remote server
+        //todo registering a user to a specific event.
+    }
+
+
     private static String getAbsoluteUrl(Context context, String relativeUrl) {
         Resources res = context.getResources();
         String baseUrl = res.getString(R.string.root_domain_api);

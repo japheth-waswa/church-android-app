@@ -11,8 +11,12 @@ import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +47,7 @@ import event.pojo.DynamicToastStatusUpdate;
 import event.pojo.EventDataRetrievedSaved;
 import event.pojo.SermonDataRetrievedSaved;
 import job.EventsJob;
+import job.RegisterEventJob;
 import job.builder.MyJobsBuilder;
 import model.dyno.Connectivity;
 import model.dyno.FormValidation;
@@ -57,7 +62,7 @@ public class EventFragment extends Fragment {
     //private FragmentManager localFragmentManager;
     //private FragmentManager localFragmentManager;
     //private FragmentTransaction fragmentTransaction;
-    //private int orientationChange = -1;
+    private int orientationChange = -1;
     private int positionCurrentlyVisible = -1;
     private Cursor localCursor;
     private Animator spruceAnimator;
@@ -84,14 +89,14 @@ public class EventFragment extends Fragment {
         //inflate the view
         fragmentEventsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_events, container, false);
 
-
+        jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getActivity().getApplicationContext()));
         if (savedInstanceState == null) {
             //do not start job if is orientation change
             //start bg job to get events from remote server
-            jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getActivity().getApplicationContext()));
+
             jobManager.addJobInBackground(new EventsJob());
         } else {
-            //orientationChange = 1;
+            orientationChange = 1;
             positionCurrentlyVisible = savedInstanceState.getInt("eventPosition");
             currentDialogedItem = savedInstanceState.getInt("currentDialogedItem");
             fullNames = savedInstanceState.getString("fullNames");
@@ -105,6 +110,7 @@ public class EventFragment extends Fragment {
 
         /**recycler view adapter**/
         eventRecyclerViewAdapter = new EventRecyclerViewAdapter(localCursor);
+
         eventRecyclerViewAdapter.setRegisterButtonListener(new OnChurchButtonItemClickListener() {
             @Override
             public void onRegisterEventClicked(View view, int position) {
@@ -114,24 +120,47 @@ public class EventFragment extends Fragment {
             }
         });
 
+        //set adapter
+        fragmentEventsBinding.eventsRecycler.setAdapter(eventRecyclerViewAdapter);
+
+        //get screen width and do some magic
+        int scrWidth = getScreenDimensions();
+        int numItems = 1;
+
+        if(scrWidth >=800)
+            numItems = 2;
+        if(scrWidth >=1280)
+            numItems = 4;
+
         //todo large screens-(change recyclerview layout)-(number of items diplayed in width)-(data placement and format)
         //todo change recyclerview layout for larger scrren devices and include appropriate animation
-        LinearLayoutManager linearLayoutManagerRecycler = new LinearLayoutManager(getContext()) {
-            @Override
-            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-                super.onLayoutChildren(recycler, state);
-                //Animate in the visible children
-                spruceAnimator = new Spruce.SpruceBuilder(fragmentEventsBinding.eventsRecycler)
-                        .sortWith(new DefaultSort(100))
-                        .animateWith(DefaultAnimations.shrinkAnimator(fragmentEventsBinding.eventsRecycler, 800),
-                                ObjectAnimator.ofFloat(fragmentEventsBinding.eventsRecycler,
-                                        "translationX", -fragmentEventsBinding.eventsRecycler.getWidth(), 0f)
-                                        .setDuration(800)).start();
-            }
-        };
+        if(scrWidth >=800){
 
-        fragmentEventsBinding.eventsRecycler.setAdapter(eventRecyclerViewAdapter);
-        fragmentEventsBinding.eventsRecycler.setLayoutManager(linearLayoutManagerRecycler);
+            GridLayoutManager gridLayoutMgr = new GridLayoutManager(getContext(),numItems);
+
+            fragmentEventsBinding.eventsRecycler.setLayoutManager(gridLayoutMgr);
+
+
+        }else{
+
+            LinearLayoutManager linearLayoutManagerRecycler = new LinearLayoutManager(getContext()) {
+                @Override
+                public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+                    super.onLayoutChildren(recycler, state);
+                    //Animate in the visible children
+                    spruceAnimator = new Spruce.SpruceBuilder(fragmentEventsBinding.eventsRecycler)
+                            .sortWith(new DefaultSort(100))
+                            .animateWith(DefaultAnimations.shrinkAnimator(fragmentEventsBinding.eventsRecycler, 800),
+                                    ObjectAnimator.ofFloat(fragmentEventsBinding.eventsRecycler,
+                                            "translationX", -fragmentEventsBinding.eventsRecycler.getWidth(), 0f)
+                                            .setDuration(800)).start();
+                }
+            };
+
+            fragmentEventsBinding.eventsRecycler.setLayoutManager(linearLayoutManagerRecycler);
+
+        }
+
 
 
         return fragmentEventsBinding.getRoot();
@@ -139,7 +168,6 @@ public class EventFragment extends Fragment {
 
     private void registerForEvent(int position) {
 
-        //todo handle data in dialog on screen orientation and restore by also showing the dialog back
 
         //inflate dialog view
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
@@ -195,6 +223,8 @@ public class EventFragment extends Fragment {
         regDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //get event id
+                String eventId = localCursor.getString(localCursor.getColumnIndex(ChurchContract.EventsEntry.COLUMN_EVENT_ID));
 
                 //handle form validation
                 fullNames = registerEventBindingDialog.fullNames.getText().toString();
@@ -222,8 +252,12 @@ public class EventFragment extends Fragment {
                     currentDialogedItem = -1;
 
                     //notify user
-                    EventBus.getDefault().post(new DynamicToastStatusUpdate(0, "We are registering you thanks."));
-                    //todo initiate a background job to register this user after successful validation of input data(write api endpoint in church application to receive the data)
+                    EventBus.getDefault().post(new DynamicToastStatusUpdate(0, "We are registering you."));
+                    //initiate a background job to register this user after successful validation of input data(write api endpoint in church application to receive the data)
+                    if(localCursor != null && localCursor.isClosed() == false){
+                        jobManager.addJobInBackground(new RegisterEventJob(eventId,fullNames,emailAddress,phone));
+                    }
+
 
                     //set the variables null after posting a background job
                     fullNames = null;
@@ -235,6 +269,14 @@ public class EventFragment extends Fragment {
         });
 
 
+    }
+
+    //get screen dimensions
+    public int getScreenDimensions() {
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;
+        return width;
     }
 
 
@@ -292,7 +334,7 @@ public class EventFragment extends Fragment {
             if (currentDialogedItem != -1) {
                 fragmentEventsBinding.eventsRecycler.scrollToPosition(currentDialogedItem);
             } else {
-                //scroll to position if set
+
                 if (positionCurrentlyVisible != -1) {
                     fragmentEventsBinding.eventsRecycler.scrollToPosition(positionCurrentlyVisible);
                 }
@@ -308,9 +350,6 @@ public class EventFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putInt("orientationChange", 1);
 
-        //post event
-
-        //todo save current visible position
         outState.putInt("eventPosition", positionCurrentlyVisible);
 
         //save dialog data
@@ -360,6 +399,7 @@ public class EventFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
         /**close cursors**/
         if (localCursor != null) {
             localCursor.close();

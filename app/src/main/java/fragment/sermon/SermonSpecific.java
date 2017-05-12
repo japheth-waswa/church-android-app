@@ -210,8 +210,6 @@ public class SermonSpecific extends Fragment{
         handler.startQuery(23, null, ChurchContract.SermonEntry.CONTENT_URI, projection, selection, selectionArgs, null);
     }
 
-    //subscribe to event of pdf download
-
     public int getScreenDimensions() {
         DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
