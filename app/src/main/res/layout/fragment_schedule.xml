@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="schedule"
+            type="model.Schedule"/>
+    </data>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <id.arieridwan.lib.PageLoader
+                android:id="@+id/pageloader"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:setLoadingText="Please wait..."
+                app:setErrorText="Try again later"
+                app:setTextColor="@color/black"
+                app:setLoadingImage="@drawable/ic_loader"
+                app:setErrorImage="@drawable/ic_error"
+                app:setLoadingAnimationMode="rotate"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/standardPadding"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorAccent"
+                android:text="@={schedule.theme_title}" />
+
+            <com.yarolegovich.discretescrollview.DiscreteScrollView
+                android:id="@+id/schedulePagesDiscreteScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+</layout>
