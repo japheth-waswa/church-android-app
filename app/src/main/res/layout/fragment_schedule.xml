@@ -34,6 +34,15 @@
                 android:textColor="@color/colorAccent"
                 android:text="@={schedule.theme_title}" />
 
+            <TextView
+                android:id="@+id/themeDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/standardPadding"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:text="@={schedule.theme_description}" />
+
             <com.yarolegovich.discretescrollview.DiscreteScrollView
                 android:id="@+id/schedulePagesDiscreteScrollView"
                 android:layout_width="match_parent"
