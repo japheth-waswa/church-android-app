@@ -16,7 +16,7 @@
             <id.arieridwan.lib.PageLoader
                 android:id="@+id/pageloader"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 app:setLoadingText="Please wait..."
                 app:setErrorText="Try again later"
                 app:setTextColor="@color/black"
@@ -25,6 +25,7 @@
                 app:setLoadingAnimationMode="rotate"/>
 
             <TextView
+                android:id="@+id/themeTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/standardPadding"
@@ -36,7 +37,7 @@
             <com.yarolegovich.discretescrollview.DiscreteScrollView
                 android:id="@+id/schedulePagesDiscreteScrollView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"/>
         </LinearLayout>
 
 

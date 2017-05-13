@@ -14,6 +14,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +22,7 @@ import android.view.WindowManager;
 
 import com.birbit.android.jobqueue.JobManager;
 import com.japhethwaswa.church.R;
-import com.japhethwaswa.church.databinding.FragmentEventsBinding;
 import com.japhethwaswa.church.databinding.FragmentScheduleBinding;
-import com.japhethwaswa.church.databinding.RegisterEventDialogBinding;
-import com.willowtreeapps.spruce.Spruce;
-import com.willowtreeapps.spruce.animation.DefaultAnimations;
-import com.willowtreeapps.spruce.sort.DefaultSort;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.Orientation;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
@@ -43,9 +39,12 @@ import event.OnChurchButtonItemClickListener;
 import event.pojo.ConnectionStatus;
 import event.pojo.DynamicToastStatusUpdate;
 import event.pojo.EventDataRetrievedSaved;
+import event.pojo.ScheduleDataRetrievedSaved;
 import job.EventsJob;
 import job.RegisterEventJob;
+import job.ScheduleJob;
 import job.builder.MyJobsBuilder;
+import model.Schedule;
 import model.dyno.Connectivity;
 import model.dyno.FormValidation;
 
@@ -57,6 +56,7 @@ public class ScheduleFragment extends Fragment implements DiscreteScrollView.OnI
     private ScheduleRecyclerViewAdapter scheduleRecyclerViewAdapter;
     private int orientationChange = -1;
     private Cursor localCursor;
+    private Cursor scheduleCursor;
     private String fullNames;
     private String emailAddress;
     private String phone;
@@ -81,7 +81,7 @@ public class ScheduleFragment extends Fragment implements DiscreteScrollView.OnI
             //do not start job if is orientation change
             //start bg job to get schedule from remote server
 
-            jobManager.addJobInBackground(new EventsJob());
+            jobManager.addJobInBackground(new ScheduleJob());
         } else {
             orientationChange = 1;
             fullNames = savedInstanceState.getString("fullNames");
@@ -91,6 +91,7 @@ public class ScheduleFragment extends Fragment implements DiscreteScrollView.OnI
 
         //set cursor to null
         localCursor = null;
+        scheduleCursor = null;
 
         //discrete scrollview here
         scheduleRecyclerViewAdapter = new ScheduleRecyclerViewAdapter(localCursor);
@@ -103,27 +104,16 @@ public class ScheduleFragment extends Fragment implements DiscreteScrollView.OnI
         fragmentScheduleBinding.schedulePagesDiscreteScrollView.setItemTransformer(new ScaleTransformer.Builder()
         .setMinScale(0.8f).build());
 
-        /**recycler view adapter**/
-        //eventRecyclerViewAdapter = new EventRecyclerViewAdapter(localCursor);
-
-
-        //set adapter
-        //fragmentEventsBinding.eventsRecycler.setAdapter(eventRecyclerViewAdapter);
-
-        //todo do not set layout manager for discrete scrollview
-
-
-
         return fragmentScheduleBinding.getRoot();
     }
 
+//todo rem to save current visible position to be restored on screen rotation
 
-    //todo get both schedule entry and pages-schedule entry
     //fetch all from db.
-    private void getSchedulePagesFromDb() {
-        if (localCursor != null) {
-            localCursor.close();
-            localCursor = null;
+    private void getScheduleFromDb() {
+        if (scheduleCursor != null) {
+            scheduleCursor.close();
+            scheduleCursor = null;
         }
         //show loader
         fragmentScheduleBinding.pageloader.startProgress();
@@ -132,50 +122,89 @@ public class ScheduleFragment extends Fragment implements DiscreteScrollView.OnI
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
 
-                localCursor = cursor;
-                //loadSermonListToRecyclerView();
+                scheduleCursor = cursor;
+
+                if (scheduleCursor.getCount() > 0){
+
+                    fragmentScheduleBinding.pageloader.stopProgress();
+
+                    //move to first position
+                    scheduleCursor.moveToFirst();
+                    String scheduleId = scheduleCursor.getString(scheduleCursor.getColumnIndex(ChurchContract.SchedulesEntry.COLUMN_SCHEDULE_ID));
+                    String scheduleTitle = scheduleCursor.getString(scheduleCursor.getColumnIndex(ChurchContract.SchedulesEntry.COLUMN_THEME_TITLE));
+                    String scheduleDescription = scheduleCursor.getString(scheduleCursor.getColumnIndex(ChurchContract.SchedulesEntry.COLUMN_THEME_DESCRIPTION));
+                    String scheduleDate = scheduleCursor.getString(scheduleCursor.getColumnIndex(ChurchContract.SchedulesEntry.COLUMN_SUNDAY_DATE));
+
+                    //set data in xml view
+                    Schedule schedule = new Schedule();
+                    schedule.setTheme_title(scheduleTitle);
+                    schedule.setTheme_description(scheduleDescription);
+                    schedule.setSunday_date(scheduleDate);
+                    fragmentScheduleBinding.setSchedule(schedule);
+
+                    //get the id of the schedule and use to get
+                    getSchedulePagesFromDb(scheduleId);
+                }
+
+
             }
         };
 
         String[] projection = {
-                ChurchContract.EventsEntry.COLUMN_EVENT_ID,
-                ChurchContract.EventsEntry.COLUMN_TITLE,
-                ChurchContract.EventsEntry.COLUMN_IMAGE_URL,
-                ChurchContract.EventsEntry.COLUMN_BRIEF_DESCRIPTION,
-                ChurchContract.EventsEntry.COLUMN_CONTENT,
-                ChurchContract.EventsEntry.COLUMN_EVENT_DATE,
-                ChurchContract.EventsEntry.COLUMN_EVENT_LOCATION,
-                ChurchContract.EventsEntry.COLUMN_EVENT_CATEGORY_ID,
-                ChurchContract.EventsEntry.COLUMN_VISIBLE,
-                ChurchContract.EventsEntry.COLUMN_CREATED_AT,
-                ChurchContract.EventsEntry.COLUMN_UPDATED_AT
+                ChurchContract.SchedulesEntry.COLUMN_SCHEDULE_ID,
+                ChurchContract.SchedulesEntry.COLUMN_THEME_TITLE,
+                ChurchContract.SchedulesEntry.COLUMN_THEME_DESCRIPTION,
+                ChurchContract.SchedulesEntry.COLUMN_SUNDAY_DATE,
+                ChurchContract.SchedulesEntry.COLUMN_COLUMN_COUNT,
+                ChurchContract.SchedulesEntry.COLUMN_VISIBLE
         };
 
-        String orderBy = ChurchContract.EventsEntry.COLUMN_EVENT_DATE + " ASC";
-        //String orderBy = null;
+        String orderBy = ChurchContract.SchedulesEntry.COLUMN_SUNDAY_DATE + " ASC";
 
-        handler.startQuery(23, null, ChurchContract.EventsEntry.CONTENT_URI, projection, null, null, orderBy);
+        handler.startQuery(23, null, ChurchContract.SchedulesEntry.CONTENT_URI, projection, null, null, orderBy);
     }
 
-    /**private void loadSermonListToRecyclerView() {
-        if (localCursor.getCount() > 0) {
-            //hide loader here
-            fragmentScheduleBinding.pageloader.stopProgress();
-            //set recycler cursor
-            eventRecyclerViewAdapter.setCursor(localCursor);
+    private void getSchedulePagesFromDb(String scheduleId) {
+        if (localCursor != null) {
+            localCursor.close();
+            localCursor = null;
+        }
 
-            if (currentDialogedItem != -1) {
-                fragmentEventsBinding.eventsRecycler.scrollToPosition(currentDialogedItem);
-            } else {
+        ChurchQueryHandler handler = new ChurchQueryHandler(getContext().getContentResolver()) {
+            @Override
+            protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
 
-                if (positionCurrentlyVisible != -1) {
-                    fragmentEventsBinding.eventsRecycler.scrollToPosition(positionCurrentlyVisible);
-                }
+                localCursor = cursor;
+
+                loadPagesToDiscreteScrollView();
             }
+        };
+
+        String[] projection = {
+                ChurchContract.SchedulePagesEntry.COLUMN_SCHEDULE_PAGES_ID,
+                ChurchContract.SchedulePagesEntry.COLUMN_PAGE_CONTENT,
+                ChurchContract.SchedulePagesEntry.COLUMN_SUNDAY_SCHEDULE_ID,
+                ChurchContract.SchedulePagesEntry.COLUMN_PAGE_ORDER,
+                ChurchContract.SchedulePagesEntry.COLUMN_VISIBLE
+        };
+
+        String orderBy = "CAST (" + ChurchContract.SchedulePagesEntry.COLUMN_PAGE_ORDER + " AS INTEGER) ASC";
+
+        handler.startQuery(25, null, ChurchContract.SchedulePagesEntry.CONTENT_URI, projection, null, null, orderBy);
+    }
+
+    private void loadPagesToDiscreteScrollView() {
+
+        if (localCursor.getCount() > 0) {
+
+            //set recycler cursor
+            scheduleRecyclerViewAdapter.setCursor(localCursor);
+
+            //todo scroll to position if screen rotated.
 
 
         }
-    }**/
+    }
 
 
     @Override
@@ -187,21 +216,16 @@ public class ScheduleFragment extends Fragment implements DiscreteScrollView.OnI
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventDataRetrievedSaved(EventDataRetrievedSaved event) {
-        //parse the event item and display
-        //todo 2-schedules and schedule pages
-        //getEventFromDb();
+    public void onScheduleDataRetrievedSaved(ScheduleDataRetrievedSaved event) {
+        Log.e("jean-event","event-received");
+        getScheduleFromDb();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
-        //todo 2-schedules and schedule pages
-        //getEventFromDb();
-
-
-        EventBus.getDefault().register(this);
+        getScheduleFromDb();
+                EventBus.getDefault().register(this);
     }
 
     @Override
@@ -224,6 +248,9 @@ public class ScheduleFragment extends Fragment implements DiscreteScrollView.OnI
         /**close cursors**/
         if (localCursor != null) {
             localCursor.close();
+        }
+if (scheduleCursor != null) {
+    scheduleCursor.close();
         }
 
 

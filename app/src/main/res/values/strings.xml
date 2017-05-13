@@ -19,6 +19,7 @@
     <string name="token_test">validtoken</string>
     <string name="app_sermon">sermons</string>
     <string name="app_event">events</string>
+    <string name="app_schedule">schedules</string>
     <string name="all_sermons_title">Sermons</string>
     <string name="all_events_title">Events</string>
 </resources>

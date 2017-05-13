@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Looper;
 import android.util.Log;
 
@@ -30,6 +31,7 @@ import db.ChurchQueryHandler;
 import db.DatabaseHelper;
 import event.pojo.BibleUpdate;
 import event.pojo.EventDataRetrievedSaved;
+import event.pojo.ScheduleDataRetrievedSaved;
 import event.pojo.SermonDataRetrievedSaved;
 import model.dyno.OAuth;
 
@@ -138,36 +140,6 @@ public class ChurchWebService {
             e.printStackTrace();
         }
 
-        //clear entire database of sermons
-        /**ChurchQueryHandler handler = new ChurchQueryHandler(applicationContext.getContentResolver());
-         handler.startDelete(3,null,ChurchContract.SermonEntry.CONTENT_URI,null,null);
-
-         if(jArray.length() > 0) {
-         for (int i = 0; i < jArray.length(); i++) {
-         try {
-
-         JSONObject sermonJObject = jArray.getJSONObject(i);
-         ContentValues values = new ContentValues();
-         values.put(ChurchContract.SermonEntry.COLUMN_SERMON_ID,sermonJObject.getString("id"));
-         values.put(ChurchContract.SermonEntry.COLUMN_SERMON_TITLE,sermonJObject.getString("title"));
-         values.put(ChurchContract.SermonEntry.COLUMN_SERMON_IMAGE_URL,sermonJObject.getString("image_url"));
-         values.put(ChurchContract.SermonEntry.COLUMN_SERMON_BRIEF_DESCRIPTION,sermonJObject.getString("brief_description"));
-         values.put(ChurchContract.SermonEntry.COLUMN_SERMON_AUDIO_URL,sermonJObject.getString("audio_url"));
-         values.put(ChurchContract.SermonEntry.COLUMN_SERMON_VIDEO_URL,sermonJObject.getString("video_url"));
-         values.put(ChurchContract.SermonEntry.COLUMN_SERMON_PDF_URL,sermonJObject.getString("pdf_url"));
-         values.put(ChurchContract.SermonEntry.COLUMN_SERMON_DATE,sermonJObject.getString("sermon_date"));
-         values.put(ChurchContract.SermonEntry.COLUMN_SERMON_VISIBLE,sermonJObject.getString("visible"));
-         values.put(ChurchContract.SermonEntry.COLUMN_SERMON_CREATED_AT,sermonJObject.getString("created_at"));
-         values.put(ChurchContract.SermonEntry.COLUMN_SERMON_UPDATED_AT,sermonJObject.getString("updated_at"));
-
-         handler.startInsert(5,null, ChurchContract.SermonEntry.CONTENT_URI,values);
-         } catch (JSONException e) {
-         e.printStackTrace();
-         }
-         }
-         }
-         //post event for all subscribers that data has been received and saved in local database
-         EventBus.getDefault().post(new SermonDataRetrievedSaved());**/
     }
 
 
@@ -246,6 +218,90 @@ public class ChurchWebService {
         //todo registering a user to a specific event.
     }
 
+    //get schedule
+
+    public static void serviceGetSchedule(final Context applicationContext) {
+
+        Resources res = applicationContext.getResources();
+        String relativeUrl = res.getString(R.string.app_schedule);
+        String accessToken = OAuth.getClientCredentialsGrantTypeAccessToken();
+
+        AndroidNetworking.get(getAbsoluteUrl(applicationContext, relativeUrl))
+                .setPriority(Priority.HIGH)
+                .setTag("scheduleApi")
+                .addHeaders("Authorization", "Bearer " + accessToken)
+                .build().getAsJSONObject(new JSONObjectRequestListener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                parseSchedules(response, applicationContext);
+            }
+
+            @Override
+            public void onError(ANError anError) {
+            }
+        });
+
+    }
+
+    private static void parseSchedules(JSONObject custJObject, Context applicationContext) {
+
+        JSONObject jObject = custJObject;
+        JSONArray jArray = null;
+
+        ChurchQueryHandler handler = new ChurchQueryHandler(applicationContext.getContentResolver());
+        handler.startDelete(5, null, ChurchContract.SchedulesEntry.CONTENT_URI, null, null);
+
+
+
+        try {
+            //get jsonArray
+            jArray = jObject.getJSONArray("sundaypages");
+
+            ContentValues values = new ContentValues();
+            values.put(ChurchContract.SchedulesEntry.COLUMN_SCHEDULE_ID, jObject.getString("id"));
+            values.put(ChurchContract.SchedulesEntry.COLUMN_THEME_TITLE, jObject.getString("theme_title"));
+            values.put(ChurchContract.SchedulesEntry.COLUMN_THEME_DESCRIPTION, jObject.getString("theme_description"));
+            values.put(ChurchContract.SchedulesEntry.COLUMN_SUNDAY_DATE, jObject.getString("sunday_date"));
+            values.put(ChurchContract.SchedulesEntry.COLUMN_COLUMN_COUNT, jObject.getString("column_count"));
+            values.put(ChurchContract.SchedulesEntry.COLUMN_VISIBLE, jObject.getString("visible"));
+            values.put(ChurchContract.SchedulesEntry.COLUMN_CREATED_AT, jObject.getString("created_at"));
+            values.put(ChurchContract.SchedulesEntry.COLUMN_UPDATED_AT, jObject.getString("updated_at"));
+
+            handler.startInsert(7, null, ChurchContract.SchedulesEntry.CONTENT_URI, values);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+        ChurchQueryHandler handlered = new ChurchQueryHandler(applicationContext.getContentResolver());
+        handlered.startDelete(17, null, ChurchContract.SchedulePagesEntry.CONTENT_URI, null, null);
+
+        if (jArray.length() > 0) {
+            for (int i = 0; i < jArray.length(); i++) {
+                try {
+
+                    JSONObject jObj = jArray.getJSONObject(i);
+                    ContentValues valuesed = new ContentValues();
+                    valuesed.put(ChurchContract.SchedulePagesEntry.COLUMN_SCHEDULE_PAGES_ID, jObj.getString("id"));
+                    valuesed.put(ChurchContract.SchedulePagesEntry.COLUMN_PAGE_CONTENT, jObj.getString("page_content"));
+                    valuesed.put(ChurchContract.SchedulePagesEntry.COLUMN_SUNDAY_SCHEDULE_ID, jObj.getString("sunday_schedule_id"));
+                    valuesed.put(ChurchContract.SchedulePagesEntry.COLUMN_PAGE_ORDER, jObj.getString("page_order"));
+                    valuesed.put(ChurchContract.SchedulePagesEntry.COLUMN_VISIBLE, jObj.getString("visible"));
+                    valuesed.put(ChurchContract.SchedulePagesEntry.COLUMN_CREATED_AT, jObj.getString("created_at"));
+                    valuesed.put(ChurchContract.SchedulePagesEntry.COLUMN_UPDATED_AT, jObj.getString("updated_at"));
+
+                    handlered.startInsert(19, null, ChurchContract.SchedulePagesEntry.CONTENT_URI, valuesed);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        //post event for all subscribers that data has been received and saved in local database
+        EventBus.getDefault().post(new ScheduleDataRetrievedSaved());
+
+    }
 
     private static String getAbsoluteUrl(Context context, String relativeUrl) {
         Resources res = context.getResources();

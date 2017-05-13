@@ -37,6 +37,7 @@ import event.pojo.DynamicToastStatusUpdate;
 import event.pojo.NavActivityColor;
 import event.pojo.NavActivityHideNavigation;
 import fragment.event.EventFragment;
+import fragment.schedule.ScheduleFragment;
 import fragment.sermon.SermonFragment;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -122,13 +123,16 @@ public class NavActivity extends AppCompatActivity {
                 break;
 
             case 2:
-                //sermons
+                //event
                 EventFragment eventFragment = new EventFragment();
                 fragmentTransaction.replace(R.id.navFragmentHolder, eventFragment, "eventFragment");
                 fragmentTransaction.commit();
                 break;
             case 3:
-                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
+                //schedule
+                ScheduleFragment scheduleFragment = new ScheduleFragment();
+                fragmentTransaction.replace(R.id.navFragmentHolder, scheduleFragment, "scheduleFragment");
+                fragmentTransaction.commit();
                 break;
             case 4:
                 Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
