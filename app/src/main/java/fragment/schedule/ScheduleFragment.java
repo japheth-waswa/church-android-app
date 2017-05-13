@@ -55,11 +55,9 @@ public class ScheduleFragment extends Fragment implements DiscreteScrollView.OnI
     private JobManager jobManager;
     private ScheduleRecyclerViewAdapter scheduleRecyclerViewAdapter;
     private int orientationChange = -1;
+    private int previousPosition = -1;
     private Cursor localCursor;
     private Cursor scheduleCursor;
-    private String fullNames;
-    private String emailAddress;
-    private String phone;
 
 
     @Nullable
@@ -84,9 +82,7 @@ public class ScheduleFragment extends Fragment implements DiscreteScrollView.OnI
             jobManager.addJobInBackground(new ScheduleJob());
         } else {
             orientationChange = 1;
-            fullNames = savedInstanceState.getString("fullNames");
-            emailAddress = savedInstanceState.getString("emailAddress");
-            phone = savedInstanceState.getString("phone");
+            previousPosition = savedInstanceState.getInt("previousPosition");
         }
 
         //set cursor to null
@@ -106,8 +102,6 @@ public class ScheduleFragment extends Fragment implements DiscreteScrollView.OnI
 
         return fragmentScheduleBinding.getRoot();
     }
-
-//todo rem to save current visible position to be restored on screen rotation
 
     //fetch all from db.
     private void getScheduleFromDb() {
@@ -200,7 +194,9 @@ public class ScheduleFragment extends Fragment implements DiscreteScrollView.OnI
             //set recycler cursor
             scheduleRecyclerViewAdapter.setCursor(localCursor);
 
-            //todo scroll to position if screen rotated.
+            //scroll to position
+            if(previousPosition != -1)
+                fragmentScheduleBinding.schedulePagesDiscreteScrollView.scrollToPosition(previousPosition);
 
 
         }
@@ -211,13 +207,13 @@ public class ScheduleFragment extends Fragment implements DiscreteScrollView.OnI
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("orientationChange", 1);
+        outState.putInt("previousPosition", fragmentScheduleBinding.schedulePagesDiscreteScrollView.getCurrentItem());
 
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onScheduleDataRetrievedSaved(ScheduleDataRetrievedSaved event) {
-        Log.e("jean-event","event-received");
         getScheduleFromDb();
     }
 
@@ -266,8 +262,8 @@ if (scheduleCursor != null) {
     //handle item changes
     private void onItemChanged(int position) {
         if (localCursor != null && localCursor.isClosed() == false) {
-            //todo perform logic here ie change color of button-refer from github
             //localCursor.moveToPosition(position);
+            //perform logic that you want here
         }
     }
 }

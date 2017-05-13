@@ -43,8 +43,8 @@ public class ScheduleViewHolder extends RecyclerView.ViewHolder{
 
         itemScheduleBinding.setSchedulePage(schedulePage);
         //todo attach bootstrap to webview html from assets folder
+        //todo error-ApplicationContext is null in ApplicationStatus
         String html = "<html><body>" + schedulePage.getPage_content()+"</body></html>";
-        //itemScheduleBinding.scheduleWebView.loadData(html, "text/html", "utf-8");
         itemScheduleBinding.scheduleWebView.loadDataWithBaseURL(null,html,"text/html", "UTF-8", "");
     }
 
