@@ -35,18 +35,22 @@
                 android:text="@={schedule.theme_title}" />
 
             <TextView
-                android:id="@+id/themeDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:id="@+id/pageNumber"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_margin="@dimen/standardPadding"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:text="@={schedule.theme_description}" />
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:background="@drawable/ic_blank_page"/>
 
             <com.yarolegovich.discretescrollview.DiscreteScrollView
                 android:id="@+id/schedulePagesDiscreteScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
+
+
         </LinearLayout>
 
 

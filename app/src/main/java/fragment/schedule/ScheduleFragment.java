@@ -262,8 +262,12 @@ if (scheduleCursor != null) {
     //handle item changes
     private void onItemChanged(int position) {
         if (localCursor != null && localCursor.isClosed() == false) {
-            //localCursor.moveToPosition(position);
-            //perform logic that you want here
+            if(localCursor.moveToPosition(position)){
+                String pageNum = localCursor.getString(localCursor.getColumnIndex(ChurchContract.SchedulePagesEntry.COLUMN_PAGE_ORDER));
+                fragmentScheduleBinding.pageNumber.setText(pageNum);
+            }
+
+
         }
     }
 }
