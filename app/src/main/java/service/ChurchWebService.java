@@ -170,8 +170,6 @@ public class ChurchWebService {
                 }
             }
         }
-        // todo post event for all subscribers that data has been received and saved in local database
-        //EventBus.getDefault().post(new SermonDataRetrievedSaved());
     }
 
 
