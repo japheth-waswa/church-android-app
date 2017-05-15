@@ -367,7 +367,7 @@ public class ChurchWebService {
 
         AndroidNetworking.get(getAbsoluteUrl(applicationContext, relativeUrl))
                 .setPriority(Priority.HIGH)
-                .setTag("scheduleApi")
+                .setTag("blogApi")
                 .addHeaders("Authorization", "Bearer " + accessToken)
                 .build().getAsJSONObject(new JSONObjectRequestListener() {
             @Override

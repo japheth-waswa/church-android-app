@@ -23,6 +23,7 @@
     <string name="app_donation">donations</string>
     <string name="app_blog">blogs</string>
     <string name="all_sermons_title">Sermons</string>
+    <string name="all_blogs_title">News Feed</string>
     <string name="all_events_title">Events</string>
     <string name="fb_code">fb</string>
     <string name="twitter_code">tr</string>
