@@ -10,6 +10,9 @@ import db.ChurchContract.EventsEntry;
 import db.ChurchContract.SchedulesEntry;
 import db.ChurchContract.SchedulePagesEntry;
 import db.ChurchContract.DonationEntry;
+import db.ChurchContract.BlogCategoryEntry;
+import db.ChurchContract.BlogsEntry;
+import db.ChurchContract.BlogCommentsEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
 
@@ -101,6 +104,50 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                     DonationEntry.COLUMN_UPDATED_AT + " TEXT " +
                     ")";
 
+    private static final String TABLE_BLOGCATEGORY_CREATE=
+            "CREATE TABLE " + BlogCategoryEntry.TABLE_NAME + " (" +
+                    BlogCategoryEntry._ID + " INTEGER PRIMARY KEY, " +
+                    BlogCategoryEntry.COLUMN_BLOG_CATEGORY_ID + " TEXT, " +
+                    BlogCategoryEntry.COLUMN__TITLE + " TEXT, " +
+                    BlogCategoryEntry.COLUMN_URL_KEY + " TEXT, " +
+                    BlogCategoryEntry.COLUMN_DESCRIPTION + " TEXT, " +
+                    BlogCategoryEntry.COLUMN_VISIBLE + " TEXT, " +
+                    BlogCategoryEntry.COLUMN_CREATED_AT + " TEXT, " +
+                    BlogCategoryEntry.COLUMN_UPDATED_AT + " TEXT " +
+                    ")";
+
+
+    private static final String TABLE_BLOG_CREATE=
+            "CREATE TABLE " + BlogsEntry.TABLE_NAME + " (" +
+                    BlogsEntry._ID + " INTEGER PRIMARY KEY, " +
+                    BlogsEntry.COLUMN_BLOG_CATEGORY_ID + " TEXT, " +
+                    BlogsEntry.COLUMN_BLOG_ID + " TEXT, " +
+                    BlogsEntry.COLUMN_URL_KEY + " TEXT, " +
+                    BlogsEntry.COLUMN_TITLE + " TEXT, " +
+                    BlogsEntry.COLUMN_IMAGE_URL + " TEXT, " +
+                    BlogsEntry.COLUMN_BRIEF_DESCRIPTION + " TEXT, " +
+                    BlogsEntry.COLUMN_CONTENT + " TEXT, " +
+                    BlogsEntry.COLUMN_AUTHOR_NAME + " TEXT, " +
+                    BlogsEntry.COLUMN_PUBLISH_DATE + " TEXT, " +
+                    BlogsEntry.COLUMN_VISIBLE + " TEXT, " +
+                    BlogsEntry.COLUMN_CREATED_AT + " TEXT, " +
+                    BlogsEntry.COLUMN_UPDATED_AT + " TEXT " +
+                    ")";
+
+    private static final String TABLE_BLOGCOMMENTS_CREATE=
+            "CREATE TABLE " + BlogCommentsEntry.TABLE_NAME + " (" +
+                    BlogCommentsEntry._ID + " INTEGER PRIMARY KEY, " +
+                    BlogCommentsEntry.COLUMN_NAMES + " TEXT, " +
+                    BlogCommentsEntry.COLUMN_BLOG_ID + " TEXT, " +
+                    BlogCommentsEntry.COLUMN_EMAIL + " TEXT, " +
+                    BlogCommentsEntry.COLUMN_PHONE + " TEXT, " +
+                    BlogCommentsEntry.COLUMN_MESSAGE + " TEXT, " +
+                    BlogCommentsEntry.COLUMN_VIEWED + " TEXT, " +
+                    BlogCommentsEntry.COLUMN_VISIBLE + " TEXT, " +
+                    BlogCommentsEntry.COLUMN_CREATED_AT + " TEXT, " +
+                    BlogCommentsEntry.COLUMN_UPDATED_AT + " TEXT " +
+                    ")";
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -115,6 +162,9 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.execSQL(TABLE_SCHEDULE_CREATE);
         db.execSQL(TABLE_SCHEDULEPAGES_CREATE);
         db.execSQL(TABLE_DONATION_CREATE);
+        db.execSQL(TABLE_BLOGCATEGORY_CREATE);
+        db.execSQL(TABLE_BLOG_CREATE);
+        db.execSQL(TABLE_BLOGCOMMENTS_CREATE);
     }
 
     @Override
@@ -125,5 +175,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + SchedulesEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SchedulePagesEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + DonationEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + BlogCategoryEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + BlogsEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + BlogCommentsEntry.TABLE_NAME);
     }
 }

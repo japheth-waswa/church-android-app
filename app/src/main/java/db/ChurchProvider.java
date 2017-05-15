@@ -18,6 +18,9 @@ import static db.ChurchContract.PATH_EVENTS;
 import static db.ChurchContract.PATH_SCHEDULES;
 import static db.ChurchContract.PATH_SCHEDULE_PAGES;
 import static db.ChurchContract.PATH_DONATION;
+import static db.ChurchContract.PATH_BLOG_CATEGORIES;
+import static db.ChurchContract.PATH_BLOG;
+import static db.ChurchContract.PATH_BLOG_COMMENTS;
 
 public class ChurchProvider extends ContentProvider{
     /**
@@ -40,6 +43,15 @@ public class ChurchProvider extends ContentProvider{
 
     private static final int DONATION = 11;
     private static final int DONATION_ID = 12;
+
+    private static final int BLOGCATEGORY = 13;
+    private static final int BLOGCATEGORY_ID = 14;
+
+    private static final int BLOG = 15;
+    private static final int BLOG_ID = 16;
+
+    private static final int BLOG_COMMENTS = 17;
+    private static final int BLOG_COMMENTS_ID = 18;
 
     //Uri matcher
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -69,6 +81,18 @@ public class ChurchProvider extends ContentProvider{
         //donation data uri
         uriMatcher.addURI(CONTENT_AUTHORITY, PATH_DONATION, DONATION);
         uriMatcher.addURI(CONTENT_AUTHORITY, PATH_DONATION + "/#", DONATION_ID);
+
+        //blog category data uri
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_BLOG_CATEGORIES, BLOGCATEGORY);
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_BLOG_CATEGORIES + "/#", BLOGCATEGORY_ID);
+
+        //blog data uri
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_BLOG, BLOG);
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_BLOG + "/#", BLOG_ID);
+
+        //blog comments data uri
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_BLOG_COMMENTS, BLOG_COMMENTS);
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_BLOG_COMMENTS + "/#", BLOG_COMMENTS_ID);
 
     }
 
@@ -137,6 +161,30 @@ public class ChurchProvider extends ContentProvider{
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 cursor = db.query(ChurchContract.DonationEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
+            case BLOGCATEGORY:
+                cursor = db.query(ChurchContract.BlogCategoryEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case BLOGCATEGORY_ID:
+                selection = ChurchContract.BlogCategoryEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                cursor = db.query(ChurchContract.BlogCategoryEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case BLOG:
+                cursor = db.query(ChurchContract.BlogsEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case BLOG_ID:
+                selection = ChurchContract.BlogsEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                cursor = db.query(ChurchContract.BlogsEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case BLOG_COMMENTS:
+                cursor = db.query(ChurchContract.BlogCommentsEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case BLOG_COMMENTS_ID:
+                selection = ChurchContract.BlogCommentsEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                cursor = db.query(ChurchContract.BlogCommentsEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown Uri");
         }
@@ -168,6 +216,12 @@ public class ChurchProvider extends ContentProvider{
                 return insertRecord(uri, values, ChurchContract.SchedulePagesEntry.TABLE_NAME);
             case DONATION:
                 return insertRecord(uri, values, ChurchContract.DonationEntry.TABLE_NAME);
+            case BLOGCATEGORY:
+                return insertRecord(uri, values, ChurchContract.BlogCategoryEntry.TABLE_NAME);
+            case BLOG:
+                return insertRecord(uri, values, ChurchContract.BlogsEntry.TABLE_NAME);
+            case BLOG_COMMENTS:
+                return insertRecord(uri, values, ChurchContract.BlogCommentsEntry.TABLE_NAME);
             default:
                 throw new IllegalArgumentException("Unkwown uri: " + uri);
 
@@ -214,6 +268,18 @@ public class ChurchProvider extends ContentProvider{
                 return deleteRecord(uri, null, null, ChurchContract.DonationEntry.TABLE_NAME);
             case DONATION_ID:
                 return deleteRecord(uri, selection, selectionArgs, ChurchContract.DonationEntry.TABLE_NAME);
+            case BLOGCATEGORY:
+                return deleteRecord(uri, null, null, ChurchContract.BlogCategoryEntry.TABLE_NAME);
+            case BLOGCATEGORY_ID:
+                return deleteRecord(uri, selection, selectionArgs, ChurchContract.BlogCategoryEntry.TABLE_NAME);
+            case BLOG:
+                return deleteRecord(uri, null, null, ChurchContract.BlogsEntry.TABLE_NAME);
+            case BLOG_ID:
+                return deleteRecord(uri, selection, selectionArgs, ChurchContract.BlogsEntry.TABLE_NAME);
+            case BLOG_COMMENTS:
+                return deleteRecord(uri, null, null, ChurchContract.BlogCommentsEntry.TABLE_NAME);
+            case BLOG_COMMENTS_ID:
+                return deleteRecord(uri, selection, selectionArgs, ChurchContract.BlogCommentsEntry.TABLE_NAME);
             default:
                 throw new IllegalArgumentException("Insert unknown URI: " + uri);
         }
@@ -248,6 +314,12 @@ public class ChurchProvider extends ContentProvider{
                 return updateRecord(uri, values, selection, selectionArgs, ChurchContract.SchedulePagesEntry.TABLE_NAME);
             case DONATION:
                 return updateRecord(uri, values, selection, selectionArgs, ChurchContract.DonationEntry.TABLE_NAME);
+            case BLOGCATEGORY:
+                return updateRecord(uri, values, selection, selectionArgs, ChurchContract.BlogCategoryEntry.TABLE_NAME);
+            case BLOG:
+                return updateRecord(uri, values, selection, selectionArgs, ChurchContract.BlogsEntry.TABLE_NAME);
+            case BLOG_COMMENTS:
+                return updateRecord(uri, values, selection, selectionArgs, ChurchContract.BlogCommentsEntry.TABLE_NAME);
             default:
                 throw new IllegalArgumentException("Update unknown URI: " + uri);
         }

@@ -11,6 +11,9 @@ public class ChurchContract {
     public static final String PATH_SCHEDULES = "schedules";
     public static final String PATH_SCHEDULE_PAGES = "schedule_pages";
     public static final String PATH_DONATION = "donation";
+    public static final String PATH_BLOG_CATEGORIES = "blog_categories";
+    public static final String PATH_BLOG = "blogs";
+    public static final String PATH_BLOG_COMMENTS = "blog_comments";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://"+CONTENT_AUTHORITY);
 
 
@@ -124,6 +127,64 @@ public class ChurchContract {
         public static final String COLUMN_FACEBOOK= "facebook_url";
         public static final String COLUMN_TWITTER= "twitter_url";
         public static final String COLUMN_YOUTUBE= "youtube_url";
+        public static final String COLUMN_VISIBLE= "visible";
+        public static final String COLUMN_CREATED_AT= "created_at";
+        public static final String COLUMN_UPDATED_AT= "updated_at";
+    }
+
+    public static final class BlogCategoryEntry implements BaseColumns{
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI,PATH_BLOG_CATEGORIES);
+
+        //Table name
+        public static final String TABLE_NAME = "blog_categories";
+        //column field names
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_BLOG_CATEGORY_ID = "blog_category_id";
+        public static final String COLUMN__TITLE = "title";
+        public static final String COLUMN_URL_KEY= "url_key";
+        public static final String COLUMN_DESCRIPTION= "description";
+        public static final String COLUMN_VISIBLE= "visible";
+        public static final String COLUMN_CREATED_AT= "created_at";
+        public static final String COLUMN_UPDATED_AT= "updated_at";
+    }
+
+    public static final class BlogsEntry implements BaseColumns{
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI,PATH_BLOG);
+
+        //Table name
+        public static final String TABLE_NAME = "blogs";
+        //column field names
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_BLOG_ID = "blog_id";
+        public static final String COLUMN_TITLE = "blog_title";
+        public static final String COLUMN_URL_KEY= "url_key";
+        public static final String COLUMN_IMAGE_URL= "image_url";
+        public static final String COLUMN_BRIEF_DESCRIPTION= "brief_description";
+        public static final String COLUMN_CONTENT= "content";
+        public static final String COLUMN_AUTHOR_NAME= "author_name";
+        public static final String COLUMN_PUBLISH_DATE= "publish_date";
+        public static final String COLUMN_BLOG_CATEGORY_ID= "blog_category_id";
+        public static final String COLUMN_VISIBLE= "visible";
+        public static final String COLUMN_CREATED_AT= "created_at";
+        public static final String COLUMN_UPDATED_AT= "updated_at";
+    }
+
+    public static final class BlogCommentsEntry implements BaseColumns{
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI,PATH_BLOG_COMMENTS);
+
+        //Table name
+        public static final String TABLE_NAME = "blog_comments";
+        //column field names
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_NAMES = "names";
+        public static final String COLUMN_EMAIL = "email";
+        public static final String COLUMN_PHONE= "phone";
+        public static final String COLUMN_MESSAGE= "message";
+        public static final String COLUMN_BLOG_ID= "blog_id";
+        public static final String COLUMN_VIEWED= "viewed";
         public static final String COLUMN_VISIBLE= "visible";
         public static final String COLUMN_CREATED_AT= "created_at";
         public static final String COLUMN_UPDATED_AT= "updated_at";
