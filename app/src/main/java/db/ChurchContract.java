@@ -10,6 +10,7 @@ public class ChurchContract {
     public static final String PATH_EVENTS = "events";
     public static final String PATH_SCHEDULES = "schedules";
     public static final String PATH_SCHEDULE_PAGES = "schedule_pages";
+    public static final String PATH_DONATION = "donation";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://"+CONTENT_AUTHORITY);
 
 
@@ -102,6 +103,27 @@ public class ChurchContract {
         public static final String COLUMN_PAGE_CONTENT = "page_content";
         public static final String COLUMN_SUNDAY_SCHEDULE_ID = "sunday_schedule_id";
         public static final String COLUMN_PAGE_ORDER= "page_order";
+        public static final String COLUMN_VISIBLE= "visible";
+        public static final String COLUMN_CREATED_AT= "created_at";
+        public static final String COLUMN_UPDATED_AT= "updated_at";
+    }
+
+    public static final class DonationEntry implements BaseColumns{
+
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI,PATH_DONATION);
+
+        //Table name
+        public static final String TABLE_NAME = "donation";
+        //column field names
+        public static final String _ID = BaseColumns._ID;
+        public static final String COLUMN_DONATION_ID = "donation_id";
+        public static final String COLUMN_TITLE = "title";
+        public static final String COLUMN_IMAGE_URL = "image_url";
+        public static final String COLUMN_DESCRIPTION= "description";
+        public static final String COLUMN_CONTENT= "content";
+        public static final String COLUMN_FACEBOOK= "facebook_url";
+        public static final String COLUMN_TWITTER= "twitter_url";
+        public static final String COLUMN_YOUTUBE= "youtube_url";
         public static final String COLUMN_VISIBLE= "visible";
         public static final String COLUMN_CREATED_AT= "created_at";
         public static final String COLUMN_UPDATED_AT= "updated_at";

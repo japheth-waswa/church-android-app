@@ -301,6 +301,57 @@ public class ChurchWebService {
 
     }
 
+
+    //retrieve donation
+    public static void serviceGetDonation(final Context applicationContext) {
+        Resources res = applicationContext.getResources();
+        String relativeUrl = res.getString(R.string.app_donation);
+        String accessToken = OAuth.getClientCredentialsGrantTypeAccessToken();
+
+        AndroidNetworking.get(getAbsoluteUrl(applicationContext, relativeUrl))
+                .setPriority(Priority.HIGH)
+                .setTag("donationApi")
+                .addHeaders("Authorization", "Bearer " + accessToken)
+                .build().getAsJSONObject(new JSONObjectRequestListener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                parseDonation(response, applicationContext);
+            }
+
+            @Override
+            public void onError(ANError anError) {
+            }
+        });
+    }
+
+    private static void parseDonation(JSONObject response, Context applicationContext) {
+
+        ChurchQueryHandler handler = new ChurchQueryHandler(applicationContext.getContentResolver());
+        handler.startDelete(9, null, ChurchContract.DonationEntry.CONTENT_URI, null, null);
+
+        JSONObject jObject = response;
+
+        try {
+            ContentValues values = new ContentValues();
+            values.put(ChurchContract.DonationEntry.COLUMN_DONATION_ID, jObject.getString("id"));
+            values.put(ChurchContract.DonationEntry.COLUMN_TITLE, jObject.getString("title"));
+            values.put(ChurchContract.DonationEntry.COLUMN_IMAGE_URL, jObject.getString("image_url"));
+            values.put(ChurchContract.DonationEntry.COLUMN_DESCRIPTION, jObject.getString("description"));
+            values.put(ChurchContract.DonationEntry.COLUMN_CONTENT, jObject.getString("content"));
+            values.put(ChurchContract.DonationEntry.COLUMN_FACEBOOK, jObject.getString("facebook_url"));
+            values.put(ChurchContract.DonationEntry.COLUMN_TWITTER, jObject.getString("twitter_url"));
+            values.put(ChurchContract.DonationEntry.COLUMN_YOUTUBE, jObject.getString("youtube_url"));
+            values.put(ChurchContract.DonationEntry.COLUMN_VISIBLE, jObject.getString("visible"));
+            values.put(ChurchContract.DonationEntry.COLUMN_CREATED_AT, jObject.getString("created_at"));
+            values.put(ChurchContract.DonationEntry.COLUMN_UPDATED_AT, jObject.getString("updated_at"));
+
+            handler.startInsert(11, null, ChurchContract.DonationEntry.CONTENT_URI, values);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private static String getAbsoluteUrl(Context context, String relativeUrl) {
         Resources res = context.getResources();
         String baseUrl = res.getString(R.string.root_domain_api);

@@ -9,6 +9,7 @@ import db.ChurchContract.EventCategoryEntry;
 import db.ChurchContract.EventsEntry;
 import db.ChurchContract.SchedulesEntry;
 import db.ChurchContract.SchedulePagesEntry;
+import db.ChurchContract.DonationEntry;
 
 public class DatabaseHelper extends SQLiteOpenHelper{
 
@@ -84,6 +85,22 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                     SchedulePagesEntry.COLUMN_UPDATED_AT + " TEXT " +
                     ")";
 
+    private static final String TABLE_DONATION_CREATE=
+            "CREATE TABLE " + DonationEntry.TABLE_NAME + " (" +
+                    DonationEntry._ID + " INTEGER PRIMARY KEY, " +
+                    DonationEntry.COLUMN_DONATION_ID + " TEXT, " +
+                    DonationEntry.COLUMN_TITLE + " TEXT, " +
+                    DonationEntry.COLUMN_IMAGE_URL + " TEXT, " +
+                    DonationEntry.COLUMN_DESCRIPTION + " TEXT, " +
+                    DonationEntry.COLUMN_CONTENT + " TEXT, " +
+                    DonationEntry.COLUMN_FACEBOOK + " TEXT, " +
+                    DonationEntry.COLUMN_TWITTER + " TEXT, " +
+                    DonationEntry.COLUMN_YOUTUBE + " TEXT, " +
+                    DonationEntry.COLUMN_VISIBLE + " TEXT, " +
+                    DonationEntry.COLUMN_CREATED_AT + " TEXT, " +
+                    DonationEntry.COLUMN_UPDATED_AT + " TEXT " +
+                    ")";
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -97,6 +114,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.execSQL(TABLE_EVENT_CREATE);
         db.execSQL(TABLE_SCHEDULE_CREATE);
         db.execSQL(TABLE_SCHEDULEPAGES_CREATE);
+        db.execSQL(TABLE_DONATION_CREATE);
     }
 
     @Override
@@ -106,5 +124,6 @@ public class DatabaseHelper extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + EventsEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SchedulesEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SchedulePagesEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DonationEntry.TABLE_NAME);
     }
 }

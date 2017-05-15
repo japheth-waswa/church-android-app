@@ -17,6 +17,7 @@ import static db.ChurchContract.PATH_EVENT_CATEGORIES;
 import static db.ChurchContract.PATH_EVENTS;
 import static db.ChurchContract.PATH_SCHEDULES;
 import static db.ChurchContract.PATH_SCHEDULE_PAGES;
+import static db.ChurchContract.PATH_DONATION;
 
 public class ChurchProvider extends ContentProvider{
     /**
@@ -36,6 +37,9 @@ public class ChurchProvider extends ContentProvider{
 
     private static final int SCHEDULEPAGES = 9;
     private static final int SCHEDULEPAGES_ID = 10;
+
+    private static final int DONATION = 11;
+    private static final int DONATION_ID = 12;
 
     //Uri matcher
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -61,6 +65,10 @@ public class ChurchProvider extends ContentProvider{
         //schedule pages data uri
         uriMatcher.addURI(CONTENT_AUTHORITY, PATH_SCHEDULE_PAGES, SCHEDULEPAGES);
         uriMatcher.addURI(CONTENT_AUTHORITY, PATH_SCHEDULE_PAGES + "/#", SCHEDULEPAGES_ID);
+
+        //donation data uri
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_DONATION, DONATION);
+        uriMatcher.addURI(CONTENT_AUTHORITY, PATH_DONATION + "/#", DONATION_ID);
 
     }
 
@@ -121,6 +129,14 @@ public class ChurchProvider extends ContentProvider{
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 cursor = db.query(ChurchContract.SchedulePagesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
+            case DONATION:
+                cursor = db.query(ChurchContract.DonationEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case DONATION_ID:
+                selection = ChurchContract.DonationEntry._ID + "=?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                cursor = db.query(ChurchContract.DonationEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown Uri");
         }
@@ -150,6 +166,8 @@ public class ChurchProvider extends ContentProvider{
                 return insertRecord(uri, values, ChurchContract.SchedulesEntry.TABLE_NAME);
             case SCHEDULEPAGES:
                 return insertRecord(uri, values, ChurchContract.SchedulePagesEntry.TABLE_NAME);
+            case DONATION:
+                return insertRecord(uri, values, ChurchContract.DonationEntry.TABLE_NAME);
             default:
                 throw new IllegalArgumentException("Unkwown uri: " + uri);
 
@@ -192,6 +210,10 @@ public class ChurchProvider extends ContentProvider{
                 return deleteRecord(uri, null, null, ChurchContract.SchedulePagesEntry.TABLE_NAME);
             case SCHEDULEPAGES_ID:
                 return deleteRecord(uri, selection, selectionArgs, ChurchContract.SchedulePagesEntry.TABLE_NAME);
+            case DONATION:
+                return deleteRecord(uri, null, null, ChurchContract.DonationEntry.TABLE_NAME);
+            case DONATION_ID:
+                return deleteRecord(uri, selection, selectionArgs, ChurchContract.DonationEntry.TABLE_NAME);
             default:
                 throw new IllegalArgumentException("Insert unknown URI: " + uri);
         }
@@ -224,6 +246,8 @@ public class ChurchProvider extends ContentProvider{
                 return updateRecord(uri, values, selection, selectionArgs, ChurchContract.SchedulesEntry.TABLE_NAME);
             case SCHEDULEPAGES:
                 return updateRecord(uri, values, selection, selectionArgs, ChurchContract.SchedulePagesEntry.TABLE_NAME);
+            case DONATION:
+                return updateRecord(uri, values, selection, selectionArgs, ChurchContract.DonationEntry.TABLE_NAME);
             default:
                 throw new IllegalArgumentException("Update unknown URI: " + uri);
         }
