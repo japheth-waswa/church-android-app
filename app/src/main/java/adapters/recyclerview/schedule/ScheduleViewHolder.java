@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 
 import com.japhethwaswa.church.databinding.ItemScheduleBinding;
-import com.japhethwaswa.church.databinding.ItemSermonBinding;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

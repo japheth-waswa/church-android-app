@@ -30,7 +30,7 @@ public class SermonViewHolder extends RecyclerView.ViewHolder{
     public void bind(Cursor cursor){
 
         Sermon sermon =new Sermon();
-        if(cursor.isClosed() == false && cursor != null){
+        if(!cursor.isClosed()){
             sermon.setSermon_title(cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_TITLE)));
             sermon.setSermon_image_url(ChurchWebService.getRootAbsoluteUrl(ApplicationContextProvider.getsContext(),cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_IMAGE_URL))));
             sermon.setSermon_brief_description(cursor.getString(cursor.getColumnIndex(ChurchContract.SermonEntry.COLUMN_SERMON_BRIEF_DESCRIPTION)));

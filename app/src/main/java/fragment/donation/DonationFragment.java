@@ -223,6 +223,8 @@ public class DonationFragment extends Fragment  implements DataBindingCustomList
             localCursor.close();
         }
 
+        fragmentDonationBinding.donationWebView.loadUrl("about:blank");
+
     }
 
 

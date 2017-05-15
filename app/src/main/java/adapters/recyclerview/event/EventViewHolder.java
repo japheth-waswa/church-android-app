@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.japhethwaswa.church.databinding.ItemEventBinding;
-import com.japhethwaswa.church.databinding.ItemSermonBinding;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

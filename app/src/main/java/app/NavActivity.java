@@ -37,6 +37,7 @@ import event.pojo.DownloadSermonPdfStatus;
 import event.pojo.DynamicToastStatusUpdate;
 import event.pojo.NavActivityColor;
 import event.pojo.NavActivityHideNavigation;
+import fragment.blog.BlogFragment;
 import fragment.donation.DonationFragment;
 import fragment.event.EventFragment;
 import fragment.schedule.ScheduleFragment;
@@ -147,8 +148,13 @@ public class NavActivity extends AppCompatActivity{
                 Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
                 break;
             case 6:
-                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
+
+                //blog/news feed
+                BlogFragment blogFragment = new BlogFragment();
+                fragmentTransaction.replace(R.id.navFragmentHolder, blogFragment, "blogFragment");
+                fragmentTransaction.commit();
                 break;
+
             case 7:
                 Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
                 break;

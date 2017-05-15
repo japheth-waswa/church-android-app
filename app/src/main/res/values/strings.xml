@@ -4,6 +4,7 @@
     <string name="btn_cancel">Cancel</string>
     <string name="preference_file_key">com.japhethwaswa.church.JEAN_BABY</string>
     <string name="preference_sermon_position">sermonPosition</string>
+    <string name="preference_blog_position">blogPosition</string>
     <string name="preference_client_credentials_name">clientCredentialsAccessTokenString</string>
     <string name="preference_client_credentials_expires">clientCredentialsAccessTokenExpires</string>
     <string name="preference_password_grant_name">passwordGrantAccessTokenString</string>

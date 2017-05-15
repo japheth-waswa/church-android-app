@@ -250,7 +250,6 @@ if (scheduleCursor != null) {
         }
 
 
-
     }
 
     @Override
