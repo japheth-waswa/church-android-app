@@ -36,6 +36,7 @@ import event.pojo.DownloadSermonPdfStatus;
 import event.pojo.DynamicToastStatusUpdate;
 import event.pojo.NavActivityColor;
 import event.pojo.NavActivityHideNavigation;
+import fragment.donation.DonationFragment;
 import fragment.event.EventFragment;
 import fragment.schedule.ScheduleFragment;
 import fragment.sermon.SermonFragment;
@@ -135,7 +136,10 @@ public class NavActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
                 break;
             case 4:
-                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
+                //donation
+                DonationFragment donationFragment = new DonationFragment();
+                fragmentTransaction.replace(R.id.navFragmentHolder, donationFragment, "donationFragment");
+                fragmentTransaction.commit();
                 break;
 
             case 5:

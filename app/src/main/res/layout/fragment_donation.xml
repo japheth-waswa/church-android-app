@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="donation"
+            type="model.Donation"/>
+    </data>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <id.arieridwan.lib.PageLoader
+                android:id="@+id/pageloader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:setLoadingText="Please wait..."
+                app:setErrorText="Try again later"
+                app:setTextColor="@color/black"
+                app:setLoadingImage="@drawable/ic_loader"
+                app:setErrorImage="@drawable/ic_error"
+                app:setLoadingAnimationMode="rotate"/>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/donationTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:layout_margin="@dimen/standardPadding"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorAccent"
+                        android:text="@={donation.title}" />
+
+                    <WebView
+                        android:id="@+id/donationWebView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"></WebView>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="facebook"/>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+
+        </LinearLayout>
+
+
+</layout>

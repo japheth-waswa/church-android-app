@@ -30,6 +30,7 @@ import db.ChurchContract;
 import db.ChurchQueryHandler;
 import db.DatabaseHelper;
 import event.pojo.BibleUpdate;
+import event.pojo.DonationDataRetrievedSaved;
 import event.pojo.EventDataRetrievedSaved;
 import event.pojo.ScheduleDataRetrievedSaved;
 import event.pojo.SermonDataRetrievedSaved;
@@ -349,6 +350,9 @@ public class ChurchWebService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        //post event
+        EventBus.getDefault().post(new DonationDataRetrievedSaved());
 
     }
 
