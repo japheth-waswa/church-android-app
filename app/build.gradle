@@ -30,6 +30,7 @@ dependencies {
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
     testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    compile 'com.github.florent37:diagonallayout:1.0.4'
     compile 'com.yarolegovich:discrete-scrollview:1.1.4'
     compile 'com.github.imangazalievm:circlemenu:1.0.3'
     compile 'com.willowtreeapps.spruce:spruce-android:1.0.0'

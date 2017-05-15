@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import adapters.recyclerview.schedule.ScheduleRecyclerViewAdapter;
 import db.ChurchContract;
 import db.ChurchQueryHandler;
+import event.DataBindingCustomListener;
+import event.DtbCustomListenerPresenter;
 import event.pojo.ConnectionStatus;
 import event.pojo.DonationDataRetrievedSaved;
 import event.pojo.ScheduleDataRetrievedSaved;
@@ -38,12 +41,13 @@ import model.Schedule;
 import model.dyno.Connectivity;
 
 
-public class DonationFragment extends Fragment{
+public class DonationFragment extends Fragment  implements DataBindingCustomListener.View {
 
     private FragmentDonationBinding fragmentDonationBinding;
     private JobManager jobManager;
     private int orientationChange = -1;
     private Cursor localCursor;
+    private DtbCustomListenerPresenter dtbCustomListenerPresenter;
 
 
     @Nullable
@@ -73,7 +77,22 @@ public class DonationFragment extends Fragment{
         //set cursor to null
         localCursor = null;
 
+        //set presenter
+        dtbCustomListenerPresenter = new DtbCustomListenerPresenter(this);
+
+        fragmentDonationBinding.setDatabindingcustompresenter(dtbCustomListenerPresenter);
+
         return fragmentDonationBinding.getRoot();
+    }
+
+    @Override
+    public void onNeedString(String stringData) {
+        Log.e("jean","she is awesome");
+    }
+
+    @Override
+    public void onSocialClick(String code, String stringData) {
+        Log.e("jean-click",code+"----"+stringData);
     }
 
     private void getDonationFromDb() {
@@ -179,5 +198,6 @@ public class DonationFragment extends Fragment{
         }
 
     }
+
 
 }

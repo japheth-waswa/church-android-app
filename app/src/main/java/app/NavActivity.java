@@ -30,6 +30,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 
 import es.dmoral.toasty.Toasty;
+import event.DataBindingCustomListener;
 import event.pojo.ConnectionStatus;
 import event.pojo.DownloadSermonPdf;
 import event.pojo.DownloadSermonPdfStatus;
@@ -44,7 +45,7 @@ import fragment.sermon.SermonFragment;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class NavActivity extends AppCompatActivity {
+public class NavActivity extends AppCompatActivity{
 
     private static final int ALL_PERMISSIONS_RESULT = 100;
     private ActivityNavBinding activityNavBinding;
@@ -159,6 +160,7 @@ public class NavActivity extends AppCompatActivity {
                 break;
         }
     }
+
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

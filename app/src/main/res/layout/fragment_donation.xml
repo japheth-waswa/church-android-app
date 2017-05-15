@@ -7,6 +7,9 @@
         <variable
             name="donation"
             type="model.Donation"/>
+        <variable
+            name="databindingcustompresenter"
+            type="event.DtbCustomListenerPresenter"/>
     </data>
 
         <LinearLayout
@@ -49,10 +52,29 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"></WebView>
 
-                    <Button
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="facebook"/>
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            android:layout_width="128dp"
+                            android:layout_height="128dp"
+                            android:src="@drawable/ic_facebook"
+                            android:onClick="@{() -> databindingcustompresenter.onSocialClick(@string/fb_code,donation.facebook_url)}"/>
+
+                        <ImageButton
+                            android:layout_width="128dp"
+                            android:layout_height="128dp"
+                            android:src="@drawable/ic_youtube"/>
+
+                        <ImageButton
+                            android:layout_width="128dp"
+                            android:layout_height="128dp"
+                            android:src="@drawable/ic_twitter"/>
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
