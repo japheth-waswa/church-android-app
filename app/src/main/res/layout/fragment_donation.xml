@@ -58,17 +58,20 @@
                         android:orientation="horizontal">
 
                         <ImageButton
+                            android:id="@+id/fragFbUrl"
                             android:layout_width="128dp"
                             android:layout_height="128dp"
                             android:src="@drawable/ic_facebook"
                             android:onClick="@{() -> databindingcustompresenter.onSocialClick(@string/fb_code,donation.facebook_url)}"/>
 
                         <ImageButton
+                            android:id="@+id/fragYoutubeUrl"
                             android:layout_width="128dp"
                             android:layout_height="128dp"
                             android:src="@drawable/ic_youtube"/>
 
                         <ImageButton
+                            android:id="@+id/fragTwitterUrl"
                             android:layout_width="128dp"
                             android:layout_height="128dp"
                             android:src="@drawable/ic_twitter"/>

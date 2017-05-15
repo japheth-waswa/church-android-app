@@ -87,12 +87,11 @@ public class DonationFragment extends Fragment  implements DataBindingCustomList
 
     @Override
     public void onNeedString(String stringData) {
-        Log.e("jean","she is awesome");
     }
 
     @Override
     public void onSocialClick(String code, String stringData) {
-        Log.e("jean-click",code+"----"+stringData);
+        //todo perform a redirect to this url
     }
 
     private void getDonationFromDb() {
@@ -136,6 +135,7 @@ public class DonationFragment extends Fragment  implements DataBindingCustomList
             fragmentDonationBinding.pageloader.stopProgress();
 
             if(localCursor.moveToFirst()){
+
                 Donation donation = new Donation();
                 donation.setTitle(localCursor.getString(localCursor.getColumnIndex(ChurchContract.DonationEntry.COLUMN_TITLE)));
                 donation.setImage_url(localCursor.getString(localCursor.getColumnIndex(ChurchContract.DonationEntry.COLUMN_IMAGE_URL)));
@@ -144,6 +144,16 @@ public class DonationFragment extends Fragment  implements DataBindingCustomList
                 donation.setFacebook_url(localCursor.getString(localCursor.getColumnIndex(ChurchContract.DonationEntry.COLUMN_FACEBOOK)));
                 donation.setTwitter_url(localCursor.getString(localCursor.getColumnIndex(ChurchContract.DonationEntry.COLUMN_TWITTER)));
                 donation.setYoutube_url(localCursor.getString(localCursor.getColumnIndex(ChurchContract.DonationEntry.COLUMN_YOUTUBE)));
+
+                //ensure fb,twitter,youtube is not null to proceed
+                if(donation.getFacebook_url() == null || donation.getFacebook_url().isEmpty() || donation.getFacebook_url().trim().equalsIgnoreCase("null"))
+                    fragmentDonationBinding.fragFbUrl.setVisibility(View.GONE);
+
+                if(donation.getTwitter_url() == null || donation.getTwitter_url().isEmpty() || donation.getTwitter_url().trim().equalsIgnoreCase("null"))
+                    fragmentDonationBinding.fragTwitterUrl.setVisibility(View.GONE);
+
+                if(donation.getYoutube_url() == null || donation.getYoutube_url().isEmpty() || donation.getYoutube_url().trim().equalsIgnoreCase("null"))
+                    fragmentDonationBinding.fragYoutubeUrl.setVisibility(View.GONE);
 
                 fragmentDonationBinding.setDonation(donation);
                 String html = "<html><head><link href=\"bootstrap.min.css\" type=\"text/css\" /></head><body>" + donation.getContent()+"<script src=\"bootstrap.min.js\" type=\"text/javascript\"></script> </body></html>";
