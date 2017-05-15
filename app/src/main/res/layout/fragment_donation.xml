@@ -52,29 +52,47 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"></WebView>
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/standardPadding"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:text="SHARE:"
+                        />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="10dp">
 
                         <ImageButton
                             android:id="@+id/fragFbUrl"
-                            android:layout_width="128dp"
-                            android:layout_height="128dp"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
                             android:src="@drawable/ic_facebook"
                             android:onClick="@{() -> databindingcustompresenter.onSocialClick(@string/fb_code,donation.facebook_url)}"/>
 
                         <ImageButton
                             android:id="@+id/fragYoutubeUrl"
-                            android:layout_width="128dp"
-                            android:layout_height="128dp"
-                            android:src="@drawable/ic_youtube"/>
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:src="@drawable/ic_youtube"
+                            android:onClick="@{() -> databindingcustompresenter.onSocialClick(@string/fb_code,donation.youtube_url)}"/>
 
                         <ImageButton
                             android:id="@+id/fragTwitterUrl"
-                            android:layout_width="128dp"
-                            android:layout_height="128dp"
-                            android:src="@drawable/ic_twitter"/>
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:src="@drawable/ic_twitter"
+                            android:onClick="@{() -> databindingcustompresenter.onSocialClick(@string/fb_code,donation.twitter_url)}"/>
 
                     </LinearLayout>
 

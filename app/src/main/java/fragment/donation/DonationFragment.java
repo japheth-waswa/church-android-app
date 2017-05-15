@@ -92,6 +92,7 @@ public class DonationFragment extends Fragment  implements DataBindingCustomList
     @Override
     public void onSocialClick(String code, String stringData) {
         //todo perform a redirect to this url
+        Log.e("jean-shit","this is awesome-"+stringData);
     }
 
     private void getDonationFromDb() {
