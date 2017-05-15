@@ -21,6 +21,7 @@
     <string name="app_event">events</string>
     <string name="app_schedule">schedules</string>
     <string name="app_donation">donations</string>
+    <string name="app_blog">blogs</string>
     <string name="all_sermons_title">Sermons</string>
     <string name="all_events_title">Events</string>
     <string name="fb_code">fb</string>
