@@ -1,7 +1,11 @@
 package fragment.donation;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
@@ -24,6 +28,8 @@ import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 import adapters.recyclerview.schedule.ScheduleRecyclerViewAdapter;
 import db.ChurchContract;
@@ -91,8 +97,17 @@ public class DonationFragment extends Fragment  implements DataBindingCustomList
 
     @Override
     public void onSocialClick(String code, String stringData) {
-        //todo perform a redirect to this url
-        Log.e("jean-shit","this is awesome-"+stringData);
+        //build the web intent
+        Uri webpage = Uri.parse(stringData);
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,webpage);
+
+        //verify it resolves
+        PackageManager packageManager = getActivity().getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(webIntent,0);
+                boolean isIntentSafe = activities.size() > 0;
+
+        if(isIntentSafe)
+            startActivity(webIntent);
     }
 
     private void getDonationFromDb() {
