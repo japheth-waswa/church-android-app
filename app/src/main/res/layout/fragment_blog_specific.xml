@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:diagonal="http://schemas.android.com/tools">
     <data>
 
         <variable
@@ -14,18 +15,78 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
+
+            <com.github.florent37.diagonallayout.DiagonalLayout
+                android:id="@+id/diagonalLayout"
+                android:layout_width="match_parent"
+                android:layout_height="266dp"
+                android:elevation="10dp"
+                app:diagonal_angle="10"
+                diagonal:diagonal_direction="left"
+                diagonal:diagonal_position="bottom"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/brand" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Blog title here"
+                    android:layout_gravity="top|left"
+                    android:fontFamily="sans-serif-light"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="70dp"
+                    android:textSize="25sp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="105dp"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="publish date"
+                        android:layout_gravity="top|left"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-condensed"
+                        android:textSize="14sp"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="category name"
+                        android:textStyle="bold"
+                        android:layout_gravity="top|left"
+                        android:fontFamily="sans-serif-condensed"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="14sp"
+                        />
+
+                </LinearLayout>
+
+            </com.github.florent37.diagonallayout.DiagonalLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/diagonalLayout"
                 android:text="specific blog detailed here"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </ScrollView>
 
