@@ -76,7 +76,7 @@ private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
 
 
         //webview settings
-        //fragmentBlogSpecificBinding.blogWebView.getSettings().setJavaScriptEnabled(true);
+        fragmentBlogSpecificBinding.blogWebView.getSettings().setJavaScriptEnabled(true);
 
         return fragmentBlogSpecificBinding.getRoot();
     }
@@ -106,6 +106,7 @@ private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
                     blog.setImage_url(ChurchWebService.getRootAbsoluteUrl(ApplicationContextProvider.getsContext(),cursor.getString(cursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_IMAGE_URL))));
                     blog.setBrief_description(cursor.getString(cursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_BRIEF_DESCRIPTION)));
                     blog.setContent(cursor.getString(cursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_CONTENT)));
+                    blog.setAuthor_name(cursor.getString(cursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_AUTHOR_NAME)));
 
                     /**date format**/
                     String blogDate = "";
@@ -123,8 +124,8 @@ private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
 
                     fragmentBlogSpecificBinding.setBlog(blog);
 
-                    //String html = "<html><head><link href=\"bootstrap.min.css\" type=\"text/css\" /></head><body>" + blog.getContent()+"<script src=\"bootstrap.min.js\" type=\"text/javascript\"></script> </body></html>";
-                    //fragmentBlogSpecificBinding.blogWebView.loadDataWithBaseURL("file:///android_asset/",html,"text/html", "UTF-8", "");
+                    String html = "<html><head><link href=\"bootstrap.min.css\" type=\"text/css\" /></head><body>" + blog.getContent()+"<script src=\"bootstrap.min.js\" type=\"text/javascript\"></script> </body></html>";
+                    fragmentBlogSpecificBinding.blogWebView.loadDataWithBaseURL("file:///android_asset/",html,"text/html", "UTF-8", "");
 
 
                 }
@@ -192,7 +193,7 @@ private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
 
         super.onPause();
 
-        //fragmentBlogSpecificBinding.blogWebView.loadUrl("about:blank");
+        fragmentBlogSpecificBinding.blogWebView.loadUrl("about:blank");
     }
 
 }

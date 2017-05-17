@@ -35,14 +35,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/brand" />
+                    app:imageUrl="@{blog.image_url}"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Blog title here"
+                    android:text="@={blog.blog_title}"
                     android:layout_gravity="top|left"
                     android:fontFamily="sans-serif-light"
+                    android:textColor="@color/white"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="70dp"
                     android:textSize="25sp"
@@ -58,8 +59,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="publish date"
+                        android:text="@={blog.publish_date}"
                         android:layout_gravity="top|left"
+                        android:textColor="@color/white"
                         android:textStyle="bold"
                         android:fontFamily="sans-serif-condensed"
                         android:textSize="14sp"
@@ -68,7 +70,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="category name"
+                        android:text="@={blog.author_name}"
+                        android:textColor="@color/white"
                         android:textStyle="bold"
                         android:layout_gravity="top|left"
                         android:fontFamily="sans-serif-condensed"
@@ -87,7 +90,7 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="190dp"
                 android:elevation="15dp"
-                android:src="@drawable/ic_error"/>
+                android:src="@drawable/ic_user_custom"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -117,7 +120,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Followers"
+                        android:text="Comments"
                         android:textColor="#3E3E3E"
                         android:fontFamily="sans-serif-condensed"
                         android:layout_marginLeft="10dp"
@@ -126,7 +129,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="3.5K"
+                        android:text="3,700"
                         android:textStyle="bold"
                         android:textColor="#3E3E3E"
                         android:fontFamily="sans-serif-condensed"
@@ -145,7 +148,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Following"
+                        android:text="Category"
                         android:textColor="#3E3E3E"
                         android:fontFamily="sans-serif-condensed"
                         android:layout_marginLeft="10dp"
@@ -154,7 +157,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1.9K"
+                        android:text="Church"
                         android:textStyle="bold"
                         android:textColor="#3E3E3E"
                         android:fontFamily="sans-serif-condensed"
@@ -166,14 +169,13 @@
 
             </LinearLayout>
 
-            <TextView
+            <WebView
+                android:id="@+id/blogWebView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="320dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:textColor="#717171"
-                android:text="this is the description of the items that should be in stock."/>
+                android:layout_marginRight="10dp"/>
 
         </RelativeLayout>
 
