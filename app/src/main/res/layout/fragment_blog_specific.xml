@@ -8,6 +8,11 @@
         <variable
             name="blog"
             type="model.Blog" />
+
+        <variable
+            name="custommodel"
+            type="model.CustomModel" />
+
     </data>
 
 
@@ -129,7 +134,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="3,700"
+                        android:text="@={custommodel.comments_count}"
                         android:textStyle="bold"
                         android:textColor="#3E3E3E"
                         android:fontFamily="sans-serif-condensed"
@@ -157,7 +162,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Church"
+                        android:text="@={custommodel.category}"
                         android:textStyle="bold"
                         android:textColor="#3E3E3E"
                         android:fontFamily="sans-serif-condensed"

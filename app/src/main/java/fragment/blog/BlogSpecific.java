@@ -8,6 +8,7 @@ import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ import event.pojo.DownloadSermonPdfStatus;
 import event.pojo.NavActivityColor;
 import event.pojo.NavActivityHideNavigation;
 import model.Blog;
+import model.CustomModel;
 import model.Sermon;
 import model.dyno.ApplicationContextProvider;
 import service.ChurchWebService;
@@ -124,6 +126,9 @@ private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
 
                     fragmentBlogSpecificBinding.setBlog(blog);
 
+                    updateCustomModelData();
+
+
                     String html = "<html><head><link href=\"bootstrap.min.css\" type=\"text/css\" /></head><body>" + blog.getContent()+"<script src=\"bootstrap.min.js\" type=\"text/javascript\"></script> </body></html>";
                     fragmentBlogSpecificBinding.blogWebView.loadDataWithBaseURL("file:///android_asset/",html,"text/html", "UTF-8", "");
 
@@ -152,6 +157,69 @@ private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
         String[] selectionArgs = {String.valueOf(blogId)};
 
         handler.startQuery(23, null, ChurchContract.BlogsEntry.CONTENT_URI, projection, selection, selectionArgs, null);
+    }
+
+    private void updateCustomModelData() {
+
+        final CustomModel customModel = new CustomModel();
+        final String[] categoryTitle = {null};
+        final String[] commentsCount = {"0"};
+
+        ChurchQueryHandler handler = new ChurchQueryHandler(getContext().getContentResolver()){
+            @Override
+            protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+
+
+                if(token == 33){
+                    if(cursor.getCount() > 0){
+                        cursor.moveToFirst();
+                        categoryTitle[0] = cursor.getString(cursor.getColumnIndex(ChurchContract.BlogCategoryEntry.COLUMN_URL_KEY));
+                    }
+
+                }
+
+
+                if(token == 37){
+                    commentsCount[0] = String.valueOf(cursor.getCount());
+                    fragmentBlogSpecificBinding.setCustommodel(customModel);
+                }
+
+                customModel.setCategory(categoryTitle[0]);
+                customModel.setComments_count(commentsCount[0]);
+
+
+                cursor.close();
+
+            }
+        };
+
+        String[] projection = {
+                ChurchContract.BlogCategoryEntry.COLUMN__TITLE,
+                ChurchContract.BlogCategoryEntry.COLUMN_BLOG_CATEGORY_ID,
+                ChurchContract.BlogCategoryEntry.COLUMN_URL_KEY,
+                ChurchContract.BlogCategoryEntry.COLUMN_VISIBLE,
+                ChurchContract.BlogCategoryEntry.COLUMN_CREATED_AT
+        };
+
+        String selection = ChurchContract.BlogCategoryEntry.COLUMN_BLOG_CATEGORY_ID + "=?";
+        String[] selectionArgs = {localCursor.getString(localCursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_BLOG_CATEGORY_ID))};
+
+        handler.startQuery(33, null, ChurchContract.BlogCategoryEntry.CONTENT_URI, projection, selection, selectionArgs, null);
+
+
+String[] projectioned = {
+                ChurchContract.BlogCommentsEntry.COLUMN_VISIBLE,
+                ChurchContract.BlogCommentsEntry.COLUMN_CREATED_AT
+        };
+
+        String selectioned = ChurchContract.BlogCommentsEntry.COLUMN_BLOG_ID + "=?";
+        String[] selectionArgsed = {localCursor.getString(localCursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_BLOG_ID))};
+
+        handler.startQuery(37, null, ChurchContract.BlogCommentsEntry.CONTENT_URI, projectioned, selectioned, selectionArgsed, null);
+
+
+
+
     }
 
     @Override
@@ -195,5 +263,7 @@ private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
 
         fragmentBlogSpecificBinding.blogWebView.loadUrl("about:blank");
     }
+
+    //todo add the comments sections(both commenting and displaying comments)
 
 }
