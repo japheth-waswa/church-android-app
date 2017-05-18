@@ -214,8 +214,13 @@ public class ChurchWebService {
 
 
     public static void serviceRegisterForEvent(Context applicationContext, String eventId, String fullNames, String emailAddress, String phone) {
-        //todo implement logic to post registration to remote server-rem to add the logic in remote server ie php endpoint
-        //todo registering a user to a specific event.
+        //todo webapp====implement logic to post registration to remote server-rem to add the logic in remote server ie php endpoint
+        //todo webapp====registering a user to a specific event.
+    }
+
+
+    public static void servicePostComment(Context applicationContext, String blogId, String fullNames, String emailAddress, String comment) {
+        //todo webapp====implement logic to post comment to remote server
     }
 
     //get schedule

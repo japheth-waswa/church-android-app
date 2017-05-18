@@ -56,6 +56,7 @@ import event.pojo.DownloadSermonPdfStatus;
 import event.pojo.DynamicToastStatusUpdate;
 import event.pojo.NavActivityColor;
 import event.pojo.NavActivityHideNavigation;
+import job.CommentEventJob;
 import job.RegisterEventJob;
 import job.builder.MyJobsBuilder;
 import model.Blog;
@@ -280,6 +281,9 @@ public class BlogSpecific extends Fragment implements DataBindingCustomListener.
 
     private void commentOnBlog() {
 
+        if (commDialog != null) {
+            commDialog.dismiss();
+        }
 
         //inflate dialog view
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
@@ -355,10 +359,9 @@ public class BlogSpecific extends Fragment implements DataBindingCustomListener.
                     commDialog = null;
 
                     //notify user
-                    EventBus.getDefault().post(new DynamicToastStatusUpdate(0, "Your comment is being submitted."));
+                    EventBus.getDefault().post(new DynamicToastStatusUpdate(0, "Thanks for commenting"));
 
-                    //todo rem blog id
-                    //jobManager.addJobInBackground(new RegisterEventJob(eventId,fullNames,emailAddress,phone));
+                    jobManager.addJobInBackground(new CommentEventJob(String.valueOf(blogId),fullNames,emailAddress,comment));
 
                 }
 
@@ -434,8 +437,7 @@ public class BlogSpecific extends Fragment implements DataBindingCustomListener.
         commentOnBlog();
     }
 
-    //todo allow users to comment and post to remote server and update in the UI
-    //todo in web app set the image location of the user ie "image_url" for user that wrote the article/news feed.
+    //todo webapp====in web app set the image location of the user ie "image_url" for user that wrote the article/news feed. ie in web application and update db to store this data
     //todo Unable to open asset URL: file:///android_asset/
 
 }
