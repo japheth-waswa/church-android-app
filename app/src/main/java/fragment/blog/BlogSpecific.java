@@ -229,6 +229,10 @@ public class BlogSpecific extends Fragment implements DataBindingCustomListener.
                 customModel.setCategory(categoryTitle[0]);
                 customModel.setComments_count(commentsCount[0]);
 
+                if(commentsCount[0] == "0")
+                    fragmentBlogSpecificBinding.commentsTitle.setVisibility(View.GONE);
+
+
 
                 if (token == 37) {
                     //populate comments recyclerview
@@ -438,6 +442,5 @@ public class BlogSpecific extends Fragment implements DataBindingCustomListener.
     }
 
     //todo webapp====in web app set the image location of the user ie "image_url" for user that wrote the article/news feed. ie in web application and update db to store this data
-    //todo Unable to open asset URL: file:///android_asset/
 
 }

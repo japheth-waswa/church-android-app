@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.japhethwaswa.church.databinding.ItemScheduleBinding;
 
@@ -26,6 +27,8 @@ public class ScheduleViewHolder extends RecyclerView.ViewHolder{
     public ScheduleViewHolder(View itemView) {
         super(itemView);
         itemScheduleBinding = DataBindingUtil.bind(itemView);
+
+
 
         //webview settings
         itemScheduleBinding.scheduleWebView.getSettings().setJavaScriptEnabled(true);

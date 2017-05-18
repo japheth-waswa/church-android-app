@@ -26,6 +26,7 @@ public class ScheduleRecyclerViewAdapter extends RecyclerView.Adapter<ScheduleVi
         LayoutInflater inflater = LayoutInflater.from(context);
         View customViewContainer = inflater.inflate(R.layout.item_schedule, parent, false);
 
+
         return new ScheduleViewHolder(customViewContainer);
 
     }
