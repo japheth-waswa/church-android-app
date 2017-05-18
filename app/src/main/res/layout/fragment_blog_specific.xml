@@ -89,7 +89,7 @@
             </com.github.florent37.diagonallayout.DiagonalLayout>
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/avatar"
+                android:id="@+id/avatarCircle"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginLeft="40dp"
@@ -98,6 +98,7 @@
                 android:src="@drawable/ic_user_custom"/>
 
             <LinearLayout
+                android:id="@+id/blogSpecificHolder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -178,7 +179,9 @@
                 android:id="@+id/blogWebView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="320dp"
+                android:layout_margin="@dimen/standardPadding"
+                android:layout_below="@id/avatarCircle"
+                android:layout_marginTop="390dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
 
@@ -186,6 +189,8 @@
                 android:id="@+id/commentsTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/blogWebView"
+                android:layout_marginBottom="@dimen/standardPadding"
                 android:text="COMMENTS"
                 android:textSize="19sp"
                 android:textColor="@color/colorAccent"/>
@@ -193,7 +198,8 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/blogCommentsRecycler"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_below="@id/commentsTitle"/>
 
         </RelativeLayout>
 

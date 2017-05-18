@@ -259,6 +259,7 @@ public class BlogSpecific extends Fragment {
 
     private void populateCommentsRecyclerView() {
 
+        Log.e("jean","cursor"+commentsCursor.getCount());
         if (commentsCursor != null && commentsCursor.getCount() > 0) {
             commentRecyclerViewAdapter.setCursor(commentsCursor);
         }
@@ -316,5 +317,6 @@ public class BlogSpecific extends Fragment {
     //todo allow users to comment and post to remote server and update in the UI
     //todo in web app set the image location of the user
     //todo while not validated with network set an a 3dots-if sent and returned set nothing(reduce opacity)-comments
+    //todo Unable to open asset URL: file:///android_asset/
 
 }
