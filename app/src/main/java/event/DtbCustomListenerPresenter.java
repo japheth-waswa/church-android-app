@@ -18,4 +18,10 @@ public class DtbCustomListenerPresenter implements DataBindingCustomListener.Pre
     public void onSocialClick(String code, String stringData) {
         view.onSocialClick(code,stringData);
     }
+
+    @Override
+    public void onCommentClick() {
+        view.onCommentClick();
+    }
+
 }

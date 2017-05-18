@@ -13,6 +13,10 @@
             name="custommodel"
             type="model.CustomModel" />
 
+        <variable
+            name="databindingcustompresenter"
+            type="event.DtbCustomListenerPresenter"/>
+
     </data>
 
 
@@ -185,11 +189,21 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
 
+            <ImageButton
+                android:id="@+id/wantToComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/blogWebView"
+                android:layout_marginBottom="@dimen/standardPadding"
+                android:background="@null"
+                android:src="@drawable/ic_twitter"
+                android:onClick="@{() -> databindingcustompresenter.onCommentClick()}"/>
+
             <TextView
                 android:id="@+id/commentsTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/blogWebView"
+                android:layout_below="@id/wantToComment"
                 android:layout_marginBottom="@dimen/standardPadding"
                 android:text="COMMENTS"
                 android:textSize="19sp"

@@ -248,17 +248,17 @@ public class EventFragment extends Fragment {
                 boolean checkedPhone = FormValidation.checkInt(phone, 10, 10);
                 boolean checkedFullNames = FormValidation.checkString(fullNames, 0, 0);
 
-                if (checkedEmailAddress == false) {
+                if (!checkedEmailAddress) {
                     registerEventBindingDialog.emailAddress.setError("Invalid Email Address");
                 }
-                if (checkedPhone == false) {
+                if (!checkedPhone) {
                     registerEventBindingDialog.phone.setError("Must be 10 chars long");
                 }
-                if (checkedFullNames == false) {
+                if (!checkedFullNames) {
                     registerEventBindingDialog.fullNames.setError("Please Enter");
                 }
 
-                if (checkedEmailAddress == true && checkedPhone == true && checkedFullNames == true) {
+                if (checkedEmailAddress && checkedPhone && checkedFullNames) {
                     //dismiss dialog
                     regDialog.dismiss();
                     regDialog =  null;
@@ -267,7 +267,7 @@ public class EventFragment extends Fragment {
                     //notify user
                     EventBus.getDefault().post(new DynamicToastStatusUpdate(0, "We are registering you."));
                     //initiate a background job to register this user after successful validation of input data(write api endpoint in church application to receive the data)
-                    if(localCursor != null && localCursor.isClosed() == false){
+                    if(localCursor != null && !localCursor.isClosed()){
                         jobManager.addJobInBackground(new RegisterEventJob(eventId,fullNames,emailAddress,phone));
                     }
 

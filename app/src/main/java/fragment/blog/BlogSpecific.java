@@ -1,6 +1,7 @@
 package fragment.blog;
 
 import android.animation.Animator;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -21,9 +23,12 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.DownloadListener;
 import com.androidnetworking.interfaces.DownloadProgressListener;
+import com.birbit.android.jobqueue.JobManager;
 import com.japhethwaswa.church.R;
+import com.japhethwaswa.church.databinding.CommentBlogDialogBinding;
 import com.japhethwaswa.church.databinding.FragmentBlogSpecificBinding;
 import com.japhethwaswa.church.databinding.FragmentSermonSpecificBinding;
+import com.japhethwaswa.church.databinding.RegisterEventDialogBinding;
 import com.willowtreeapps.spruce.Spruce;
 import com.willowtreeapps.spruce.animation.DefaultAnimations;
 import com.willowtreeapps.spruce.sort.DefaultSort;
@@ -44,17 +49,23 @@ import db.ChurchContract;
 import db.ChurchQueryHandler;
 import event.ClickListener;
 import event.CustomRecyclerTouchListener;
+import event.DataBindingCustomListener;
+import event.DtbCustomListenerPresenter;
 import event.pojo.DownloadSermonPdf;
 import event.pojo.DownloadSermonPdfStatus;
+import event.pojo.DynamicToastStatusUpdate;
 import event.pojo.NavActivityColor;
 import event.pojo.NavActivityHideNavigation;
+import job.RegisterEventJob;
+import job.builder.MyJobsBuilder;
 import model.Blog;
 import model.CustomModel;
 import model.Sermon;
 import model.dyno.ApplicationContextProvider;
+import model.dyno.FormValidation;
 import service.ChurchWebService;
 
-public class BlogSpecific extends Fragment {
+public class BlogSpecific extends Fragment implements DataBindingCustomListener.View{
 
     private static final int MESSAGE_ID = 7;
     private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
@@ -64,6 +75,10 @@ public class BlogSpecific extends Fragment {
     private int orientationChange = -1;
     private int blogId = -1;
     private Animator spruceAnimator;
+    private CommentBlogDialogBinding commentBlogBindingDialog;
+    private AlertDialog commDialog;
+    private JobManager jobManager;
+    private DtbCustomListenerPresenter dtbCustomListenerPresenter;
 
 
     @Nullable
@@ -79,6 +94,8 @@ public class BlogSpecific extends Fragment {
 
         fragmentBlogSpecificBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_blog_specific, container, false);
 
+        jobManager = new JobManager(MyJobsBuilder.getConfigBuilder(getActivity().getApplicationContext()));
+
         //get the following bundle arguments
         Bundle bundle = getArguments();
         orientationChange = bundle.getInt("orientationChange");
@@ -91,17 +108,7 @@ public class BlogSpecific extends Fragment {
         /**blog comments recycler view adapter**/
         commentRecyclerViewAdapter = new CommentRecyclerViewAdapter(commentsCursor);
 
-        LinearLayoutManager linearLayoutManagerRecycler = new LinearLayoutManager(getContext()) {
-            @Override
-            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-                super.onLayoutChildren(recycler, state);
-                //Animate in the visible children
-                spruceAnimator = new Spruce.SpruceBuilder(fragmentBlogSpecificBinding.blogCommentsRecycler)
-                        .sortWith(new DefaultSort(100))
-                        .animateWith(DefaultAnimations.spinAnimator(fragmentBlogSpecificBinding.blogCommentsRecycler, 800))
-                        .start();
-            }
-        };
+        LinearLayoutManager linearLayoutManagerRecycler = new LinearLayoutManager(getContext());
 
         fragmentBlogSpecificBinding.blogCommentsRecycler.setAdapter(commentRecyclerViewAdapter);
         fragmentBlogSpecificBinding.blogCommentsRecycler.setLayoutManager(linearLayoutManagerRecycler);
@@ -109,6 +116,11 @@ public class BlogSpecific extends Fragment {
 
         //webview settings
         fragmentBlogSpecificBinding.blogWebView.getSettings().setJavaScriptEnabled(true);
+
+        //set presenter listener
+        dtbCustomListenerPresenter = new DtbCustomListenerPresenter(this);
+
+        fragmentBlogSpecificBinding.setDatabindingcustompresenter(dtbCustomListenerPresenter);
 
         return fragmentBlogSpecificBinding.getRoot();
     }
@@ -249,8 +261,8 @@ public class BlogSpecific extends Fragment {
                 ChurchContract.BlogCommentsEntry.COLUMN_CREATED_AT
         };
 
-        String selectioned = ChurchContract.BlogCommentsEntry.COLUMN_BLOG_ID + "=? AND " + ChurchContract.BlogCommentsEntry.COLUMN_VISIBLE+ "=?";
-        String[] selectionArgsed = {localCursor.getString(localCursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_BLOG_ID)),"1"};
+        String selectioned = ChurchContract.BlogCommentsEntry.COLUMN_BLOG_ID + "=? AND " + ChurchContract.BlogCommentsEntry.COLUMN_VISIBLE + "=?";
+        String[] selectionArgsed = {localCursor.getString(localCursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_BLOG_ID)), "1"};
 
         handler.startQuery(37, null, ChurchContract.BlogCommentsEntry.CONTENT_URI, projectioned, selectioned, selectionArgsed, null);
 
@@ -259,10 +271,99 @@ public class BlogSpecific extends Fragment {
 
     private void populateCommentsRecyclerView() {
 
-        Log.e("jean","cursor"+commentsCursor.getCount());
         if (commentsCursor != null && commentsCursor.getCount() > 0) {
             commentRecyclerViewAdapter.setCursor(commentsCursor);
         }
+
+    }
+
+
+    private void commentOnBlog() {
+
+
+        //inflate dialog view
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        View commentBlogBindingDialogInflated = layoutInflater.inflate(R.layout.comment_blog_dialog, null, false);
+
+        //binding
+        commentBlogBindingDialog = DataBindingUtil.bind(commentBlogBindingDialogInflated);
+
+        //dialog builder
+        AlertDialog.Builder commDialogBuilder = new AlertDialog.Builder(getContext());
+
+        //dialog title
+        commDialogBuilder.setTitle("Comment");
+
+        //dialog icon
+        commDialogBuilder.setIcon(R.drawable.ic_register);
+
+        //set view
+        commDialogBuilder.setView(commentBlogBindingDialogInflated);
+
+        //set dialog message
+        commDialogBuilder.setCancelable(false)
+                .setPositiveButton("Comment", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        commDialog = null;
+                    }
+                });
+
+
+        //create alert dialog
+        commDialog = commDialogBuilder.create();
+        //show it
+
+        commDialog.show();
+
+        //override the button positive handler
+        commDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //handle form validation
+                String fullNames = commentBlogBindingDialog.fullNames.getText().toString();
+                String emailAddress = commentBlogBindingDialog.emailAddress.getText().toString();
+                String comment = commentBlogBindingDialog.commentText.getText().toString();
+                //form validation
+                boolean checkedEmailAddress = FormValidation.checkEmail(emailAddress);
+                boolean checkedFullNames = FormValidation.checkString(fullNames, 0, 0);
+                boolean checkedComment = FormValidation.checkString(comment, 0, 0);
+
+                if (!checkedEmailAddress) {
+                    commentBlogBindingDialog.emailAddress.setError("Invalid Email Address");
+                }
+
+                if (!checkedFullNames) {
+                    commentBlogBindingDialog.fullNames.setError("Please Enter");
+                }
+
+                if (!checkedComment) {
+                    commentBlogBindingDialog.commentText.setError("Please Enter");
+                }
+
+                if (checkedEmailAddress && checkedComment && checkedFullNames) {
+                    //dismiss dialog
+                    commDialog.dismiss();
+                    commDialog = null;
+
+                    //notify user
+                    EventBus.getDefault().post(new DynamicToastStatusUpdate(0, "Your comment is being submitted."));
+
+                    //todo rem blog id
+                    //jobManager.addJobInBackground(new RegisterEventJob(eventId,fullNames,emailAddress,phone));
+
+                }
+
+            }
+        });
 
 
     }
@@ -311,12 +412,30 @@ public class BlogSpecific extends Fragment {
         super.onPause();
 
         fragmentBlogSpecificBinding.blogWebView.loadUrl("about:blank");
+
+
+        if (commDialog != null) {
+            commDialog.dismiss();
+        }
     }
 
-    //todo add the comments sections(both commenting and displaying comments)
+    @Override
+    public void onNeedString(String stringData) {
+
+    }
+
+    @Override
+    public void onSocialClick(String code, String stringData) {
+
+    }
+
+    @Override
+    public void onCommentClick() {
+        commentOnBlog();
+    }
+
     //todo allow users to comment and post to remote server and update in the UI
-    //todo in web app set the image location of the user
-    //todo while not validated with network set an a 3dots-if sent and returned set nothing(reduce opacity)-comments
+    //todo in web app set the image location of the user ie "image_url" for user that wrote the article/news feed.
     //todo Unable to open asset URL: file:///android_asset/
 
 }

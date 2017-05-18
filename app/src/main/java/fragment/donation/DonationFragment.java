@@ -110,6 +110,11 @@ public class DonationFragment extends Fragment  implements DataBindingCustomList
             startActivity(webIntent);
     }
 
+    @Override
+    public void onCommentClick() {
+
+    }
+
     private void getDonationFromDb() {
         if (localCursor != null) {
             localCursor.close();
