@@ -49,6 +49,7 @@ public class BlogSpecific extends Fragment {
     private static final int MESSAGE_ID = 7;
     private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
     private Cursor localCursor;
+    private Cursor commentsCursor;
     private int orientationChange = -1;
     private int blogId = -1;
 
@@ -73,6 +74,7 @@ public class BlogSpecific extends Fragment {
 
         //set cursor to null
         localCursor = null;
+        commentsCursor = null;
 
         //hideNavigation();
 
@@ -174,6 +176,7 @@ public class BlogSpecific extends Fragment {
                     if (cursor.getCount() > 0) {
                         cursor.moveToFirst();
                         categoryTitle[0] = cursor.getString(cursor.getColumnIndex(ChurchContract.BlogCategoryEntry.COLUMN_URL_KEY));
+                        cursor.close();
                     }
 
                 }
@@ -188,7 +191,12 @@ public class BlogSpecific extends Fragment {
                 customModel.setComments_count(commentsCount[0]);
 
 
-                cursor.close();
+                if (token == 37) {
+                    //populate comments recyclerview
+                    commentsCursor = cursor;
+                    populateCommentsRecyclerView(commentsCursor);
+                }
+
 
             }
         };
@@ -220,11 +228,18 @@ public class BlogSpecific extends Fragment {
 
     }
 
+    private void populateCommentsRecyclerView(Cursor commentsCursor) {
+    }
+
     @Override
     public void onDestroy() {
         /**close cursors**/
         if (localCursor != null) {
             localCursor.close();
+        }
+
+        if (commentsCursor != null) {
+            commentsCursor.close();
         }
 
         super.onDestroy();

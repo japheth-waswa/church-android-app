@@ -182,6 +182,19 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
 
+            <TextView
+                android:id="@+id/commentsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="COMMENTS"
+                android:textSize="19sp"
+                android:textColor="@color/colorAccent"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/blogCommentsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
         </RelativeLayout>
 
     </ScrollView>
