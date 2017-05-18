@@ -171,8 +171,7 @@ public class BlogAllFragment extends Fragment {
 
         handler.startQuery(23, null, ChurchContract.BlogsEntry.CONTENT_URI, projection, null, null, orderBy);
     }
-//todo for small devices change the way item are displayed in the recyclerview
-    //todo change the animation of items in the recyclerview
+
     private void loadBlogListToRecyclerView() {
         if (localCursor != null && localCursor.getCount() > 0) {
             //hide loader here

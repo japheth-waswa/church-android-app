@@ -44,10 +44,10 @@ import model.Sermon;
 import model.dyno.ApplicationContextProvider;
 import service.ChurchWebService;
 
-public class BlogSpecific extends Fragment{
+public class BlogSpecific extends Fragment {
 
     private static final int MESSAGE_ID = 7;
-private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
+    private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
     private Cursor localCursor;
     private int orientationChange = -1;
     private int blogId = -1;
@@ -84,7 +84,7 @@ private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
     }
 
     private void hideNavigation() {
-       //post event
+        //post event
         EventBus.getDefault().post(new NavActivityHideNavigation(false));
     }
 
@@ -105,7 +105,7 @@ private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
                     //update UI
                     Blog blog = new Blog();
                     blog.setBlog_title(cursor.getString(cursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_TITLE)));
-                    blog.setImage_url(ChurchWebService.getRootAbsoluteUrl(ApplicationContextProvider.getsContext(),cursor.getString(cursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_IMAGE_URL))));
+                    blog.setImage_url(ChurchWebService.getRootAbsoluteUrl(ApplicationContextProvider.getsContext(), cursor.getString(cursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_IMAGE_URL))));
                     blog.setBrief_description(cursor.getString(cursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_BRIEF_DESCRIPTION)));
                     blog.setContent(cursor.getString(cursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_CONTENT)));
                     blog.setAuthor_name(cursor.getString(cursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_AUTHOR_NAME)));
@@ -117,7 +117,7 @@ private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
                     try {
                         Date date = dtFormat.parse(dateString);
                         SimpleDateFormat dtFormatOutPut = new SimpleDateFormat("EEE, d MMM yyyy");
-                        blogDate =  dtFormatOutPut.format(date);
+                        blogDate = dtFormatOutPut.format(date);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -129,8 +129,8 @@ private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
                     updateCustomModelData();
 
 
-                    String html = "<html><head><link href=\"bootstrap.min.css\" type=\"text/css\" /></head><body>" + blog.getContent()+"<script src=\"bootstrap.min.js\" type=\"text/javascript\"></script> </body></html>";
-                    fragmentBlogSpecificBinding.blogWebView.loadDataWithBaseURL("file:///android_asset/",html,"text/html", "UTF-8", "");
+                    String html = "<html><head><link href=\"bootstrap.min.css\" type=\"text/css\" /></head><body>" + blog.getContent() + "<script src=\"bootstrap.min.js\" type=\"text/javascript\"></script> </body></html>";
+                    fragmentBlogSpecificBinding.blogWebView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "");
 
 
                 }
@@ -165,13 +165,13 @@ private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
         final String[] categoryTitle = {null};
         final String[] commentsCount = {"0"};
 
-        ChurchQueryHandler handler = new ChurchQueryHandler(getContext().getContentResolver()){
+        ChurchQueryHandler handler = new ChurchQueryHandler(getContext().getContentResolver()) {
             @Override
             protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
 
 
-                if(token == 33){
-                    if(cursor.getCount() > 0){
+                if (token == 33) {
+                    if (cursor.getCount() > 0) {
                         cursor.moveToFirst();
                         categoryTitle[0] = cursor.getString(cursor.getColumnIndex(ChurchContract.BlogCategoryEntry.COLUMN_URL_KEY));
                     }
@@ -179,7 +179,7 @@ private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
                 }
 
 
-                if(token == 37){
+                if (token == 37) {
                     commentsCount[0] = String.valueOf(cursor.getCount());
                     fragmentBlogSpecificBinding.setCustommodel(customModel);
                 }
@@ -207,17 +207,15 @@ private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
         handler.startQuery(33, null, ChurchContract.BlogCategoryEntry.CONTENT_URI, projection, selection, selectionArgs, null);
 
 
-String[] projectioned = {
+        String[] projectioned = {
                 ChurchContract.BlogCommentsEntry.COLUMN_VISIBLE,
                 ChurchContract.BlogCommentsEntry.COLUMN_CREATED_AT
         };
 
-        String selectioned = ChurchContract.BlogCommentsEntry.COLUMN_BLOG_ID + "=?";
-        String[] selectionArgsed = {localCursor.getString(localCursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_BLOG_ID))};
+        String selectioned = ChurchContract.BlogCommentsEntry.COLUMN_BLOG_ID + "=? AND " + ChurchContract.BlogCommentsEntry.COLUMN_VISIBLE+ "=?";
+        String[] selectionArgsed = {localCursor.getString(localCursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_BLOG_ID)),"1"};
 
         handler.startQuery(37, null, ChurchContract.BlogCommentsEntry.CONTENT_URI, projectioned, selectioned, selectionArgsed, null);
-
-
 
 
     }
@@ -238,7 +236,7 @@ String[] projectioned = {
         super.onStart();
 
         //register event
-       // EventBus.getDefault().register(this);
+        // EventBus.getDefault().register(this);
     }
 
 
@@ -265,5 +263,7 @@ String[] projectioned = {
     }
 
     //todo add the comments sections(both commenting and displaying comments)
+    //todo allow users to comment and post to remote server and update in the UI
+    //todo in web app set the image location of the user
 
 }
