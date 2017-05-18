@@ -142,6 +142,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                     BlogCommentsEntry.COLUMN_EMAIL + " TEXT, " +
                     BlogCommentsEntry.COLUMN_PHONE + " TEXT, " +
                     BlogCommentsEntry.COLUMN_MESSAGE + " TEXT, " +
+                    BlogCommentsEntry.COLUMN_UPLOADED + " TEXT, " +
                     BlogCommentsEntry.COLUMN_VIEWED + " TEXT, " +
                     BlogCommentsEntry.COLUMN_VISIBLE + " TEXT, " +
                     BlogCommentsEntry.COLUMN_CREATED_AT + " TEXT, " +

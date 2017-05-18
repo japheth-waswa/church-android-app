@@ -184,6 +184,7 @@ public class ChurchContract {
         public static final String COLUMN_PHONE= "phone";
         public static final String COLUMN_MESSAGE= "message";
         public static final String COLUMN_BLOG_ID= "blog_id";
+        public static final String COLUMN_UPLOADED= "uploaded";
         public static final String COLUMN_VIEWED= "viewed";
         public static final String COLUMN_VISIBLE= "visible";
         public static final String COLUMN_CREATED_AT= "created_at";

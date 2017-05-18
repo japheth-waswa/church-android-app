@@ -495,6 +495,7 @@ public class ChurchWebService {
                     valuesed.put(ChurchContract.BlogCommentsEntry.COLUMN_MESSAGE, jObj.getString("message"));
                     valuesed.put(ChurchContract.BlogCommentsEntry.COLUMN_BLOG_ID, jObj.getString("blog_id"));
                     valuesed.put(ChurchContract.BlogCommentsEntry.COLUMN_VISIBLE, jObj.getString("visible"));
+                    valuesed.put(ChurchContract.BlogCommentsEntry.COLUMN_UPLOADED,"1");
                     valuesed.put(ChurchContract.BlogCommentsEntry.COLUMN_CREATED_AT, jObj.getString("created_at"));
                     valuesed.put(ChurchContract.BlogCommentsEntry.COLUMN_UPDATED_AT, jObj.getString("updated_at"));
 

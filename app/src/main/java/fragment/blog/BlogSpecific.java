@@ -1,5 +1,6 @@
 package fragment.blog;
 
+import android.animation.Animator;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +24,9 @@ import com.androidnetworking.interfaces.DownloadProgressListener;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.FragmentBlogSpecificBinding;
 import com.japhethwaswa.church.databinding.FragmentSermonSpecificBinding;
+import com.willowtreeapps.spruce.Spruce;
+import com.willowtreeapps.spruce.animation.DefaultAnimations;
+import com.willowtreeapps.spruce.sort.DefaultSort;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,8 +38,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import adapters.recyclerview.blog.BlogRecyclerViewAdapter;
+import adapters.recyclerview.comment.CommentRecyclerViewAdapter;
 import db.ChurchContract;
 import db.ChurchQueryHandler;
+import event.ClickListener;
+import event.CustomRecyclerTouchListener;
 import event.pojo.DownloadSermonPdf;
 import event.pojo.DownloadSermonPdfStatus;
 import event.pojo.NavActivityColor;
@@ -48,10 +58,12 @@ public class BlogSpecific extends Fragment {
 
     private static final int MESSAGE_ID = 7;
     private FragmentBlogSpecificBinding fragmentBlogSpecificBinding;
+    private CommentRecyclerViewAdapter commentRecyclerViewAdapter;
     private Cursor localCursor;
     private Cursor commentsCursor;
     private int orientationChange = -1;
     private int blogId = -1;
+    private Animator spruceAnimator;
 
 
     @Nullable
@@ -76,18 +88,29 @@ public class BlogSpecific extends Fragment {
         localCursor = null;
         commentsCursor = null;
 
-        //hideNavigation();
+        /**blog comments recycler view adapter**/
+        commentRecyclerViewAdapter = new CommentRecyclerViewAdapter(commentsCursor);
+
+        LinearLayoutManager linearLayoutManagerRecycler = new LinearLayoutManager(getContext()) {
+            @Override
+            public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+                super.onLayoutChildren(recycler, state);
+                //Animate in the visible children
+                spruceAnimator = new Spruce.SpruceBuilder(fragmentBlogSpecificBinding.blogCommentsRecycler)
+                        .sortWith(new DefaultSort(100))
+                        .animateWith(DefaultAnimations.spinAnimator(fragmentBlogSpecificBinding.blogCommentsRecycler, 800))
+                        .start();
+            }
+        };
+
+        fragmentBlogSpecificBinding.blogCommentsRecycler.setAdapter(commentRecyclerViewAdapter);
+        fragmentBlogSpecificBinding.blogCommentsRecycler.setLayoutManager(linearLayoutManagerRecycler);
 
 
         //webview settings
         fragmentBlogSpecificBinding.blogWebView.getSettings().setJavaScriptEnabled(true);
 
         return fragmentBlogSpecificBinding.getRoot();
-    }
-
-    private void hideNavigation() {
-        //post event
-        EventBus.getDefault().post(new NavActivityHideNavigation(false));
     }
 
     private void getThisBlogFromDb() {
@@ -173,7 +196,7 @@ public class BlogSpecific extends Fragment {
 
 
                 if (token == 33) {
-                    if (cursor.getCount() > 0) {
+                    if (cursor != null && cursor.getCount() > 0) {
                         cursor.moveToFirst();
                         categoryTitle[0] = cursor.getString(cursor.getColumnIndex(ChurchContract.BlogCategoryEntry.COLUMN_URL_KEY));
                         cursor.close();
@@ -183,7 +206,10 @@ public class BlogSpecific extends Fragment {
 
 
                 if (token == 37) {
-                    commentsCount[0] = String.valueOf(cursor.getCount());
+                    if (cursor != null) {
+                        commentsCount[0] = String.valueOf(cursor.getCount());
+                    }
+
                     fragmentBlogSpecificBinding.setCustommodel(customModel);
                 }
 
@@ -194,7 +220,7 @@ public class BlogSpecific extends Fragment {
                 if (token == 37) {
                     //populate comments recyclerview
                     commentsCursor = cursor;
-                    populateCommentsRecyclerView(commentsCursor);
+                    populateCommentsRecyclerView();
                 }
 
 
@@ -216,6 +242,9 @@ public class BlogSpecific extends Fragment {
 
 
         String[] projectioned = {
+                ChurchContract.BlogCommentsEntry.COLUMN_NAMES,
+                ChurchContract.BlogCommentsEntry.COLUMN_MESSAGE,
+                ChurchContract.BlogCommentsEntry.COLUMN_UPLOADED,
                 ChurchContract.BlogCommentsEntry.COLUMN_VISIBLE,
                 ChurchContract.BlogCommentsEntry.COLUMN_CREATED_AT
         };
@@ -228,7 +257,13 @@ public class BlogSpecific extends Fragment {
 
     }
 
-    private void populateCommentsRecyclerView(Cursor commentsCursor) {
+    private void populateCommentsRecyclerView() {
+
+        if (commentsCursor != null && commentsCursor.getCount() > 0) {
+            commentRecyclerViewAdapter.setCursor(commentsCursor);
+        }
+
+
     }
 
     @Override
@@ -280,5 +315,6 @@ public class BlogSpecific extends Fragment {
     //todo add the comments sections(both commenting and displaying comments)
     //todo allow users to comment and post to remote server and update in the UI
     //todo in web app set the image location of the user
+    //todo while not validated with network set an a 3dots-if sent and returned set nothing(reduce opacity)-comments
 
 }
