@@ -92,10 +92,8 @@ public class BlogAllFragment extends Fragment {
                 //Animate in the visible children
                 spruceAnimator = new Spruce.SpruceBuilder(fragmentBlogsAllBinding.blogsRecycler)
                         .sortWith(new DefaultSort(100))
-                        .animateWith(DefaultAnimations.shrinkAnimator(fragmentBlogsAllBinding.blogsRecycler, 800),
-                                ObjectAnimator.ofFloat(fragmentBlogsAllBinding.blogsRecycler,
-                                        "translationX", -fragmentBlogsAllBinding.blogsRecycler.getWidth(), 0f)
-                                        .setDuration(800)).start();
+                        .animateWith(DefaultAnimations.spinAnimator(fragmentBlogsAllBinding.blogsRecycler, 800))
+                        .start();
             }
         };
 
@@ -176,7 +174,7 @@ public class BlogAllFragment extends Fragment {
 //todo for small devices change the way item are displayed in the recyclerview
     //todo change the animation of items in the recyclerview
     private void loadBlogListToRecyclerView() {
-        if (localCursor.getCount() > 0) {
+        if (localCursor != null && localCursor.getCount() > 0) {
             //hide loader here
             fragmentBlogsAllBinding.pageloader.stopProgress();
             //set recycler cursor
