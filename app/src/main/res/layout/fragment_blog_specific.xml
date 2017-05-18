@@ -189,21 +189,11 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
 
-            <ImageButton
-                android:id="@+id/wantToComment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/blogWebView"
-                android:layout_marginBottom="@dimen/standardPadding"
-                android:background="@null"
-                android:src="@drawable/ic_twitter"
-                android:onClick="@{() -> databindingcustompresenter.onCommentClick()}"/>
-
             <TextView
                 android:id="@+id/commentsTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/wantToComment"
+                android:layout_below="@id/blogWebView"
                 android:layout_marginBottom="@dimen/standardPadding"
                 android:text="COMMENTS"
                 android:textSize="19sp"
@@ -214,6 +204,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/commentsTitle"/>
+
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/wantToComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_chat_nav"
+                android:onClick="@{() -> databindingcustompresenter.onCommentClick()}"/>
 
         </RelativeLayout>
 
