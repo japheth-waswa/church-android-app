@@ -179,7 +179,7 @@ public class EventFragment extends Fragment {
         }
     }
 
-    private void registerForEvent(int position) {
+    private void registerForEvent(final int position) {
 
 
         //inflate dialog view
@@ -237,7 +237,9 @@ public class EventFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //get event id
-                String eventId = localCursor.getString(localCursor.getColumnIndex(ChurchContract.EventsEntry.COLUMN_EVENT_ID));
+                String eventId;
+                if(localCursor.moveToPosition(position));
+                eventId = localCursor.getString(localCursor.getColumnIndex(ChurchContract.EventsEntry.COLUMN_EVENT_ID));
 Log.e("jean-event",eventId);
                 //handle form validation
                 fullNames = registerEventBindingDialog.fullNames.getText().toString();
