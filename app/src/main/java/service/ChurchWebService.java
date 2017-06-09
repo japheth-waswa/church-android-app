@@ -32,6 +32,7 @@ import db.DatabaseHelper;
 import event.pojo.BibleUpdate;
 import event.pojo.BlogDataRetrievedSaved;
 import event.pojo.DonationDataRetrievedSaved;
+import event.pojo.DynamicToastStatusUpdate;
 import event.pojo.EventDataRetrievedSaved;
 import event.pojo.ScheduleDataRetrievedSaved;
 import event.pojo.SermonDataRetrievedSaved;
@@ -214,13 +215,59 @@ public class ChurchWebService {
 
 
     public static void serviceRegisterForEvent(Context applicationContext, String eventId, String fullNames, String emailAddress, String phone) {
-        //todo webapp====implement logic to post registration to remote server-rem to add the logic in remote server ie php endpoint
-        //todo webapp====registering a user to a specific event.
+
+        Resources res = applicationContext.getResources();
+        String relativeUrl = res.getString(R.string.app_event_post);
+        String accessToken = OAuth.getClientCredentialsGrantTypeAccessToken();
+
+        AndroidNetworking.post(getAbsoluteUrl(applicationContext, relativeUrl))
+                .addBodyParameter("firstname",fullNames)
+                .addBodyParameter("email",emailAddress)
+                .addBodyParameter("phone",phone)
+                .addBodyParameter("event_id",eventId)
+                .setPriority(Priority.HIGH)
+                .setTag("eventRegisterApi")
+                .addHeaders("Authorization", "Bearer " + accessToken)
+                .build().getAsJSONObject(new JSONObjectRequestListener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                EventBus.getDefault().post(new DynamicToastStatusUpdate(2, "Event registration successful"));
+            }
+
+            @Override
+            public void onError(ANError anError) {
+                Log.e("jean-error",anError.toString());
+            }
+        });
+
     }
 
 
     public static void servicePostComment(Context applicationContext, String blogId, String fullNames, String emailAddress, String comment) {
-        //todo webapp====implement logic to post comment to remote server
+
+        Resources res = applicationContext.getResources();
+        String relativeUrl = res.getString(R.string.app_blog_comment_post);
+        String accessToken = OAuth.getClientCredentialsGrantTypeAccessToken();
+
+        AndroidNetworking.post(getAbsoluteUrl(applicationContext, relativeUrl))
+                .addBodyParameter("names",fullNames)
+                .addBodyParameter("email",emailAddress)
+                .addBodyParameter("message",comment)
+                .addBodyParameter("blog_id",blogId)
+                .setPriority(Priority.HIGH)
+                .setTag("commentPostApi")
+                .addHeaders("Authorization", "Bearer " + accessToken)
+                .build().getAsJSONObject(new JSONObjectRequestListener() {
+            @Override
+            public void onResponse(JSONObject response) {
+                EventBus.getDefault().post(new DynamicToastStatusUpdate(2, "Comment saved"));
+            }
+
+            @Override
+            public void onError(ANError anError) {
+            }
+        });
+
     }
 
     //get schedule

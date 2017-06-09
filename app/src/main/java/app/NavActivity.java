@@ -221,7 +221,7 @@ public class NavActivity extends AppCompatActivity{
             Toasty.success(this,event.getStatusMessage(), Toast.LENGTH_SHORT, true).show();
 
         //error
-        if (event.getStatus() == 2)
+        if (event.getStatus() == 3)
             Toasty.error(this,event.getStatusMessage(), Toast.LENGTH_SHORT, true).show();
 
     }

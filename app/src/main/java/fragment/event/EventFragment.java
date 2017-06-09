@@ -238,7 +238,7 @@ public class EventFragment extends Fragment {
             public void onClick(View v) {
                 //get event id
                 String eventId = localCursor.getString(localCursor.getColumnIndex(ChurchContract.EventsEntry.COLUMN_EVENT_ID));
-
+Log.e("jean-event",eventId);
                 //handle form validation
                 fullNames = registerEventBindingDialog.fullNames.getText().toString();
                 emailAddress = registerEventBindingDialog.emailAddress.getText().toString();
@@ -268,6 +268,7 @@ public class EventFragment extends Fragment {
                     EventBus.getDefault().post(new DynamicToastStatusUpdate(0, "We are registering you."));
                     //initiate a background job to register this user after successful validation of input data(write api endpoint in church application to receive the data)
                     if(localCursor != null && !localCursor.isClosed()){
+                        Log.e("jean-event-succ",eventId);
                         jobManager.addJobInBackground(new RegisterEventJob(eventId,fullNames,emailAddress,phone));
                     }
 
