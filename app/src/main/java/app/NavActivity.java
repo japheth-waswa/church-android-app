@@ -145,22 +145,12 @@ public class NavActivity extends AppCompatActivity{
                 break;
 
             case 5:
-                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
-                break;
-            case 6:
-
                 //blog/news feed
                 BlogFragment blogFragment = new BlogFragment();
                 fragmentTransaction.replace(R.id.navFragmentHolder, blogFragment, "blogFragment");
                 fragmentTransaction.commit();
                 break;
 
-            case 7:
-                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
-                break;
-            case 8:
-                Log.e("jeff-waswa", String.valueOf(position) + "-fragment load here");
-                break;
             default:
                 super.onBackPressed();
                 break;

@@ -17,9 +17,6 @@
         android:icon="@drawable/ic_donate_nav"
         android:title="Donate"/>
     <item
-        android:icon="@drawable/ic_gallery_nav"
-        android:title="Gallery"/>
-    <item
         android:icon="@drawable/ic_news_nav"
         android:title="News Feed"/>
 </menu>

@@ -50,18 +50,15 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.donateMenu:
                         startNavigationActivity(3);
                         break;
-                    case R.id.galleryMenu:
-                        startNavigationActivity(4);
-                        break;
                     case R.id.newsFeedMenu:
-                        startNavigationActivity(5);
+                        startNavigationActivity(4);
                         break;
                     default:
                         return;
                 }
             }
         });
-
+        
 
     }
 

@@ -46,15 +46,6 @@
                 app:colorPressed="#FF9800"
                 app:icon="@drawable/ic_donate_nav" />
 
-
-            <com.imangazaliev.circlemenu.CircleMenuButton
-                android:id="@+id/galleryMenu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:colorNormal="#E4006B"
-                app:colorPressed="#E4006B"
-                app:icon="@drawable/ic_gallery_nav" />
-
             <com.imangazaliev.circlemenu.CircleMenuButton
                 android:id="@+id/newsFeedMenu"
                 android:layout_width="wrap_content"
