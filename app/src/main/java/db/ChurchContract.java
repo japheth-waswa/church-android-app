@@ -164,6 +164,7 @@ public class ChurchContract {
         public static final String COLUMN_BRIEF_DESCRIPTION= "brief_description";
         public static final String COLUMN_CONTENT= "content";
         public static final String COLUMN_AUTHOR_NAME= "author_name";
+        public static final String COLUMN_AUTHOR_IMAGE_URL= "author_image_url";
         public static final String COLUMN_PUBLISH_DATE= "publish_date";
         public static final String COLUMN_BLOG_CATEGORY_ID= "blog_category_id";
         public static final String COLUMN_VISIBLE= "visible";

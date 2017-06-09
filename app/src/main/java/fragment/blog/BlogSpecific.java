@@ -24,6 +24,8 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.DownloadListener;
 import com.androidnetworking.interfaces.DownloadProgressListener;
 import com.birbit.android.jobqueue.JobManager;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.japhethwaswa.church.R;
 import com.japhethwaswa.church.databinding.CommentBlogDialogBinding;
 import com.japhethwaswa.church.databinding.FragmentBlogSpecificBinding;
@@ -164,8 +166,11 @@ public class BlogSpecific extends Fragment implements DataBindingCustomListener.
 
                     fragmentBlogSpecificBinding.setBlog(blog);
 
+                    //UPDATE CUSTOM MODLE WITH DATA
                     updateCustomModelData();
 
+                    //update author image using glide.
+                    updateAuthorImage(cursor.getString(cursor.getColumnIndex(ChurchContract.BlogsEntry.COLUMN_AUTHOR_IMAGE_URL)));
 
                     String html = "<html><head><link href=\"bootstrap.min.css\" type=\"text/css\" /></head><body>" + blog.getContent() + "<script src=\"bootstrap.min.js\" type=\"text/javascript\"></script> </body></html>";
                     fragmentBlogSpecificBinding.blogWebView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", "");
@@ -185,6 +190,7 @@ public class BlogSpecific extends Fragment implements DataBindingCustomListener.
                 ChurchContract.BlogsEntry.COLUMN_PUBLISH_DATE,
                 ChurchContract.BlogsEntry.COLUMN_CONTENT,
                 ChurchContract.BlogsEntry.COLUMN_AUTHOR_NAME,
+                ChurchContract.BlogsEntry.COLUMN_AUTHOR_IMAGE_URL,
                 ChurchContract.BlogsEntry.COLUMN_BLOG_CATEGORY_ID,
                 ChurchContract.BlogsEntry.COLUMN_URL_KEY,
                 ChurchContract.BlogsEntry.COLUMN_VISIBLE,
@@ -195,6 +201,16 @@ public class BlogSpecific extends Fragment implements DataBindingCustomListener.
         String[] selectionArgs = {String.valueOf(blogId)};
 
         handler.startQuery(23, null, ChurchContract.BlogsEntry.CONTENT_URI, projection, selection, selectionArgs, null);
+    }
+
+    private void updateAuthorImage(String string) {
+        //fragmentBlogSpecificBinding.avatarCircle
+        Glide.with(this)
+                .load(string)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+                .error(R.drawable.ic_user_custom)
+                .into(fragmentBlogSpecificBinding.avatarCircle);
     }
 
     private void updateCustomModelData() {
@@ -440,7 +456,5 @@ public class BlogSpecific extends Fragment implements DataBindingCustomListener.
     public void onCommentClick() {
         commentOnBlog();
     }
-
-    //todo webapp====in web app set the image location of the user ie "image_url" for user that wrote the article/news feed. ie in web application and update db to store this data
 
 }

@@ -128,6 +128,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
                     BlogsEntry.COLUMN_BRIEF_DESCRIPTION + " TEXT, " +
                     BlogsEntry.COLUMN_CONTENT + " TEXT, " +
                     BlogsEntry.COLUMN_AUTHOR_NAME + " TEXT, " +
+                    BlogsEntry.COLUMN_AUTHOR_IMAGE_URL + " TEXT, " +
                     BlogsEntry.COLUMN_PUBLISH_DATE + " TEXT, " +
                     BlogsEntry.COLUMN_VISIBLE + " TEXT, " +
                     BlogsEntry.COLUMN_CREATED_AT + " TEXT, " +

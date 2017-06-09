@@ -496,6 +496,7 @@ public class ChurchWebService {
                         values.put(ChurchContract.BlogsEntry.COLUMN_BRIEF_DESCRIPTION, jObj.getString("brief_description"));
                         values.put(ChurchContract.BlogsEntry.COLUMN_CONTENT, jObj.getString("content"));
                         values.put(ChurchContract.BlogsEntry.COLUMN_AUTHOR_NAME, jObj.getString("author_name"));
+                        values.put(ChurchContract.BlogsEntry.COLUMN_AUTHOR_IMAGE_URL, jObj.getString("author_image_url"));
                         values.put(ChurchContract.BlogsEntry.COLUMN_PUBLISH_DATE, jObj.getString("publish_date"));
                         values.put(ChurchContract.BlogsEntry.COLUMN_BLOG_CATEGORY_ID, jObj.getString("blog_category_id"));
                         values.put(ChurchContract.BlogsEntry.COLUMN_VISIBLE, jObj.getString("visible"));
